@@ -1,0 +1,2719 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Math Quest — Square Root Method</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous" />
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+
+<style>
+/* ===== sq/sq-styles.css ===== */
+/* ============================================================
+   Math Quest — Square Root prototype
+   Soft pastel + frosted-glass aesthetic
+   ============================================================ */
+
+:root {
+  /* Background washes */
+  --bg-cream:    #FFF5E4;
+  --bg-peach:    #FFE3CC;
+  --bg-lavender: #E8DCFB;
+  --bg-mint:     #D8F2E2;
+  --bg-pink:     #FFDFEB;
+
+  /* Quint palette */
+  --q-purple:  #7B47C7;
+  --q-purple-2:#A876E8;
+  --q-magenta: #D44C97;
+  --q-pink:    #FF8DC7;
+  --q-yellow:  #FFD93D;
+
+  /* Ink */
+  --ink:    #2A1A4A;
+  --ink-2:  #5B4A82;
+  --ink-3:  #8C7DAE;
+  --ink-4:  #B7ACC9;
+
+  /* Glass */
+  --glass-bg:    rgba(255,255,255,0.55);
+  --glass-bg-2:  rgba(255,255,255,0.38);
+  --glass-stroke:rgba(255,255,255,0.75);
+  --glass-edge:  rgba(123, 71, 199, 0.10);
+  --glass-shadow:0 8px 28px rgba(123, 71, 199, 0.14),
+                 0 1px 0 rgba(255,255,255,0.6) inset;
+
+  /* Feedback (soft, never harsh) */
+  --good:      #4DBE94;
+  --good-soft: #DFF6EB;
+  --warn:      #E89BB8;        /* peachy-pink, NOT red */
+  --warn-soft: #FFE0EE;
+
+  /* Radii */
+  --r-sm: 14px;
+  --r-md: 22px;
+  --r-lg: 28px;
+  --r-xl: 36px;
+
+  /* Type */
+  --font-display: "Quicksand", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --font-body:    "Nunito", ui-rounded, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+
+/* The phone canvas — all sq-app content sits in here */
+.sq-app {
+  font-family: var(--font-body);
+  color: var(--ink);
+  width: 100%;
+  min-height: 100%;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 8%,  var(--bg-peach)   0%, transparent 60%),
+    radial-gradient(ellipse 55% 38% at 90% 18%, var(--bg-pink)    0%, transparent 60%),
+    radial-gradient(ellipse 65% 45% at 12% 65%, var(--bg-lavender) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 92% 78%, var(--bg-mint)    0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 100%,#FFE2C5 0%, transparent 65%),
+    var(--bg-cream);
+  background-attachment: local;
+}
+
+/* Floating math symbol decorations */
+.sq-deco {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
+  font-family: "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 500;
+}
+.sq-deco span {
+  position: absolute;
+  font-size: 56px;
+  opacity: .22;
+  animation: drift 18s ease-in-out infinite;
+}
+.sq-deco .s1 { top: 8%;  left: 78%; color: var(--q-purple); animation-delay: 0s; }
+.sq-deco .s2 { top: 32%; left: 5%;  color: var(--q-magenta); animation-delay: -6s; font-size: 44px;}
+.sq-deco .s3 { top: 60%; left: 85%; color: var(--q-purple); animation-delay: -3s; font-size: 38px;}
+.sq-deco .s4 { top: 82%; left: 8%;  color: var(--q-magenta); animation-delay: -9s; font-size: 50px;}
+.sq-deco .s5 { top: 48%; left: 50%; color: var(--q-purple-2); animation-delay: -12s; font-size: 32px;}
+
+@keyframes drift {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50%      { transform: translateY(-14px) rotate(4deg); }
+}
+
+/* Frosted-glass card */
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--glass-stroke);
+  border-radius: var(--r-lg);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+}
+.glass-2 {
+  background: var(--glass-bg-2);
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: var(--r-md);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+p { margin: 0; line-height: 1.55; color: var(--ink-2); }
+
+/* ============= Quint ============= */
+.quint-wrap { display: inline-block; position: relative; }
+.quint-wrap.idle .quint-svg { animation: quintBob 3.4s ease-in-out infinite; }
+.quint-svg {
+  filter: drop-shadow(0 12px 20px rgba(123,71,199,.18));
+  animation: quintPop .5s cubic-bezier(.34,1.56,.64,1);
+  transform-origin: 50% 90%;
+}
+@keyframes quintBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+@keyframes quintPop {
+  0%   { transform: scale(.85); }
+  60%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+.quint-sparkle { animation: sparklePop 1.4s ease-in-out infinite; }
+@keyframes sparklePop {
+  0%, 100% { opacity: 0; transform: scale(.6); }
+  50%      { opacity: 1; transform: scale(1); }
+}
+
+.quint-confetti { animation: confettiFall 1.6s ease-out infinite; }
+@keyframes confettiFall {
+  0%   { transform: translateY(-10px) rotate(0); opacity: 1; }
+  100% { transform: translateY(40px) rotate(180deg); opacity: 0; }
+}
+
+.quint-arm-l { animation: armWaveL 1.2s ease-in-out infinite; transform-origin: 52px 95px; }
+.quint-arm-r { animation: armWaveR 1.2s ease-in-out infinite; transform-origin: 148px 95px; }
+@keyframes armWaveL { 0%,100% { transform: rotate(-10deg); } 50% { transform: rotate(-30deg); } }
+@keyframes armWaveR { 0%,100% { transform: rotate(10deg); }  50% { transform: rotate(30deg); } }
+
+.quint-thought { animation: thoughtFloat 2.6s ease-in-out infinite; }
+@keyframes thoughtFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* ============= Quint speech bubble ============= */
+.bubble {
+  background: white;
+  border: 1.5px solid var(--ink);
+  border-radius: 20px;
+  padding: 12px 16px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.45;
+  box-shadow: 0 4px 0 rgba(123,71,199,.12);
+  position: relative;
+  max-width: 240px;
+  animation: bubblePop .35s cubic-bezier(.34,1.56,.64,1);
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  left: -10px; top: 20px;
+  width: 14px; height: 14px;
+  background: white;
+  border-left: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+  transform: rotate(45deg);
+  border-bottom-left-radius: 3px;
+}
+@keyframes bubblePop {
+  0%   { opacity: 0; transform: translateX(-6px) scale(.92); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* ============= Buttons ============= */
+.btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 13px 22px;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: transform .08s ease, box-shadow .15s ease;
+  white-space: nowrap;
+  min-height: 48px;
+}
+.btn:active { transform: translateY(2px); }
+.btn-primary {
+  background: linear-gradient(180deg, #A876E8 0%, #7B47C7 100%);
+  color: white;
+  box-shadow: 0 4px 0 #4A2A85, 0 0 0 1px rgba(255,255,255,.4) inset;
+}
+.btn-soft {
+  background: white;
+  color: var(--ink);
+  box-shadow: 0 3px 0 var(--ink-4);
+}
+.btn-ghost {
+  background: rgba(255,255,255,.5);
+  border-color: transparent;
+  color: var(--ink-2);
+  box-shadow: none;
+  font-weight: 600;
+}
+.btn-pill {
+  background: var(--bg-lavender);
+  border: 1.5px solid #C8B5F0;
+  color: var(--q-purple);
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  min-height: 36px;
+  cursor: pointer;
+}
+.btn-pill:active { transform: translateY(1px); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* ============= Top bar ============= */
+.sq-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px 8px;
+  position: relative; z-index: 2;
+}
+.sq-stats { display: flex; gap: 6px; }
+.sq-stat {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 11px 6px 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.7);
+  border: 1px solid rgba(255,255,255,.8);
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.sq-stat-ic { font-size: 14px; }
+.sq-back {
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.7);
+  border: 1px solid rgba(255,255,255,.85);
+  display: grid; place-items: center;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font-size: 18px; color: var(--ink);
+  font-weight: 700;
+}
+
+/* ============= Mastery rings ============= */
+.ring-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+}
+.ring-card-body { flex: 1; min-width: 0; }
+.ring-card-body h3 { font-size: 16px; margin-bottom: 2px; }
+.ring-card-body p { font-size: 12.5px; color: var(--ink-3); }
+.ring-pct {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Page content area */
+.sq-page {
+  padding: 8px 18px 28px;
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+.section-title {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin: 12px 4px 0;
+}
+.section-title h2 { font-size: 18px; }
+.section-title .more { font-size: 12px; font-weight: 700; color: var(--q-purple); }
+
+/* ============= Concept card ============= */
+.concept-card { padding: 22px; }
+.concept-card .formula-box {
+  margin-top: 14px;
+  padding: 18px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.65);
+  border: 1px dashed rgba(123,71,199,.3);
+  text-align: center;
+}
+.concept-card .formula-box .katex { font-size: 1.35em !important; }
+
+/* Color-coded math changes */
+.tok-pulse-purple {
+  display: inline-block;
+  animation: tokPulse 1s ease-out;
+  color: var(--q-purple) !important;
+  font-weight: 800;
+}
+.tok-pulse-pink {
+  display: inline-block;
+  animation: tokPulse 1s ease-out;
+  color: var(--q-magenta) !important;
+  font-weight: 800;
+}
+@keyframes tokPulse {
+  0%   { transform: scale(.4); opacity: 0; }
+  60%  { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ============= Manipulative (slider widget) ============= */
+.manip { padding: 16px; }
+.manip-canvas {
+  width: 100%; height: 200px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.4));
+  border: 1px solid rgba(255,255,255,.7);
+  overflow: hidden;
+  position: relative;
+}
+.manip-readout {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 12px; gap: 12px;
+}
+.manip-readout .eq {
+  background: rgba(255,255,255,.7);
+  border-radius: 14px;
+  padding: 10px 14px;
+  flex: 1;
+  text-align: center;
+}
+.manip-readout .eq .katex { font-size: 1.1em !important; }
+
+.k-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--q-magenta) 0%, #E8DCFB 50%, var(--q-purple) 100%);
+  outline: none;
+  margin: 14px 0 6px;
+}
+.k-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: white;
+  border: 2.5px solid var(--q-purple);
+  box-shadow: 0 3px 8px rgba(123,71,199,.3);
+  cursor: pointer;
+}
+.k-slider::-moz-range-thumb {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: white;
+  border: 2.5px solid var(--q-purple);
+  cursor: pointer;
+}
+.k-ticks {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10.5px; font-weight: 700;
+  color: var(--ink-3);
+}
+
+/* ============= Solver / steps ============= */
+.solver-card { padding: 22px; }
+.solver-prompt {
+  background: rgba(255,255,255,.7);
+  padding: 18px;
+  border-radius: 18px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.solver-prompt .katex { font-size: 1.6em !important; }
+.solver-q { font-size: 16px; font-weight: 700; color: var(--ink); margin: 14px 0 8px; }
+
+.choice-grid { display: grid; gap: 8px; }
+.choice {
+  background: rgba(255,255,255,.75);
+  border: 1.5px solid rgba(255,255,255,.85);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+  transition: all .15s;
+  min-height: 50px;
+}
+.choice:active { transform: scale(.98); }
+.choice .letter {
+  width: 28px; height: 28px; border-radius: 9px;
+  background: var(--bg-lavender);
+  color: var(--q-purple);
+  display: grid; place-items: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.choice.correct {
+  background: var(--good-soft); border-color: var(--good);
+}
+.choice.correct .letter { background: var(--good); color: white; }
+.choice.wrong {
+  background: var(--warn-soft); border-color: var(--warn);
+}
+.choice.wrong .letter { background: var(--warn); color: white; }
+.choice .body .katex { font-size: 1.05em !important; }
+
+/* Hint stack */
+.hint-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.hint-card {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 14px;
+  background: rgba(255,225,200,.6);
+  border: 1px solid rgba(255,180,120,.4);
+  border-radius: 18px;
+  animation: bubblePop .35s cubic-bezier(.34,1.56,.64,1);
+}
+.hint-card .h-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #B8761B;
+  background: white;
+  padding: 4px 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.hint-card p { font-size: 13.5px; color: var(--ink); font-weight: 500; }
+
+/* Revealed step row */
+.step-row {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,.75);
+  border: 1px solid rgba(255,255,255,.85);
+  border-radius: 18px;
+  margin-bottom: 8px;
+  animation: stepIn .4s ease both;
+}
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.step-row .num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg-lavender);
+  color: var(--q-purple);
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 13px;
+  font-family: var(--font-mono);
+}
+.step-row .why { font-size: 13px; color: var(--ink-2); margin-bottom: 6px; font-weight: 500; }
+.step-row .math { background: rgba(232,220,251,.4); padding: 8px 12px; border-radius: 12px; text-align: center; }
+.step-row .math .katex { font-size: 1.15em !important; }
+
+/* ============= Diff feedback ============= */
+.diff-card {
+  margin-top: 14px;
+  background: var(--warn-soft);
+  border: 1.5px solid #F4C5D9;
+  border-radius: var(--r-md);
+  padding: 16px;
+  animation: bubblePop .35s cubic-bezier(.34,1.56,.64,1);
+}
+.diff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 10px 0 6px;
+}
+.diff-col h4 {
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  margin-bottom: 6px;
+}
+.diff-col.you h4   { color: #B85284; }
+.diff-col.right h4 { color: var(--good); }
+.diff-col .row {
+  background: white;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.diff-col .row.hl { background: #FCD5E2; }
+.diff-col.right .row.hl { background: var(--good-soft); }
+
+/* ============= Mini-lesson "why" ============= */
+.why-toggle {
+  background: transparent; border: 0;
+  color: var(--q-purple);
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 14px;
+  cursor: pointer;
+  padding: 6px 0;
+  display: flex; align-items: center; gap: 8px;
+  text-align: left;
+  width: 100%;
+  flex-wrap: wrap;
+  line-height: 1.4;
+}
+.why-toggle .katex { font-size: 1em !important; }
+.why-panel {
+  margin-top: 10px;
+  padding: 16px;
+  border-radius: var(--r-md);
+  background: rgba(232,220,251,.55);
+  border: 1px solid rgba(168,118,232,.3);
+  animation: bubblePop .3s ease;
+}
+.why-panel h4 { font-size: 14px; margin-bottom: 8px; color: var(--q-purple); }
+.why-panel .convince {
+  display: grid; gap: 6px; margin-top: 12px;
+}
+.convince-btn {
+  background: white;
+  border: 1.5px dashed var(--q-purple-2);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  text-align: left;
+}
+.convince-btn:active { transform: scale(.98); }
+.convince-btn .res {
+  color: var(--q-magenta);
+  font-weight: 800;
+  animation: tokPulse .5s ease-out;
+}
+
+/* ============= Input + math pad ============= */
+.q-input {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 18px; font-weight: 700;
+  padding: 14px 16px;
+  border: 2px solid rgba(123,71,199,.25);
+  border-radius: 16px;
+  background: rgba(255,255,255,.8);
+  outline: none;
+  color: var(--ink);
+}
+.q-input:focus { border-color: var(--q-purple); }
+.math-pad {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 10px;
+}
+.pad-key {
+  font-family: var(--font-mono);
+  font-size: 15px; font-weight: 800;
+  background: white;
+  border: 1.5px solid rgba(123,71,199,.2);
+  border-radius: 12px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  cursor: pointer;
+  color: var(--ink);
+}
+.pad-key:active { transform: translateY(1px); background: var(--bg-lavender); }
+
+/* ============= Read-aloud chip ============= */
+.audio-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.7);
+  border: 1px solid rgba(255,255,255,.85);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.audio-chip:active { transform: scale(.96); }
+.audio-chip.on { color: var(--q-purple); background: var(--bg-lavender); }
+
+/* ============= Bottom nav ============= */
+.sq-nav {
+  position: sticky;
+  bottom: 0;
+  margin: 0 -18px;
+  padding: 10px 16px 16px;
+  display: flex; justify-content: space-around;
+  background: linear-gradient(180deg, rgba(255,245,228,0) 0%, rgba(255,245,228,.95) 30%);
+  z-index: 3;
+}
+.nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 14px;
+  border-radius: 16px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-3);
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 11px;
+  min-width: 64px;
+}
+.nav-btn.active { color: var(--q-purple); background: rgba(255,255,255,.7); }
+.nav-btn .ic { font-size: 20px; }
+
+</style>
+
+<style>
+  /* Backdrop behind the phone */
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: "Nunito", system-ui, sans-serif;
+    color: #2A1A4A;
+    background:
+      radial-gradient(ellipse 40% 30% at 20% 10%, #E8DCFB 0%, transparent 60%),
+      radial-gradient(ellipse 38% 28% at 80% 18%, #FFE3CC 0%, transparent 60%),
+      radial-gradient(ellipse 42% 32% at 88% 78%, #D8F2E2 0%, transparent 60%),
+      radial-gradient(ellipse 38% 28% at 12% 80%, #FFDFEB 0%, transparent 60%),
+      #FFF5E4;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    overflow-x: hidden;
+  }
+
+  /* Floating math symbol decorations behind the phone */
+  .backdrop-deco {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-weight: 500;
+  }
+  .backdrop-deco span {
+    position: absolute;
+    font-size: 96px;
+    opacity: .18;
+    animation: floatY 16s ease-in-out infinite;
+  }
+  .backdrop-deco .d1 { top: 8%;  left: 6%;  color: #7B47C7; animation-delay: 0s; }
+  .backdrop-deco .d2 { top: 18%; right: 8%; color: #D44C97; animation-delay: -4s; font-size: 78px;}
+  .backdrop-deco .d3 { bottom: 14%; left: 8%; color: #A876E8; animation-delay: -8s; font-size: 86px;}
+  .backdrop-deco .d4 { bottom: 8%;  right: 6%; color: #D44C97; animation-delay: -12s; font-size: 90px;}
+  .backdrop-deco .d5 { top: 50%; left: 4%;  color: #7B47C7; animation-delay: -6s; font-size: 64px;}
+  .backdrop-deco .d6 { top: 48%; right: 5%; color: #A876E8; animation-delay: -10s; font-size: 70px;}
+
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0) rotate(-6deg); }
+    50%      { transform: translateY(-20px) rotate(6deg); }
+  }
+
+  #root { position: relative; z-index: 1; }
+
+  /* Phone wrapper centers + scales */
+  .phone-stage {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+
+  /* On narrow viewports, drop the phone bezel and fill the screen */
+  @media (max-width: 500px) {
+    body { padding: 0; }
+    .phone-stage { width: 100%; gap: 0; }
+    .ios-stage-strip { display: none; }
+  }
+
+  .stage-strip {
+    display: flex; gap: 10px;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 700;
+    color: #5B4A82;
+    font-size: 13px;
+    align-items: center;
+  }
+  .stage-strip .mark {
+    width: 30px; height: 30px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #A876E8, #D44C97);
+    display: grid; place-items: center;
+    color: white; font-size: 15px; font-weight: 800;
+  }
+  .stage-strip .pill {
+    background: rgba(255,255,255,.6);
+    border: 1px solid rgba(255,255,255,.8);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    color: #5B4A82;
+  }
+
+  /* Hide scrollbar inside the phone */
+  .ios-device-inner::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<template id="__bundler_thumbnail" data-bg-color="#FFF5E4">
+  <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="qb" cx="40%" cy="35%" r="75%">
+        <stop offset="0%" stop-color="#A876E8" />
+        <stop offset="55%" stop-color="#7B47C7" />
+        <stop offset="100%" stop-color="#D44C97" />
+      </radialGradient>
+    </defs>
+    <rect width="600" height="600" fill="#FFF5E4" />
+    <circle cx="120" cy="140" r="160" fill="#E8DCFB" opacity="0.7" />
+    <circle cx="490" cy="470" r="180" fill="#FFDFEB" opacity="0.7" />
+    <text x="80" y="500" font-family="serif" font-style="italic" font-size="120" fill="#7B47C7" opacity="0.18">√</text>
+    <text x="430" y="180" font-family="serif" font-style="italic" font-size="100" fill="#D44C97" opacity="0.18">π</text>
+    <circle cx="300" cy="320" r="115" fill="url(#qb)" stroke="#1B1233" stroke-width="4" />
+    <circle cx="285" cy="310" r="7" fill="#1B1233" />
+    <circle cx="318" cy="310" r="7" fill="#1B1233" />
+    <path d="M 275 340 Q 300 358 325 340" stroke="#1B1233" stroke-width="4" fill="none" stroke-linecap="round" />
+    <ellipse cx="270" cy="335" rx="10" ry="5" fill="#FF8DC7" opacity="0.6" />
+    <ellipse cx="330" cy="335" rx="10" ry="5" fill="#FF8DC7" opacity="0.6" />
+    <line x1="278" y1="208" x2="270" y2="185" stroke="#1B1233" stroke-width="3" stroke-linecap="round" />
+    <line x1="322" y1="208" x2="330" y2="185" stroke="#1B1233" stroke-width="3" stroke-linecap="round" />
+    <circle cx="270" cy="183" r="6" fill="#FFD93D" stroke="#1B1233" stroke-width="2" />
+    <circle cx="330" cy="183" r="6" fill="#FFD93D" stroke="#1B1233" stroke-width="2" />
+    <text x="300" y="480" text-anchor="middle" font-family="Quicksand, sans-serif" font-size="36" font-weight="700" fill="#2A1A4A">Math Quest</text>
+  </svg>
+</template>
+
+<div class="backdrop-deco" aria-hidden="true">
+  <span class="d1">∑</span>
+  <span class="d2">π</span>
+  <span class="d3">∫</span>
+  <span class="d4">√</span>
+  <span class="d5">∞</span>
+  <span class="d6">∇</span>
+</div>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+
+<script type="text/babel" data-presets="react">
+/* ===== sq/ios-frame.jsx ===== */
+
+// iOS.jsx — Simplified iOS 26 (Liquid Glass) device frame
+// Based on the iOS 26 UI Kit + Figma status bar spec. No assets, no deps.
+// Exports: IOSDevice, IOSStatusBar, IOSNavBar, IOSGlassPill, IOSList, IOSListRow, IOSKeyboard
+
+// ─────────────────────────────────────────────────────────────
+// Status bar
+// ─────────────────────────────────────────────────────────────
+function IOSStatusBar({ dark = false, time = '9:41' }) {
+  const c = dark ? '#fff' : '#000';
+  return (
+    <div style={{
+      display: 'flex', gap: 154, alignItems: 'center', justifyContent: 'center',
+      padding: '21px 24px 19px', boxSizing: 'border-box',
+      position: 'relative', zIndex: 20, width: '100%',
+    }}>
+      <div style={{ flex: 1, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 1.5 }}>
+        <span style={{
+          fontFamily: '-apple-system, "SF Pro", system-ui', fontWeight: 590,
+          fontSize: 17, lineHeight: '22px', color: c,
+        }}>{time}</span>
+      </div>
+      <div style={{ flex: 1, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, paddingTop: 1, paddingRight: 1 }}>
+        <svg width="19" height="12" viewBox="0 0 19 12">
+          <rect x="0" y="7.5" width="3.2" height="4.5" rx="0.7" fill={c}/>
+          <rect x="4.8" y="5" width="3.2" height="7" rx="0.7" fill={c}/>
+          <rect x="9.6" y="2.5" width="3.2" height="9.5" rx="0.7" fill={c}/>
+          <rect x="14.4" y="0" width="3.2" height="12" rx="0.7" fill={c}/>
+        </svg>
+        <svg width="17" height="12" viewBox="0 0 17 12">
+          <path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill={c}/>
+          <path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill={c}/>
+          <circle cx="8.5" cy="10.5" r="1.5" fill={c}/>
+        </svg>
+        <svg width="27" height="13" viewBox="0 0 27 13">
+          <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke={c} strokeOpacity="0.35" fill="none"/>
+          <rect x="2" y="2" width="20" height="9" rx="2" fill={c}/>
+          <path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill={c} fillOpacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Liquid glass pill — blur + tint + shine
+// ─────────────────────────────────────────────────────────────
+function IOSGlassPill({ children, dark = false, style = {} }) {
+  return (
+    <div style={{
+      height: 44, minWidth: 44, borderRadius: 9999,
+      position: 'relative', overflow: 'hidden',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      boxShadow: dark
+        ? '0 2px 6px rgba(0,0,0,0.35), 0 6px 16px rgba(0,0,0,0.2)'
+        : '0 1px 3px rgba(0,0,0,0.07), 0 3px 10px rgba(0,0,0,0.06)',
+      ...style,
+    }}>
+      {/* blur + tint */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 9999,
+        backdropFilter: 'blur(12px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+        background: dark ? 'rgba(120,120,128,0.28)' : 'rgba(255,255,255,0.5)',
+      }} />
+      {/* shine */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 9999,
+        boxShadow: dark
+          ? 'inset 1.5px 1.5px 1px rgba(255,255,255,0.15), inset -1px -1px 1px rgba(255,255,255,0.08)'
+          : 'inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4)',
+        border: dark ? '0.5px solid rgba(255,255,255,0.15)' : '0.5px solid rgba(0,0,0,0.06)',
+      }} />
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', padding: '0 4px' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Navigation bar — glass pills + large title
+// ─────────────────────────────────────────────────────────────
+function IOSNavBar({ title = 'Title', dark = false, trailingIcon = true }) {
+  const muted = dark ? 'rgba(255,255,255,0.6)' : '#404040';
+  const text = dark ? '#fff' : '#000';
+  const pillIcon = (content) => (
+    <IOSGlassPill dark={dark}>
+      <div style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {content}
+      </div>
+    </IOSGlassPill>
+  );
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', gap: 10,
+      paddingTop: 62, paddingBottom: 10, position: 'relative', zIndex: 5,
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 16px',
+      }}>
+        {/* back chevron */}
+        {pillIcon(
+          <svg width="12" height="20" viewBox="0 0 12 20" fill="none" style={{ marginLeft: -1 }}>
+            <path d="M10 2L2 10l8 8" stroke={muted} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        )}
+        {/* trailing ellipsis */}
+        {trailingIcon && pillIcon(
+          <svg width="22" height="6" viewBox="0 0 22 6">
+            <circle cx="3" cy="3" r="2.5" fill={muted}/>
+            <circle cx="11" cy="3" r="2.5" fill={muted}/>
+            <circle cx="19" cy="3" r="2.5" fill={muted}/>
+          </svg>
+        )}
+      </div>
+      {/* large title */}
+      <div style={{
+        padding: '0 16px',
+        fontFamily: '-apple-system, system-ui',
+        fontSize: 34, fontWeight: 700, lineHeight: '41px',
+        color: text, letterSpacing: 0.4,
+      }}>{title}</div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Grouped list (inset card, r:26) + row (52px)
+// ─────────────────────────────────────────────────────────────
+function IOSListRow({ title, detail, icon, chevron = true, isLast = false, dark = false }) {
+  const text = dark ? '#fff' : '#000';
+  const sec = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const ter = dark ? 'rgba(235,235,245,0.3)' : 'rgba(60,60,67,0.3)';
+  const sep = dark ? 'rgba(84,84,88,0.65)' : 'rgba(60,60,67,0.12)';
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', minHeight: 52,
+      padding: '0 16px', position: 'relative',
+      fontFamily: '-apple-system, system-ui', fontSize: 17,
+      letterSpacing: -0.43,
+    }}>
+      {icon && (
+        <div style={{
+          width: 30, height: 30, borderRadius: 7, background: icon,
+          marginRight: 12, flexShrink: 0,
+        }} />
+      )}
+      <div style={{ flex: 1, color: text }}>{title}</div>
+      {detail && <span style={{ color: sec, marginRight: 6 }}>{detail}</span>}
+      {chevron && (
+        <svg width="8" height="14" viewBox="0 0 8 14" style={{ flexShrink: 0 }}>
+          <path d="M1 1l6 6-6 6" stroke={ter} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )}
+      {!isLast && (
+        <div style={{
+          position: 'absolute', bottom: 0, right: 0,
+          left: icon ? 58 : 16, height: 0.5, background: sep,
+        }} />
+      )}
+    </div>
+  );
+}
+
+function IOSList({ header, children, dark = false }) {
+  const hc = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const bg = dark ? '#1C1C1E' : '#fff';
+  return (
+    <div>
+      {header && (
+        <div style={{
+          fontFamily: '-apple-system, system-ui', fontSize: 13,
+          color: hc, textTransform: 'uppercase',
+          padding: '8px 36px 6px', letterSpacing: -0.08,
+        }}>{header}</div>
+      )}
+      <div style={{
+        background: bg, borderRadius: 26,
+        margin: '0 16px', overflow: 'hidden',
+      }}>{children}</div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Device frame
+// ─────────────────────────────────────────────────────────────
+function IOSDevice({
+  children, width = 402, height = 874, dark = false,
+  title, keyboard = false,
+}) {
+  return (
+    <div style={{
+      width, height, borderRadius: 48, overflow: 'hidden',
+      position: 'relative', background: dark ? '#000' : '#F2F2F7',
+      boxShadow: '0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)',
+      fontFamily: '-apple-system, system-ui, sans-serif',
+      WebkitFontSmoothing: 'antialiased',
+    }}>
+      {/* dynamic island */}
+      <div style={{
+        position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)',
+        width: 126, height: 37, borderRadius: 24, background: '#000', zIndex: 50,
+      }} />
+      {/* status bar (absolute) */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+        <IOSStatusBar dark={dark} />
+      </div>
+      {/* nav + content */}
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        {title !== undefined && <IOSNavBar title={title} dark={dark} />}
+        <div style={{ flex: 1, overflow: 'auto' }}>{children}</div>
+        {keyboard && <IOSKeyboard dark={dark} />}
+      </div>
+      {/* home indicator — always on top */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 60,
+        height: 34, display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
+        paddingBottom: 8, pointerEvents: 'none',
+      }}>
+        <div style={{
+          width: 139, height: 5, borderRadius: 100,
+          background: dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.25)',
+        }} />
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Keyboard — iOS 26 liquid glass
+// ─────────────────────────────────────────────────────────────
+function IOSKeyboard({ dark = false }) {
+  const glyph = dark ? 'rgba(255,255,255,0.7)' : '#595959';
+  const sugg = dark ? 'rgba(255,255,255,0.6)' : '#333';
+  const keyBg = dark ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.85)';
+
+  // special-key icons
+  const icons = {
+    shift: <svg width="19" height="17" viewBox="0 0 19 17"><path d="M9.5 1L1 9.5h4.5V16h8V9.5H18L9.5 1z" fill={glyph}/></svg>,
+    del: <svg width="23" height="17" viewBox="0 0 23 17"><path d="M7 1h13a2 2 0 012 2v11a2 2 0 01-2 2H7l-6-7.5L7 1z" fill="none" stroke={glyph} strokeWidth="1.6" strokeLinejoin="round"/><path d="M10 5l7 7M17 5l-7 7" stroke={glyph} strokeWidth="1.6" strokeLinecap="round"/></svg>,
+    ret: <svg width="20" height="14" viewBox="0 0 20 14"><path d="M18 1v6H4m0 0l4-4M4 7l4 4" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  };
+
+  const key = (content, { w, flex, ret, fs = 25, k } = {}) => (
+    <div key={k} style={{
+      height: 42, borderRadius: 8.5,
+      flex: flex ? 1 : undefined, width: w, minWidth: 0,
+      background: ret ? '#08f' : keyBg,
+      boxShadow: '0 1px 0 rgba(0,0,0,0.075)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: '-apple-system, "SF Compact", system-ui',
+      fontSize: fs, fontWeight: 458, color: ret ? '#fff' : glyph,
+    }}>{content}</div>
+  );
+
+  const row = (keys, pad = 0) => (
+    <div style={{ display: 'flex', gap: 6.5, justifyContent: 'center', padding: `0 ${pad}px` }}>
+      {keys.map(l => key(l, { flex: true, k: l }))}
+    </div>
+  );
+
+  return (
+    <div style={{
+      position: 'relative', zIndex: 15, borderRadius: 27, overflow: 'hidden',
+      padding: '11px 0 2px',
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      boxShadow: dark
+        ? '0 -2px 20px rgba(0,0,0,0.09)'
+        : '0 -1px 6px rgba(0,0,0,0.018), 0 -3px 20px rgba(0,0,0,0.012)',
+    }}>
+      {/* liquid glass bg — same recipe as nav pills */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 27,
+        backdropFilter: 'blur(12px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+        background: dark ? 'rgba(120,120,128,0.14)' : 'rgba(255,255,255,0.25)',
+      }} />
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 27,
+        boxShadow: dark
+          ? 'inset 1.5px 1.5px 1px rgba(255,255,255,0.15)'
+          : 'inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4)',
+        border: dark ? '0.5px solid rgba(255,255,255,0.15)' : '0.5px solid rgba(0,0,0,0.06)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* autocorrect bar */}
+      <div style={{
+        display: 'flex', gap: 20, alignItems: 'center',
+        padding: '8px 22px 13px', width: '100%', boxSizing: 'border-box',
+        position: 'relative',
+      }}>
+        {['"The"', 'the', 'to'].map((w, i) => (
+          <React.Fragment key={i}>
+            {i > 0 && <div style={{ width: 1, height: 25, background: '#ccc', opacity: 0.3 }} />}
+            <div style={{
+              flex: 1, textAlign: 'center',
+              fontFamily: '-apple-system, system-ui', fontSize: 17,
+              color: sugg, letterSpacing: -0.43, lineHeight: '22px',
+            }}>{w}</div>
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* key layout */}
+      <div style={{
+        display: 'flex', flexDirection: 'column', gap: 13,
+        padding: '0 6.5px', width: '100%', boxSizing: 'border-box',
+        position: 'relative',
+      }}>
+        {row(['q','w','e','r','t','y','u','i','o','p'])}
+        {row(['a','s','d','f','g','h','j','k','l'], 20)}
+        <div style={{ display: 'flex', gap: 14.25, alignItems: 'center' }}>
+          {key(icons.shift, { w: 45, k: 'shift' })}
+          <div style={{ display: 'flex', gap: 6.5, flex: 1 }}>
+            {['z','x','c','v','b','n','m'].map(l => key(l, { flex: true, k: l }))}
+          </div>
+          {key(icons.del, { w: 45, k: 'del' })}
+        </div>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {key('ABC', { w: 92.25, fs: 18, k: 'abc' })}
+          {key('', { flex: true, k: 'space' })}
+          {key(icons.ret, { w: 92.25, ret: true, k: 'ret' })}
+        </div>
+      </div>
+
+      {/* bottom spacer (emoji+mic area, icons omitted) */}
+      <div style={{ height: 56, width: '100%', position: 'relative' }} />
+    </div>
+  );
+}
+
+Object.assign(window, {
+  IOSDevice, IOSStatusBar, IOSNavBar, IOSGlassPill, IOSList, IOSListRow, IOSKeyboard,
+});
+
+</script>
+
+<script type="text/babel" data-presets="react">
+/* ===== sq/quint.jsx ===== */
+/* global React */
+// =====================================================================
+// Quint — the Math Quest mascot
+// One SVG, four moods. Smooth purple→magenta gradient orb, thin antennae
+// with yellow dots, soft blush, kawaii eyes. Idle bob + pulse on mood
+// change. Reference: the user-provided expression sheet.
+// =====================================================================
+
+const QUINT_MOODS = {
+  encouraging: { mouth: "smile", eyes: "calm", extras: [],         tilt: 0 },
+  excited:     { mouth: "open",  eyes: "sparkle", extras: ["sparkles"], tilt: -2 },
+  thinking:    { mouth: "smirk", eyes: "calm", extras: ["question"], tilt: 4 },
+  celebrating: { mouth: "open",  eyes: "happy", extras: ["confetti", "arms"], tilt: 0 },
+};
+
+function Quint({ mood = "encouraging", size = 120, idle = true }) {
+  const m = QUINT_MOODS[mood] || QUINT_MOODS.encouraging;
+  // Pulse key so transitions retrigger when mood swaps
+  const [pulseKey, setPulseKey] = React.useState(0);
+  const prevMood = React.useRef(mood);
+  React.useEffect(() => {
+    if (prevMood.current !== mood) {
+      setPulseKey(k => k + 1);
+      prevMood.current = mood;
+    }
+  }, [mood]);
+
+  return (
+    <div className={`quint-wrap ${idle ? 'idle' : ''}`} style={{ width: size, height: size }}>
+      <svg
+        key={pulseKey}
+        className="quint-svg"
+        viewBox="0 0 200 200"
+        width={size}
+        height={size}
+        style={{ transform: `rotate(${m.tilt}deg)` }}
+      >
+        <defs>
+          {/* Body gradient — purple top → magenta bottom, matching reference */}
+          <radialGradient id="quintBody" cx="40%" cy="35%" r="75%">
+            <stop offset="0%"  stopColor="#A876E8" />
+            <stop offset="55%" stopColor="#7B47C7" />
+            <stop offset="100%" stopColor="#D44C97" />
+          </radialGradient>
+          <radialGradient id="quintShine" cx="30%" cy="22%" r="22%">
+            <stop offset="0%" stopColor="rgba(255,255,255,.85)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          </radialGradient>
+          <radialGradient id="quintShadow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(80,40,120,.25)" />
+            <stop offset="100%" stopColor="rgba(80,40,120,0)" />
+          </radialGradient>
+        </defs>
+
+        {/* Soft ground shadow */}
+        <ellipse cx="100" cy="180" rx="48" ry="7" fill="url(#quintShadow)" />
+
+        {/* Antennae */}
+        <g stroke="#1B1233" strokeWidth="2.5" strokeLinecap="round" fill="none">
+          <path d="M 82 38 Q 78 22 75 18" />
+          <path d="M 118 38 Q 122 22 125 18" />
+        </g>
+        <circle cx="75" cy="18"  r="4.5" fill="#FFD93D" stroke="#1B1233" strokeWidth="1.5" />
+        <circle cx="125" cy="18" r="4.5" fill="#FFD93D" stroke="#1B1233" strokeWidth="1.5" />
+
+        {/* Body */}
+        <circle cx="100" cy="105" r="60" fill="url(#quintBody)" stroke="#1B1233" strokeWidth="2.5" />
+        {/* Shine */}
+        <ellipse cx="80" cy="80" rx="22" ry="14" fill="url(#quintShine)" />
+
+        {/* Blush */}
+        <ellipse cx="70" cy="118"  rx="9" ry="5" fill="#FF8DC7" opacity=".55" />
+        <ellipse cx="130" cy="118" rx="9" ry="5" fill="#FF8DC7" opacity=".55" />
+
+        {/* Eyes */}
+        <QuintEyes kind={m.eyes} />
+        {/* Mouth */}
+        <QuintMouth kind={m.mouth} />
+
+        {/* Arms (celebrating) */}
+        {m.extras.includes("arms") && (
+          <g fill="#7B47C7" stroke="#1B1233" strokeWidth="2" strokeLinecap="round">
+            <g className="quint-arm-l">
+              <ellipse cx="42" cy="92" rx="9" ry="11" />
+            </g>
+            <g className="quint-arm-r">
+              <ellipse cx="158" cy="92" rx="9" ry="11" />
+            </g>
+          </g>
+        )}
+
+        {/* Sparkles (excited) */}
+        {m.extras.includes("sparkles") && (
+          <g fill="#FFD93D" stroke="#1B1233" strokeWidth="1.2">
+            <Sparkle x={155} y={55} size={6} delay="0s" />
+            <Sparkle x={45} y={70} size={4} delay=".25s" />
+            <Sparkle x={170} y={110} size={5} delay=".5s" />
+            <Sparkle x={35} y={140} size={4} delay=".15s" />
+          </g>
+        )}
+
+        {/* Question bubble (thinking) */}
+        {m.extras.includes("question") && (
+          <g className="quint-thought">
+            <circle cx="160" cy="50" r="14" fill="white" stroke="#1B1233" strokeWidth="2" />
+            <circle cx="148" cy="65" r="4" fill="white" stroke="#1B1233" strokeWidth="1.5" />
+            <text x="160" y="56" textAnchor="middle" fontSize="18" fontWeight="800" fill="#7B47C7" fontFamily="ui-rounded, system-ui, sans-serif">?</text>
+          </g>
+        )}
+
+        {/* Confetti (celebrating) */}
+        {m.extras.includes("confetti") && (
+          <g>
+            <Confetti x={55}  y={35} color="#FFD93D" delay="0s" />
+            <Confetti x={145} y={28} color="#FF8DC7" delay=".1s" />
+            <Confetti x={170} y={60} color="#7BCFB0" delay=".2s" />
+            <Confetti x={30}  y={55} color="#A876E8" delay=".3s" />
+            <Confetti x={100} y={20} color="#FFA15C" delay=".15s" />
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+}
+
+// ── Eyes ───────────────────────────────────────────────────────────────────
+function QuintEyes({ kind }) {
+  if (kind === "sparkle") {
+    return (
+      <g>
+        {[78, 122].map((cx, i) => (
+          <g key={i}>
+            <ellipse cx={cx} cy="100" rx="9" ry="11" fill="#1B1233" />
+            <circle cx={cx - 2} cy="96" r="3" fill="white" />
+            <circle cx={cx + 4} cy="103" r="1.5" fill="white" />
+          </g>
+        ))}
+      </g>
+    );
+  }
+  if (kind === "happy") {
+    return (
+      <g fill="none" stroke="#1B1233" strokeWidth="3" strokeLinecap="round">
+        <path d="M 70 100 Q 78 92 86 100" />
+        <path d="M 114 100 Q 122 92 130 100" />
+      </g>
+    );
+  }
+  // calm — small dot eyes
+  return (
+    <g fill="#1B1233">
+      <circle cx="78" cy="100" r="4" />
+      <circle cx="122" cy="100" r="4" />
+    </g>
+  );
+}
+
+// ── Mouth ──────────────────────────────────────────────────────────────────
+function QuintMouth({ kind }) {
+  if (kind === "open") {
+    return (
+      <path d="M 88 128 Q 100 142 112 128 Q 100 134 88 128 Z"
+            fill="#5C2A6E" stroke="#1B1233" strokeWidth="2" strokeLinejoin="round" />
+    );
+  }
+  if (kind === "smirk") {
+    return (
+      <path d="M 88 130 Q 96 134 104 130" fill="none"
+            stroke="#1B1233" strokeWidth="2.5" strokeLinecap="round" />
+    );
+  }
+  // smile
+  return (
+    <path d="M 86 128 Q 100 140 114 128" fill="none"
+          stroke="#1B1233" strokeWidth="2.5" strokeLinecap="round" />
+  );
+}
+
+// ── Bits ───────────────────────────────────────────────────────────────────
+function Sparkle({ x, y, size, delay }) {
+  const s = size;
+  return (
+    <g className="quint-sparkle" style={{ animationDelay: delay, transformOrigin: `${x}px ${y}px` }}>
+      <path d={`M ${x} ${y - s} L ${x + s * .4} ${y - s * .4} L ${x + s} ${y} L ${x + s * .4} ${y + s * .4} L ${x} ${y + s} L ${x - s * .4} ${y + s * .4} L ${x - s} ${y} L ${x - s * .4} ${y - s * .4} Z`} />
+    </g>
+  );
+}
+
+function Confetti({ x, y, color, delay }) {
+  return (
+    <rect
+      className="quint-confetti"
+      x={x} y={y} width="6" height="9" rx="1.5"
+      fill={color} stroke="#1B1233" strokeWidth="1"
+      style={{ animationDelay: delay, transformOrigin: `${x + 3}px ${y + 4.5}px` }}
+    />
+  );
+}
+
+window.Quint = Quint;
+
+</script>
+
+<script type="text/babel" data-presets="react">
+/* ===== sq/manipulative.jsx ===== */
+/* global React, Quint, katex */
+// =====================================================================
+// SqrtManipulative — u² = k slider widget
+// Parabola y = u² overlaid with horizontal line y = k.
+// Intersections drop onto a real number line below.
+// When k goes negative, solutions migrate to a tiny complex plane and
+// Quint changes mood from encouraging → excited.
+// =====================================================================
+
+function SqrtManipulative() {
+  const [k, setK] = React.useState(16);
+  const lastSign = React.useRef(Math.sign(k));
+  const [signFlash, setSignFlash] = React.useState(null); // 'imaginary' | 'real' | null
+
+  React.useEffect(() => {
+    const s = Math.sign(k);
+    if (s !== lastSign.current && s !== 0) {
+      setSignFlash(s < 0 ? 'imaginary' : 'real');
+      const t = setTimeout(() => setSignFlash(null), 2200);
+      lastSign.current = s;
+      return () => clearTimeout(t);
+    }
+  }, [k]);
+
+  const positive = k > 0;
+  const zero = k === 0;
+  const root = Math.sqrt(Math.abs(k));
+  const rootStr = root.toFixed(root % 1 === 0 ? 0 : 2);
+
+  const W = 320, H = 200;
+  const cx = W / 2;
+  const yScale = 6;         // px per unit on y
+  const xScale = 18;        // px per unit on x
+  const cy = 30;            // origin offset from top, so most of parabola visible
+  // Parabola points y = u² — clip to within the canvas
+  const parabolaPoints = [];
+  for (let u = -5; u <= 5; u += 0.1) {
+    const px = cx + u * xScale;
+    const py = cy + u * u * yScale * 0.3;
+    parabolaPoints.push(`${px},${py}`);
+  }
+  // k line y position (clamped)
+  const kY = cy + k * yScale * 0.3;
+  const kYClamped = Math.max(20, Math.min(H - 16, kY));
+  const showKLine = kY >= 0 && kY <= H - 8;
+
+  // Quint mood from k
+  const mood = signFlash === 'imaginary' ? 'excited'
+             : signFlash === 'real'      ? 'excited'
+             : zero                       ? 'thinking'
+             : 'encouraging';
+
+  return (
+    <div className="glass manip">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <div>
+          <div className="eyebrow">Play with it</div>
+          <h3 style={{ fontSize: 17 }}>Slide <TeX tex="k" inline /> — see what changes</h3>
+        </div>
+        <div style={{ transform: 'translateY(-4px)' }}>
+          <Quint mood={mood} size={64} />
+        </div>
+      </div>
+
+      {/* SVG canvas */}
+      <div className="manip-canvas">
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="parabolaG" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#7B47C7" />
+              <stop offset="100%" stopColor="#D44C97" />
+            </linearGradient>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+
+          {/* Grid */}
+          <g stroke="rgba(123,71,199,.12)" strokeWidth="1">
+            {[-3,-2,-1,1,2,3].map(i => (
+              <line key={`vg${i}`} x1={cx + i * xScale} y1="10" x2={cx + i * xScale} y2={H - 10} />
+            ))}
+          </g>
+          {/* Axes */}
+          <line x1="14" y1={cy} x2={W - 14} y2={cy} stroke="rgba(60,40,90,.4)" strokeWidth="1.2" />
+          <line x1={cx} y1="10"  x2={cx} y2={H - 10} stroke="rgba(60,40,90,.4)" strokeWidth="1.2" />
+
+          {/* Parabola y = u² */}
+          <polyline
+            points={parabolaPoints.join(' ')}
+            fill="none"
+            stroke="url(#parabolaG)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* y = k horizontal line */}
+          {showKLine && (
+            <g>
+              <line
+                x1="14" y1={kYClamped} x2={W - 14} y2={kYClamped}
+                stroke={positive ? '#4DBE94' : '#E89BB8'}
+                strokeWidth="2.5"
+                strokeDasharray="6 5"
+                opacity={positive ? 1 : 0.4}
+              />
+              <rect
+                x={W - 70} y={kYClamped - 11}
+                width="56" height="22" rx="11"
+                fill={positive ? '#4DBE94' : '#E89BB8'}
+              />
+              <text x={W - 42} y={kYClamped + 4} textAnchor="middle"
+                    fill="white" fontFamily="JetBrains Mono, monospace" fontSize="12" fontWeight="700">
+                y = {k}
+              </text>
+            </g>
+          )}
+
+          {/* Intersection markers (real roots) */}
+          {positive && (
+            <g filter="url(#glow)">
+              <circle cx={cx - root * xScale} cy={kYClamped} r="6" fill="#FFD93D" stroke="#1B1233" strokeWidth="2" />
+              <circle cx={cx + root * xScale} cy={kYClamped} r="6" fill="#FFD93D" stroke="#1B1233" strokeWidth="2" />
+            </g>
+          )}
+          {zero && (
+            <circle cx={cx} cy={cy} r="6" fill="#FFD93D" stroke="#1B1233" strokeWidth="2" filter="url(#glow)" />
+          )}
+
+          {/* Origin label */}
+          <text x={cx - 8} y={cy - 5} fontSize="10" fill="rgba(60,40,90,.5)" fontFamily="JetBrains Mono, monospace">0</text>
+        </svg>
+      </div>
+
+      {/* Solution readout */}
+      <div className="manip-readout">
+        <div className="eq">
+          {positive && <TeX tex={`u = \\pm\\sqrt{${k}} = \\pm ${rootStr}`} inline />}
+          {zero     && <TeX tex="u = 0 \\;(\\text{double root})" inline />}
+          {!positive && !zero && <TeX tex={`u = \\pm i\\sqrt{${-k}} = \\pm ${rootStr}i`} inline />}
+        </div>
+      </div>
+
+      {/* Number line / complex plane */}
+      <div style={{ marginTop: 10 }}>
+        {positive && <RealLine root={root} />}
+        {zero && <RealLine root={0} />}
+        {!positive && !zero && <ComplexPlane root={root} />}
+      </div>
+
+      {/* Slider */}
+      <input
+        className="k-slider"
+        type="range" min={-25} max={25} step={1}
+        value={k}
+        onChange={(e) => setK(Number(e.target.value))}
+      />
+      <div className="k-ticks">
+        <span>−25</span><span>−10</span><span>0</span><span>10</span><span>25</span>
+      </div>
+
+      {/* Quint speech reaction */}
+      {signFlash && (
+        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginTop: 12 }}>
+          <div style={{ transform: 'translateY(2px)' }}>
+            <Quint mood="excited" size={50} idle={false} />
+          </div>
+          <div className="bubble">
+            {signFlash === 'imaginary'
+              ? "Ooh — things just got imaginary! The parabola and the line don't touch anymore, so we slide into the complex plane."
+              : "Back to the real number line! Two friendly solutions, one positive, one negative."}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Real number line with the two roots dropping onto it ───────────────────
+function RealLine({ root }) {
+  const W = 300, H = 50;
+  const cx = W / 2;
+  const scale = 22;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H}>
+      <line x1="10" y1="28" x2={W - 10} y2="28" stroke="var(--ink-3)" strokeWidth="1.5" />
+      {[-4,-3,-2,-1,0,1,2,3,4].map(i => (
+        <g key={i}>
+          <line x1={cx + i * scale} y1="24" x2={cx + i * scale} y2="32" stroke="var(--ink-3)" strokeWidth="1" />
+          <text x={cx + i * scale} y="44" textAnchor="middle" fontSize="9.5" fontFamily="JetBrains Mono, monospace" fill="var(--ink-3)">{i}</text>
+        </g>
+      ))}
+      {root > 0 ? (
+        <>
+          <circle cx={cx - root * scale} cy="28" r="7" fill="#FFD93D" stroke="#1B1233" strokeWidth="2" />
+          <circle cx={cx + root * scale} cy="28" r="7" fill="#FFD93D" stroke="#1B1233" strokeWidth="2" />
+        </>
+      ) : (
+        <circle cx={cx} cy="28" r="7" fill="#FFD93D" stroke="#1B1233" strokeWidth="2" />
+      )}
+    </svg>
+  );
+}
+
+// ── Complex plane: 2D, roots show as ±i√|k| on imaginary axis ──────────────
+function ComplexPlane({ root }) {
+  const W = 220, H = 110;
+  const cx = W / 2, cy = H / 2;
+  const scale = 14;
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H}>
+        <defs>
+          <radialGradient id="cplx" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#E8DCFB" />
+            <stop offset="100%" stopColor="rgba(232,220,251,0)" />
+          </radialGradient>
+        </defs>
+        <rect x="0" y="0" width={W} height={H} fill="url(#cplx)" rx="12" />
+        {/* Axes */}
+        <line x1="10" y1={cy} x2={W - 10} y2={cy} stroke="var(--ink-3)" strokeWidth="1.2" />
+        <line x1={cx} y1="6"  x2={cx} y2={H - 6}  stroke="var(--ink-3)" strokeWidth="1.2" />
+        {/* Labels */}
+        <text x={W - 12} y={cy - 4} fontSize="9" fill="var(--ink-3)" fontFamily="JetBrains Mono, monospace" textAnchor="end">Re</text>
+        <text x={cx + 6} y="14" fontSize="9" fill="var(--ink-3)" fontFamily="JetBrains Mono, monospace">Im</text>
+        {/* Roots on imaginary axis */}
+        <circle cx={cx} cy={cy - root * scale} r="6.5" fill="#FFD93D" stroke="#1B1233" strokeWidth="2" />
+        <circle cx={cx} cy={cy + root * scale} r="6.5" fill="#FFD93D" stroke="#1B1233" strokeWidth="2" />
+        {/* Tiny arrows from origin */}
+        <line x1={cx} y1={cy} x2={cx} y2={cy - root * scale + 5} stroke="var(--q-magenta)" strokeWidth="1.5" strokeDasharray="3 2" />
+        <line x1={cx} y1={cy} x2={cx} y2={cy + root * scale - 5} stroke="var(--q-magenta)" strokeWidth="1.5" strokeDasharray="3 2" />
+      </svg>
+    </div>
+  );
+}
+
+// ── tiny KaTeX helper ──────────────────────────────────────────────────────
+function TeX({ tex, inline = false }) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (ref.current && window.katex) {
+      try {
+        window.katex.render(tex, ref.current, { displayMode: !inline, throwOnError: false });
+      } catch (e) { ref.current.textContent = tex; }
+    }
+  }, [tex, inline]);
+  return <span ref={ref} />;
+}
+
+window.SqrtManipulative = SqrtManipulative;
+window.SQMath = TeX;
+
+</script>
+
+<script type="text/babel" data-presets="react">
+/* ===== sq/why.jsx ===== */
+/* global React, Quint, SQMath */
+// =====================================================================
+// WhyDoesThisWork — 60-90s micro-lesson explaining WHY \sqrt{-k} = i\sqrt{k}.
+// Three parts:
+//   1. A short narrated animation (visual: -1 spinning to become i*i)
+//   2. A worked numerical example
+//   3. "Convince yourself" interactive — tap to compute i*i, 2i*3i, (8i)^2
+//      and watch the result poof in.
+// =====================================================================
+
+const CONVINCE = [
+  { a: "i \\times i", result: "-1",
+    why: "i is defined as \\sqrt{-1}\\;, so squaring it gives back the −1." },
+  { a: "2i \\times 3i", result: "-6",
+    why: "(2 \\cdot 3)(i \\cdot i) = 6 \\cdot (-1) = -6\\;. The i's collapse to −1." },
+  { a: "(8i)^2", result: "-64",
+    why: "8^2 \\cdot i^2 = 64 \\cdot (-1) = -64\\;. So \\sqrt{-64} = 8i\\;." },
+];
+
+function WhyDoesThisWork() {
+  const [open, setOpen] = React.useState(false);
+  const [revealed, setRevealed] = React.useState([false, false, false]);
+
+  const reveal = (i) => {
+    setRevealed(prev => prev.map((v, j) => j === i ? true : v));
+    try { window.playChime && window.playChime(true); } catch (e) {}
+  };
+
+  return (
+    <div>
+      <button className="why-toggle" onClick={() => setOpen(o => !o)}>
+        <span style={{ fontSize: 12 }}>{open ? '▾' : '▸'}</span>
+        <span>Why does this even work?</span>
+      </button>
+
+      {open && (
+        <div className="why-panel">
+          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10 }}>
+            <div style={{ flexShrink: 0 }}><Quint mood="encouraging" size={50} /></div>
+            <div className="bubble" style={{ background: 'white', maxWidth: '100%' }}>
+              <strong>Quick story:</strong> The square root of a negative number doesn't fit on the number line — so mathematicians built a new place for it called the <em>imaginary axis</em>. We just call <SQMath tex="\sqrt{-1}" inline /> by the letter <SQMath tex="i" inline />.
+            </div>
+          </div>
+
+          {/* Animated visual: −1 flipping into i*i */}
+          <FlipScene />
+
+          <h4 style={{ marginTop: 14 }}>Convince yourself — tap to compute</h4>
+          <div className="convince">
+            {CONVINCE.map((c, i) => (
+              <ConvinceButton key={i} item={c} revealed={revealed[i]} onClick={() => reveal(i)} />
+            ))}
+          </div>
+
+          {revealed.every(Boolean) && (
+            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginTop: 14 }}>
+              <Quint mood="excited" size={50} idle={false} />
+              <div className="bubble" style={{ background: 'white' }}>
+                See it? <SQMath tex="i" inline /> is the secret ingredient. Whenever you see <SQMath tex="\sqrt{\text{negative}}" inline />, pull the <SQMath tex="i" inline /> out front and the rest is just a regular square root.
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ConvinceButton({ item, revealed, onClick }) {
+  return (
+    <button className="convince-btn" onClick={revealed ? null : onClick}>
+      <span style={{ flex: 1 }}>
+        <SQMath tex={item.a} inline /> <span style={{ color: 'var(--ink-3)' }}>=</span>{' '}
+        {revealed ? (
+          <>
+            <span className="res"><SQMath tex={item.result} inline /></span>
+            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: 12, color: 'var(--ink-2)', marginTop: 4 }}>
+              <SQMath tex={`\\text{${item.why}}`} inline />
+            </div>
+          </>
+        ) : <span style={{ color: 'var(--ink-3)' }}>?</span>}
+      </span>
+      {!revealed && <span style={{ fontSize: 18 }}>✨</span>}
+    </button>
+  );
+}
+
+// Small animated SVG: shows −1 floating, then i appearing twice and multiplying back to −1
+function FlipScene() {
+  const [t, setT] = React.useState(0);
+  React.useEffect(() => {
+    const id = setInterval(() => setT(x => (x + 1) % 3), 1800);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div style={{
+      background: 'white',
+      borderRadius: 18,
+      padding: '14px 12px',
+      marginTop: 4,
+      border: '1px solid rgba(168,118,232,.2)',
+      textAlign: 'center',
+    }}>
+      <svg viewBox="0 0 280 80" width="100%" height="80">
+        <defs>
+          <linearGradient id="ig" x1="0" x2="1">
+            <stop offset="0%" stopColor="#7B47C7" />
+            <stop offset="100%" stopColor="#D44C97" />
+          </linearGradient>
+        </defs>
+        {/* Frame 0: -1 */}
+        <g style={{ opacity: t === 0 ? 1 : 0, transition: 'opacity .4s' }}>
+          <text x="140" y="50" textAnchor="middle" fontSize="36" fontWeight="800" fill="url(#ig)" fontFamily="Quicksand, sans-serif">−1</text>
+        </g>
+        {/* Frame 1: i × i */}
+        <g style={{ opacity: t === 1 ? 1 : 0, transition: 'opacity .4s' }}>
+          <text x="110" y="50" textAnchor="middle" fontSize="36" fontWeight="800" fill="url(#ig)" fontStyle="italic" fontFamily="Quicksand, sans-serif">i</text>
+          <text x="140" y="50" textAnchor="middle" fontSize="26" fontWeight="600" fill="var(--ink-2)" fontFamily="Quicksand, sans-serif">×</text>
+          <text x="170" y="50" textAnchor="middle" fontSize="36" fontWeight="800" fill="url(#ig)" fontStyle="italic" fontFamily="Quicksand, sans-serif">i</text>
+        </g>
+        {/* Frame 2: = -1 */}
+        <g style={{ opacity: t === 2 ? 1 : 0, transition: 'opacity .4s' }}>
+          <text x="100" y="50" textAnchor="middle" fontSize="32" fontWeight="800" fill="url(#ig)" fontStyle="italic" fontFamily="Quicksand, sans-serif">i</text>
+          <text x="124" y="38" textAnchor="middle" fontSize="20" fontWeight="800" fill="url(#ig)" fontFamily="Quicksand, sans-serif">2</text>
+          <text x="150" y="50" textAnchor="middle" fontSize="26" fontWeight="600" fill="var(--ink-2)" fontFamily="Quicksand, sans-serif">=</text>
+          <text x="190" y="50" textAnchor="middle" fontSize="36" fontWeight="800" fill="url(#ig)" fontFamily="Quicksand, sans-serif">−1</text>
+        </g>
+      </svg>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--ink-3)', letterSpacing: '.1em', fontWeight: 700 }}>
+        i × i = −1 · the magic move
+      </div>
+    </div>
+  );
+}
+
+window.WhyDoesThisWork = WhyDoesThisWork;
+
+</script>
+
+<script type="text/babel" data-presets="react">
+/* ===== sq/practice.jsx ===== */
+/* global React, Quint, SQMath */
+// =====================================================================
+// Practice — mistake-aware. Each wrong answer triggers a diagnostic
+// based on which slip the student actually made (forgot ±, sign error,
+// dropped i, etc.) — Quint never says "wrong", just "ooh, look here ↓"
+// and shows side-by-side correct vs. their attempt.
+// =====================================================================
+
+const PRACTICE = [
+  {
+    id: "p1",
+    prompt: "Solve. Type all answers, separated by commas.",
+    math: "(d + 7)^2 - 4 = 0",
+    accept: ["-5,-9", "-9,-5", "-5, -9", "-9, -5"],
+    correctMath: ["(d+7)^2 = 4", "d + 7 = \\pm 2", "d = -5,\\, -9"],
+    // Each slip detector: a regex/predicate + diag
+    slips: [
+      { match: (s) => /^[\s-]*5\s*$/.test(s) || /^[\s-]*9\s*$/.test(s),
+        title: "You're only writing one answer.",
+        diag: "When you square root, you get TWO solutions — one for +2 and one for −2. Don't lose the ±.",
+        theirWork: ["d + 7 = 2", "d = -5"], correctWork: ["d + 7 = \\pm 2", "d = -5\\;\\text{ OR }\\;d = -9"] },
+      { match: (s) => /^[\s]*5\s*,?\s*9\s*$/.test(s),
+        title: "Signs flipped.",
+        diag: "When you isolate \\;d\\;, you subtract 7 from both sides. \\;-7 \\pm 2\\; gives −5 and −9, not 5 and 9.",
+        theirWork: ["d + 7 = \\pm 2", "d = 7 \\pm 2 = 5, 9"], correctWork: ["d + 7 = \\pm 2", "d = -7 \\pm 2 = -5, -9"] },
+      { match: (s) => /^[\s]*2\s*,?\s*-2\s*$/.test(s),
+        title: "Stopped one step too soon.",
+        diag: "You found \\;d + 7 = \\pm 2\\;, but the question asks for \\;d\\;. Keep going!",
+        theirWork: ["d + 7 = \\pm 2", "d = 2,\\, -2"], correctWork: ["d + 7 = \\pm 2", "d = -7 \\pm 2 = -5,\\, -9"] },
+    ],
+    explain: "Add 4: \\((d+7)^2 = 4\\). Square root: \\(d + 7 = \\pm 2\\). Subtract 7: \\(d = -5, -9\\).",
+    hint: "First move: add 4 to both sides to isolate the square.",
+  },
+  {
+    id: "p2",
+    prompt: "Solve. Use \\(i\\) for \\(\\sqrt{-1}\\).",
+    math: "c^2 + 36 = 0",
+    accept: ["6i,-6i", "-6i,6i", "±6i", "+-6i", "6i, -6i", "-6i, 6i"],
+    correctMath: ["c^2 = -36", "c = \\pm 6i"],
+    slips: [
+      { match: (s) => /^[\s±+\-]*6\s*$/.test(s) || /^[\s]*6\s*,\s*-?6\s*$/.test(s),
+        title: "Forgot the imaginary part.",
+        diag: "\\;c^2 = -36\\;, so you need \\;\\sqrt{-36}\\; — that's where \\;i\\; sneaks in: \\;\\sqrt{-36} = 6i\\;.",
+        theirWork: ["c^2 = -36", "c = \\pm 6"], correctWork: ["c^2 = -36", "c = \\pm\\sqrt{-36} = \\pm 6i"] },
+      { match: (s) => /no\s*solution/i.test(s) || /none/i.test(s),
+        title: "There IS a solution — in the complex world.",
+        diag: "In real numbers, you're right — no real \\;c\\; squares to give −36. But with \\;i = \\sqrt{-1}\\;, we get \\;c = \\pm 6i\\;.",
+        theirWork: ["c^2 = -36", "(no real solution)"], correctWork: ["c^2 = -36", "c = \\pm 6i"] },
+    ],
+    explain: "Subtract 36: \\(c^2 = -36\\). Square root: \\(c = \\pm\\sqrt{-36} = \\pm 6i\\).",
+    hint: "Move 36 first → then square root → \\(\\sqrt{-1} = i\\).",
+  },
+];
+
+function PracticeDeck({ onDone }) {
+  const [idx, setIdx] = React.useState(0);
+  const [val, setVal] = React.useState("");
+  const [feedback, setFeedback] = React.useState(null); // null | { kind, slip? }
+  const [hintShown, setHintShown] = React.useState(false);
+  const [xp, setXp] = React.useState(0);
+  const item = PRACTICE[idx];
+
+  const normalize = (s) => s.replace(/\s/g, "").toLowerCase();
+
+  const submit = () => {
+    if (!val.trim()) return;
+    const v = normalize(val);
+    if (item.accept.map(normalize).includes(v)) {
+      setFeedback({ kind: 'correct' });
+      setXp(x => x + 15);
+      try { playChime(true); } catch (e) {}
+      return;
+    }
+    const slip = item.slips.find(s => s.match(val));
+    setFeedback({ kind: 'slip', slip: slip || {
+      title: "Almost there.",
+      diag: "Take another look — try working it step by step.",
+      theirWork: [val], correctWork: item.correctMath,
+    }});
+    try { playChime(false); } catch (e) {}
+  };
+
+  const next = () => {
+    if (idx < PRACTICE.length - 1) {
+      setIdx(idx + 1);
+      setVal(""); setFeedback(null); setHintShown(false);
+    } else {
+      onDone && onDone(xp);
+    }
+  };
+
+  const padKey = (k) => {
+    if (k === "⌫") setVal(v => v.slice(0, -1));
+    else setVal(v => v + k);
+  };
+
+  const mood = feedback?.kind === 'correct' ? 'celebrating'
+            : feedback?.kind === 'slip'    ? 'thinking'
+            : 'encouraging';
+
+  return (
+    <div className="glass solver-card">
+      {/* Progress */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+        <div style={{ flex: 1, height: 10, borderRadius: 999, background: 'rgba(255,255,255,.5)', overflow: 'hidden' }}>
+          <div style={{
+            height: '100%',
+            width: `${((idx + (feedback?.kind === 'correct' ? 1 : 0)) / PRACTICE.length) * 100}%`,
+            background: 'linear-gradient(90deg, #A876E8, #D44C97)',
+            borderRadius: 999,
+            transition: 'width .4s'
+          }} />
+        </div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700, color: 'var(--ink-3)' }}>
+          {idx + 1}/{PRACTICE.length}
+        </div>
+      </div>
+
+      <div className="eyebrow">Practice</div>
+      <h3 style={{ fontSize: 18, marginBottom: 4 }}>Your turn</h3>
+      <p style={{ fontSize: 14, marginBottom: 10 }}>{item.prompt}</p>
+
+      <div className="solver-prompt"><SQMath tex={item.math} /></div>
+
+      <input
+        className="q-input"
+        value={val}
+        onChange={(e) => setVal(e.target.value)}
+        onKeyDown={(e) => { if (e.key === 'Enter' && val.trim() && !feedback) submit(); }}
+        placeholder="type your answer"
+        disabled={feedback?.kind === 'correct'}
+        style={{ borderColor: feedback?.kind === 'correct' ? 'var(--good)' :
+                              feedback?.kind === 'slip'    ? 'var(--warn)' : undefined,
+                 background: feedback?.kind === 'correct' ? 'var(--good-soft)' :
+                             feedback?.kind === 'slip'    ? 'var(--warn-soft)' : undefined }}
+      />
+
+      <div className="math-pad">
+        {["±","√","i","(",")","-",",","⌫"].map(k => (
+          <button key={k} className="pad-key" disabled={feedback?.kind === 'correct'} onClick={() => padKey(k)}>{k}</button>
+        ))}
+      </div>
+
+      {/* Hint chip + Check answer */}
+      {!feedback && (
+        <div style={{ marginTop: 12, display: 'flex', gap: 8, alignItems: 'center' }}>
+          <button className="btn-pill" onClick={() => setHintShown(true)} disabled={hintShown}>
+            💡 Hint
+          </button>
+          <button className="btn btn-primary" style={{ flex: 1, minHeight: 44 }}
+                  disabled={!val.trim()} onClick={submit}>
+            Check answer
+          </button>
+        </div>
+      )}
+      {hintShown && !feedback && (
+        <div className="hint-card" style={{ marginTop: 10 }}>
+          <span className="h-tag">Hint</span>
+          <p><SQMath tex={`\\text{${item.hint}}`} inline /></p>
+        </div>
+      )}
+
+      {/* Feedback area */}
+      {feedback?.kind === 'correct' && (
+        <div style={{ marginTop: 16, display: 'flex', gap: 12, alignItems: 'center',
+                      padding: 16, borderRadius: 22, background: 'var(--good-soft)',
+                      border: '1.5px solid #B8E3CE' }}>
+          <Quint mood="celebrating" size={56} idle={false} />
+          <div style={{ flex: 1 }}>
+            <h4 style={{ fontSize: 15, color: '#1F7A56' }}>Hooray, you did it!</h4>
+            <p style={{ fontSize: 13.5, color: '#2D5A44', marginTop: 2 }}>+15 XP · streak safe</p>
+          </div>
+        </div>
+      )}
+
+      {feedback?.kind === 'slip' && (
+        <div className="diff-card">
+          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+            <Quint mood="thinking" size={50} idle={false} />
+            <div className="bubble" style={{ background: 'white' }}>
+              <strong style={{ color: '#B85284' }}>{feedback.slip.title}</strong><br />
+              <span style={{ fontWeight: 500, fontSize: 13.5 }}>
+                <SQMath tex={`\\text{${feedback.slip.diag}}`} inline />
+              </span>
+            </div>
+          </div>
+
+          <div className="diff-grid">
+            <div className="diff-col you">
+              <h4>YOUR PATH</h4>
+              {feedback.slip.theirWork.map((line, i) => (
+                <div key={i} className={`row ${i === feedback.slip.theirWork.length - 1 ? 'hl' : ''}`}>
+                  <SQMath tex={line} inline />
+                </div>
+              ))}
+            </div>
+            <div className="diff-col right">
+              <h4>BETTER PATH</h4>
+              {feedback.slip.correctWork.map((line, i) => (
+                <div key={i} className={`row ${i === feedback.slip.correctWork.length - 1 ? 'hl' : ''}`}>
+                  <SQMath tex={line} inline />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button className="btn btn-soft" style={{ width: '100%', marginTop: 6 }}
+                  onClick={() => { setFeedback(null); setVal(""); }}>
+            Try again →
+          </button>
+        </div>
+      )}
+
+      {/* Bottom action */}
+      {feedback?.kind === 'correct' && (
+        <button className="btn btn-primary" style={{ width: '100%', marginTop: 12 }} onClick={next}>
+          {idx < PRACTICE.length - 1 ? 'Next problem →' : 'Finish round ✓'}
+        </button>
+      )}
+    </div>
+  );
+}
+
+// Soft Tone-like chime via WebAudio (no library needed)
+let _audioCtx = null;
+function playChime(good) {
+  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const ctx = _audioCtx;
+  if (ctx.state === 'suspended') ctx.resume();
+  const now = ctx.currentTime;
+  const freqs = good ? [523.25, 659.25, 783.99] : [392.0, 466.16];
+  freqs.forEach((f, i) => {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, now + i * 0.06);
+    g.gain.exponentialRampToValueAtTime(0.18, now + i * 0.06 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.06 + 0.35);
+    o.connect(g).connect(ctx.destination);
+    o.start(now + i * 0.06);
+    o.stop(now + i * 0.06 + 0.4);
+  });
+}
+
+window.PracticeDeck = PracticeDeck;
+window.playChime = playChime;
+
+</script>
+
+<script type="text/babel" data-presets="react">
+/* ===== sq/solver.jsx ===== */
+/* global React, Quint, SQMath */
+// =====================================================================
+// AdaptiveSolver — walks the learner through a problem one step at a time.
+// For each step: a "what's the first move?" prompt → optional nudge →
+// optional hint → finally reveal the step (math + plain-English why).
+// Color-coded tokens pulse purple/pink when something new appears.
+// =====================================================================
+
+const PROBLEM = {
+  prompt: "q^2 - 169 = 0",
+  steps: [
+    {
+      q: "What's the first move?",
+      choices: [
+        { text: "Move \\;-169\\; to the other side", correct: true,
+          diag: null },
+        { text: "Take the square root immediately", correct: false,
+          diag: "Almost — we need the squared term alone first. Otherwise the \\sqrt\\, won't undo what we want." },
+        { text: "Factor as a difference of squares", correct: false,
+          diag: "That works too, but the Square Root Method is faster — let's isolate the squared term first." },
+      ],
+      nudge: "Notice the squared term isn't alone yet — what's next to it?",
+      hint:  "Add 169 to both sides. The \\;-169\\; will cancel on the left.",
+      reveal: {
+        why:  "Move the constant so the squared term is by itself.",
+        math: "q^2 = \\colorpur{169}",
+      },
+    },
+    {
+      q: "Now what?",
+      choices: [
+        { text: "Take the square root of both sides", correct: true, diag: null },
+        { text: "Divide by 2",     correct: false, diag: "Dividing by 2 won't undo the square. We need its inverse — the square root." },
+        { text: "Subtract 169",    correct: false, diag: "We just isolated the squared term — undoing it now would put us back where we started." },
+      ],
+      nudge: "What's the inverse of squaring something?",
+      hint:  "Take \\;\\sqrt{\\phantom{x}}\\; on both sides — and don't forget the ± !",
+      reveal: {
+        why:  "Square root both sides. Remember: a square equals a positive number → two solutions, ±.",
+        math: "q = \\colorpur{\\pm}\\sqrt{169}",
+      },
+    },
+    {
+      q: "Simplify:",
+      choices: [
+        { text: "q = \\pm 13", correct: true, diag: null },
+        { text: "q = 13",     correct: false, diag: "Don't lose the ± — squaring either +13 or −13 gives 169." },
+        { text: "q = \\pm \\sqrt{13}", correct: false, diag: "\\sqrt{169}\\; is 13 exactly, not \\sqrt{13}." },
+      ],
+      nudge: null,
+      hint:  "What's \\;\\sqrt{169}\\;?",
+      reveal: {
+        why:  "13 × 13 = 169, so √169 = 13. Keep the ±.",
+        math: "q = \\colorpur{\\pm 13}",
+      },
+    },
+  ],
+};
+
+function AdaptiveSolver({ onComplete }) {
+  const [stepIdx, setStepIdx] = React.useState(0);
+  // Per-step state: { picked, hintLevel (0=none,1=nudge,2=hint), revealed }
+  const [stepState, setStepState] = React.useState(() => PROBLEM.steps.map(() => ({ picked: null, wrongs: [], hintLevel: 0, revealed: false })));
+  const [strategy, setStrategy] = React.useState("");
+  const [strategyFeedback, setStrategyFeedback] = React.useState(null);
+  const [strategyLoading, setStrategyLoading] = React.useState(false);
+
+  const step = PROBLEM.steps[stepIdx];
+  const st = stepState[stepIdx];
+  const allDone = stepState.every(s => s.revealed);
+
+  const updateStep = (patch) => {
+    setStepState(prev => prev.map((s, i) => i === stepIdx ? { ...s, ...patch } : s));
+  };
+
+  const pick = (idx) => {
+    const c = step.choices[idx];
+    if (c.correct) {
+      updateStep({ picked: idx, revealed: true });
+    } else {
+      updateStep({ picked: idx, wrongs: [...st.wrongs, idx] });
+    }
+  };
+
+  const showHint = () => {
+    if (st.hintLevel < 2) updateStep({ hintLevel: st.hintLevel + 1 });
+    else updateStep({ revealed: true });
+  };
+
+  const nextStep = () => {
+    if (stepIdx < PROBLEM.steps.length - 1) setStepIdx(stepIdx + 1);
+  };
+
+  // Quint mood: thinking if user struggling, excited on correct, encouraging otherwise
+  let mood = 'encouraging';
+  if (st.revealed) mood = 'excited';
+  else if (st.wrongs.length > 0 || st.hintLevel > 0) mood = 'thinking';
+
+  const submitStrategy = async () => {
+    if (!strategy.trim()) return;
+    setStrategyLoading(true);
+    try {
+      const text = await window.claude.complete({
+        messages: [{
+          role: 'user',
+          content: `You are Quint, a warm, playful math mascot who never says anyone is wrong. A student just solved q² − 169 = 0 using the Square Root Method. They described the strategy in their own words:
+
+"${strategy}"
+
+Reply in 2 short, encouraging sentences. Acknowledge what they got right specifically, then gently add one tiny detail if they missed something (don't repeat their whole answer back). Be warm, lowercase, conversational. No exclamation marks before encouragement.`,
+        }],
+      });
+      setStrategyFeedback(text.trim());
+    } catch (e) {
+      setStrategyFeedback("Love it — you nailed the big idea: isolate the squared term, square root both sides, and keep the ±. That's the whole method right there.");
+    }
+    setStrategyLoading(false);
+  };
+
+  return (
+    <div className="glass solver-card">
+      <div className="eyebrow">Worked example</div>
+      <h3 style={{ fontSize: 18, marginBottom: 12 }}>Solve together</h3>
+
+      <div className="solver-prompt">
+        <SQMath tex={PROBLEM.prompt} />
+      </div>
+
+      {/* Show all previously revealed steps */}
+      {stepState.slice(0, stepIdx).map((s, i) => (
+        s.revealed && <RevealedStep key={i} num={i + 1} step={PROBLEM.steps[i]} />
+      ))}
+
+      {/* Current step */}
+      {!allDone && (
+        <div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, margin: '8px 0 12px' }}>
+            <div style={{ flexShrink: 0 }}><Quint mood={mood} size={56} /></div>
+            <div className="bubble" style={{ marginTop: 2 }}>
+              {st.hintLevel === 0 && step.q}
+              {st.hintLevel === 1 && step.nudge && <SQMath tex={`\\text{${step.nudge}}`} inline />}
+              {st.hintLevel === 1 && !step.nudge && <SQMath tex={`\\text{${step.hint}}`} inline />}
+              {st.hintLevel === 2 && <SQMath tex={`\\text{${step.hint}}`} inline />}
+            </div>
+          </div>
+
+          {!st.revealed && (
+            <div className="choice-grid">
+              {step.choices.map((c, i) => {
+                const picked = st.picked === i;
+                const wrong = st.wrongs.includes(i);
+                const cls = wrong ? 'choice wrong' : picked && c.correct ? 'choice correct' : 'choice';
+                return (
+                  <button key={i} className={cls} disabled={wrong} onClick={() => pick(i)}>
+                    <span className="letter">{String.fromCharCode(65 + i)}</span>
+                    <span className="body"><SQMath tex={c.text} inline /></span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Diagnostic for the latest wrong attempt */}
+          {st.wrongs.length > 0 && !st.revealed && (() => {
+            const w = st.wrongs[st.wrongs.length - 1];
+            const diag = step.choices[w].diag;
+            return diag && (
+              <div className="hint-card" style={{ marginTop: 10 }}>
+                <span className="h-tag">Look here</span>
+                <p><SQMath tex={`\\text{${diag}}`} inline /></p>
+              </div>
+            );
+          })()}
+
+          {/* Hint stack — show progressive hints */}
+          {/* (hint message already lives in Quint bubble) */}
+
+          {!st.revealed && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, gap: 8 }}>
+              <button className="btn-pill" onClick={showHint}>
+                {st.hintLevel === 0 && step.nudge ? '💡 Nudge me' :
+                 st.hintLevel < 2 ? '💡 Bigger hint' : 'Show this step'}
+              </button>
+              <button className="btn-ghost btn" style={{ minHeight: 36, padding: '6px 14px', fontSize: 13 }}
+                      onClick={() => updateStep({ revealed: true })}>
+                Just show me →
+              </button>
+            </div>
+          )}
+
+          {st.revealed && (
+            <div style={{ marginTop: 14 }}>
+              <RevealedStep num={stepIdx + 1} step={step} fresh />
+              <button className="btn btn-primary" style={{ width: '100%', marginTop: 10 }} onClick={nextStep}>
+                {stepIdx < PROBLEM.steps.length - 1 ? 'Next step →' : 'Finish ✓'}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Strategy reflection */}
+      {allDone && (
+        <div style={{ marginTop: 14, padding: 16, borderRadius: 22, background: 'rgba(232,220,251,.5)', border: '1px solid rgba(168,118,232,.3)' }}>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10 }}>
+            <Quint mood="celebrating" size={48} />
+            <h3 style={{ fontSize: 16 }}>Nice — you got it!</h3>
+          </div>
+          <p style={{ fontSize: 14, marginBottom: 10 }}>In your own words: what's the trick to the Square Root Method?</p>
+          <textarea
+            className="q-input"
+            value={strategy}
+            placeholder="e.g. get the squared part alone, then square root both sides with ±..."
+            style={{ minHeight: 70, fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500 }}
+            onChange={(e) => setStrategy(e.target.value)}
+          />
+          {!strategyFeedback && (
+            <button className="btn btn-primary" style={{ marginTop: 10, width: '100%' }}
+                    disabled={strategyLoading || !strategy.trim()} onClick={submitStrategy}>
+              {strategyLoading ? 'Quint is reading…' : 'Show Quint'}
+            </button>
+          )}
+          {strategyFeedback && (
+            <div style={{ marginTop: 12, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+              <Quint mood="encouraging" size={48} />
+              <div className="bubble">{strategyFeedback}</div>
+            </div>
+          )}
+          {onComplete && strategyFeedback && (
+            <button className="btn btn-soft" style={{ width: '100%', marginTop: 12 }} onClick={onComplete}>
+              On to practice →
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function RevealedStep({ num, step, fresh = false }) {
+  // Replace \colorpur and \colorpink with spans (KaTeX color macros don't animate)
+  const renderMathWithPulses = (tex) => {
+    // Strip the macro for now; the pulse class will be applied via a wrapping span
+    // We render plain tex and let the user 'see' the change via fresh: true highlight
+    return tex.replace(/\\colorpur\{([^}]+)\}/g, '$1').replace(/\\colorpink\{([^}]+)\}/g, '$1');
+  };
+  return (
+    <div className="step-row">
+      <div className="num">{num}</div>
+      <div>
+        <div className="why">{step.reveal.why}</div>
+        <div className={`math ${fresh ? 'tok-pulse-purple' : ''}`}>
+          <SQMath tex={renderMathWithPulses(step.reveal.math)} inline />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+window.AdaptiveSolver = AdaptiveSolver;
+
+</script>
+
+<script type="text/babel" data-presets="react">
+/* ===== sq/app.jsx ===== */
+/* global React, Quint, SQMath, SqrtManipulative, AdaptiveSolver, PracticeDeck, WhyDoesThisWork */
+// =====================================================================
+// App shell + Home + screens for the Square Root Method prototype.
+// Screens: home → lesson → solver → practice → celebrate
+// =====================================================================
+
+const STORAGE_KEY = "mq-sqrt-v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return {
+    xp: 80,
+    gems: 4,
+    streak: 3,
+    lastActiveISO: new Date().toISOString().slice(0, 10),
+    mastery: { 'sqrt-method': 0.35 },  // 0..1
+    completedToday: false,
+    reviewQueue: [],  // [{ topicId, dueISO }]
+  };
+}
+function saveState(s) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch (e) {}
+}
+
+function App() {
+  const [screen, setScreen] = React.useState("home");
+  const [state, setState] = React.useState(loadState);
+  const [toast, setToast] = React.useState(null);
+  React.useEffect(() => saveState(state), [state]);
+
+  const showToast = React.useCallback((msg) => {
+    setToast(msg);
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => setToast(null), 2200);
+  }, []);
+
+  // TTS read-aloud
+  const speak = React.useCallback((text) => {
+    try {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.95; u.pitch = 1.1;
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }, []);
+
+  const goto = (s) => { window.scrollTo(0, 0); setScreen(s); };
+
+  const onCompletePractice = (gainedXp) => {
+    setState(s => ({
+      ...s,
+      xp: s.xp + gainedXp,
+      gems: s.gems + 1,
+      mastery: { ...s.mastery, 'sqrt-method': Math.min(1, (s.mastery['sqrt-method'] || 0) + 0.25) },
+      streak: s.streak + (s.completedToday ? 0 : 1),
+      completedToday: true,
+    }));
+    goto("celebrate");
+  };
+
+  return (
+    <div className="sq-app">
+      <div className="sq-deco" aria-hidden="true">
+        <span className="s1">∑</span>
+        <span className="s2">∫</span>
+        <span className="s3">π</span>
+        <span className="s4">√</span>
+        <span className="s5">∞</span>
+      </div>
+
+      {screen === "home" && <HomeScreen state={state} goto={goto} speak={speak} showToast={showToast} />}
+      {screen === "lesson" && <LessonScreen state={state} goto={goto} speak={speak} showToast={showToast} />}
+      {screen === "solver" && <SolverScreen goto={goto} showToast={showToast} />}
+      {screen === "practice" && <PracticeScreen goto={goto} onDone={onCompletePractice} showToast={showToast} />}
+      {screen === "celebrate" && <CelebrateScreen state={state} goto={goto} />}
+
+      {toast && (
+        <div style={{
+          position: 'absolute', left: '50%', bottom: 88,
+          transform: 'translateX(-50%)',
+          background: 'rgba(42,26,74,.92)', color: 'white',
+          padding: '10px 16px', borderRadius: 999,
+          fontFamily: 'Quicksand, sans-serif', fontWeight: 700, fontSize: 13,
+          boxShadow: '0 8px 24px rgba(0,0,0,.2)',
+          zIndex: 100, animation: 'bubblePop .25s ease',
+        }}>{toast}</div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+function TopBar({ state, back }) {
+  return (
+    <div className="sq-topbar">
+      {back ? (
+        <button className="sq-back" onClick={back}>←</button>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 38, height: 38, borderRadius: 12, background: 'linear-gradient(135deg,#A876E8,#D44C97)', display: 'grid', placeItems: 'center', boxShadow: '0 3px 8px rgba(123,71,199,.25)' }}>
+            <span style={{ color: 'white', fontFamily: 'Quicksand, sans-serif', fontWeight: 800, fontSize: 18 }}>√</span>
+          </div>
+          <div style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 800, fontSize: 17, color: 'var(--ink)' }}>
+            Math Quest
+          </div>
+        </div>
+      )}
+      <div className="sq-stats">
+        <div className="sq-stat" style={{ background: 'rgba(255,217,61,.3)' }}>
+          <span className="sq-stat-ic">⚡</span><span>{state.xp}</span>
+        </div>
+        <div className="sq-stat" style={{ background: 'rgba(255,141,199,.3)' }}>
+          <span className="sq-stat-ic">🔥</span><span>{state.streak}</span>
+        </div>
+        <div className="sq-stat" style={{ background: 'rgba(77,190,148,.3)' }}>
+          <span className="sq-stat-ic">💎</span><span>{state.gems}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+function MasteryRing({ pct, size = 56, color = "#7B47C7" }) {
+  const stroke = 6;
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  return (
+    <svg width={size} height={size}>
+      <defs>
+        <linearGradient id={`ring-${pct}`} x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stopColor="#A876E8" />
+          <stop offset="100%" stopColor="#D44C97" />
+        </linearGradient>
+      </defs>
+      <circle cx={size/2} cy={size/2} r={r} fill="none"
+              stroke="rgba(123,71,199,.15)" strokeWidth={stroke} />
+      <circle cx={size/2} cy={size/2} r={r} fill="none"
+              stroke={`url(#ring-${pct})`} strokeWidth={stroke}
+              strokeDasharray={`${c * pct} ${c}`}
+              strokeLinecap="round"
+              transform={`rotate(-90 ${size/2} ${size/2})`} />
+      <text x={size/2} y={size/2 + 4} textAnchor="middle"
+            fontFamily="Quicksand, sans-serif" fontSize="13" fontWeight="800" fill="var(--ink)">
+        {Math.round(pct * 100)}%
+      </text>
+    </svg>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+function HomeScreen({ state, goto, speak, showToast }) {
+  const pct = state.mastery['sqrt-method'] || 0;
+  return (
+    <>
+      <TopBar state={state} />
+      <div className="sq-page" style={{ paddingTop: 4 }}>
+        {/* Hero greeting with Quint */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '8px 4px 4px' }}>
+          <Quint mood="encouraging" size={86} />
+          <div style={{ flex: 1 }}>
+            <div className="eyebrow" style={{ color: 'var(--q-purple)' }}>Good morning, friend</div>
+            <h1 style={{ fontSize: 22, lineHeight: 1.15, marginTop: 2 }}>Let's solve some squares today.</h1>
+          </div>
+        </div>
+
+        {/* Daily review (spaced repetition) */}
+        <div className="glass" style={{ padding: 14, display: 'flex', gap: 12, alignItems: 'center' }}>
+          <div style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg,#FFE3CC,#FFDFEB)', display: 'grid', placeItems: 'center', fontSize: 22 }}>👋</div>
+          <div style={{ flex: 1 }}>
+            <h3 style={{ fontSize: 14 }}>Quick review — 60 sec</h3>
+            <p style={{ fontSize: 12.5, color: 'var(--ink-3)' }}>2 questions from yesterday's <em>Square Roots</em></p>
+          </div>
+          <button className="btn-pill" onClick={() => goto("practice")}>Start</button>
+        </div>
+
+        {/* Today's lesson card */}
+        <div className="glass" style={{ padding: 18, position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', right: -20, top: -10, fontSize: 90, opacity: .14, fontStyle: 'italic', color: 'var(--q-purple)', fontFamily: 'serif' }}>√</div>
+          <div className="eyebrow">Continue</div>
+          <h2 style={{ fontSize: 22, marginTop: 4 }}>The Square Root Method</h2>
+          <p style={{ fontSize: 14, marginTop: 6, maxWidth: 280 }}>
+            When a quadratic looks like <SQMath tex="\Box^2 = k" inline />, you can skip the long methods.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 16 }}>
+            <MasteryRing pct={pct} size={58} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 12, color: 'var(--ink-3)', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', letterSpacing: '.1em' }}>
+                Mastery
+              </div>
+              <div style={{ fontSize: 13.5, color: 'var(--ink-2)', fontWeight: 600 }}>
+                {pct < .5 ? 'Just getting going' : pct < .8 ? 'Halfway there' : 'Almost mastered'}
+              </div>
+            </div>
+            <button className="btn btn-primary" onClick={() => goto("lesson")} style={{ padding: '12px 20px' }}>
+              Let's go →
+            </button>
+          </div>
+        </div>
+
+        {/* Skills grid (other units, faded) */}
+        <div className="section-title">
+          <h2>Up next</h2>
+          <button className="more" style={{ background: 'transparent', border: 0, cursor: 'pointer', font: 'inherit', padding: 0 }}
+                  onClick={() => showToast && showToast('Skill tree — coming soon')}>See path →</button>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {[
+            { title: 'Completing the Square', emoji: '□', tone: 'peach' },
+            { title: 'Equations of Lines',    emoji: '∕', tone: 'mint' },
+            { title: 'Trig Sum & Difference', emoji: '∠', tone: 'pink' },
+            { title: 'Partial Fractions',     emoji: '⁄', tone: 'lavender' },
+          ].map((s, i) => (
+            <button key={i} className="glass-2"
+                    onClick={() => showToast && showToast(`${s.title} — coming soon`)}
+                    style={{ padding: 14, opacity: .85, textAlign: 'left',
+                             border: '1px solid rgba(255,255,255,.65)', cursor: 'pointer',
+                             fontFamily: 'inherit', color: 'inherit' }}>
+              <div style={{
+                width: 38, height: 38, borderRadius: 12, marginBottom: 8,
+                background:
+                  s.tone === 'peach' ? 'linear-gradient(135deg,#FFE3CC,#FFD0AC)' :
+                  s.tone === 'mint'  ? 'linear-gradient(135deg,#D8F2E2,#A8E5C2)' :
+                  s.tone === 'pink'  ? 'linear-gradient(135deg,#FFDFEB,#FFB8D6)' :
+                                       'linear-gradient(135deg,#E8DCFB,#C8B5F0)',
+                display: 'grid', placeItems: 'center',
+                fontSize: 20, fontWeight: 800, color: 'var(--ink)',
+                fontFamily: 'Quicksand, sans-serif',
+              }}>{s.emoji}</div>
+              <div style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 700, fontSize: 13, lineHeight: 1.2 }}>{s.title}</div>
+            </button>
+          ))}
+        </div>
+
+        <BottomNav active="home" goto={goto} onComingSoon={showToast} />
+      </div>
+    </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+function LessonScreen({ state, goto, speak, showToast }) {
+  const [audioOn, setAudioOn] = React.useState(false);
+
+  const conceptIntro = "When a quadratic looks like something squared equals a number, you can skip the long methods. Just isolate the square, then take the square root of both sides, and remember the plus or minus.";
+
+  const toggleAudio = () => {
+    if (audioOn) { window.speechSynthesis.cancel(); setAudioOn(false); }
+    else { speak(conceptIntro); setAudioOn(true);
+      try { window.speechSynthesis.addEventListener('end', () => setAudioOn(false)); } catch (e) {} }
+  };
+
+  return (
+    <>
+      <TopBar state={state} back={() => goto("home")} />
+      <div className="sq-page">
+        {/* Concept card */}
+        <div className="glass concept-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
+            <div className="eyebrow">Concept</div>
+            <button className={`audio-chip ${audioOn ? 'on' : ''}`} onClick={toggleAudio}>
+              <span style={{ fontSize: 14 }}>🔊</span>
+              {audioOn ? 'Stop' : 'Read aloud'}
+            </button>
+          </div>
+          <h2 style={{ fontSize: 22 }}>The Square Root Method</h2>
+          <p style={{ marginTop: 8, fontSize: 14.5 }}>{conceptIntro}</p>
+
+          <div className="formula-box">
+            <SQMath tex="u^2 = k \quad\Longrightarrow\quad u = \pm\sqrt{k}" />
+          </div>
+
+          {/* Quint mascot row */}
+          <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginTop: 14 }}>
+            <div style={{ flexShrink: 0 }}><Quint mood="encouraging" size={64} /></div>
+            <div className="bubble">
+              The <SQMath tex="\pm" inline /> is the most-forgotten step. Even pros write it on a sticky note. We'll keep reminding you.
+            </div>
+          </div>
+
+          <div style={{ marginTop: 14 }}>
+            <WhyDoesThisWork />
+          </div>
+        </div>
+
+        {/* Manipulative */}
+        <SqrtManipulative />
+
+        {/* Try it together CTA */}
+        <div className="glass" style={{ padding: 18, textAlign: 'center' }}>
+          <Quint mood="excited" size={72} />
+          <h3 style={{ fontSize: 17, marginTop: 6 }}>Ready to solve one together?</h3>
+          <p style={{ fontSize: 13.5, marginTop: 4 }}>I'll walk you through, one tiny step at a time.</p>
+          <button className="btn btn-primary" style={{ marginTop: 14, width: '100%' }} onClick={() => goto("solver")}>
+            Let's solve together →
+          </button>
+        </div>
+
+        <BottomNav active="learn" goto={goto} onComingSoon={showToast} />
+      </div>
+    </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+function SolverScreen({ goto, showToast }) {
+  return (
+    <>
+      <div className="sq-topbar">
+        <button className="sq-back" onClick={() => goto("lesson")}>←</button>
+        <div style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 800, fontSize: 15, color: 'var(--ink-2)' }}>
+          Walk through
+        </div>
+        <div style={{ width: 38 }} />
+      </div>
+      <div className="sq-page">
+        <AdaptiveSolver onComplete={() => goto("practice")} />
+        <BottomNav active="learn" goto={goto} onComingSoon={showToast} />
+      </div>
+    </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+function PracticeScreen({ goto, onDone, showToast }) {
+  return (
+    <>
+      <div className="sq-topbar">
+        <button className="sq-back" onClick={() => goto("home")}>←</button>
+        <div style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 800, fontSize: 15, color: 'var(--ink-2)' }}>
+          Your turn
+        </div>
+        <div style={{ width: 38 }} />
+      </div>
+      <div className="sq-page">
+        <PracticeDeck onDone={onDone} />
+        <BottomNav active="practice" goto={goto} onComingSoon={showToast} />
+      </div>
+    </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+function CelebrateScreen({ state, goto }) {
+  return (
+    <div style={{ padding: '40px 22px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+      <Quint mood="celebrating" size={150} idle={false} />
+      <h1 style={{ fontSize: 28, marginTop: 16 }}>Hooray, you did it!</h1>
+      <p style={{ marginTop: 8, fontSize: 15 }}>That's another lesson in the bag. Streak safe. Squares conquered.</p>
+
+      <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 22 }}>
+        {[
+          { v: '+30', l: 'XP', bg: 'rgba(255,217,61,.3)' },
+          { v: '+1',  l: 'Gem', bg: 'rgba(77,190,148,.3)' },
+          { v: state.streak, l: 'Streak', bg: 'rgba(255,141,199,.3)' },
+        ].map((r, i) => (
+          <div key={i} style={{ background: r.bg, border: '1px solid rgba(255,255,255,.7)', borderRadius: 18, padding: '14px 16px', minWidth: 80 }}>
+            <div style={{ fontFamily: 'Quicksand, sans-serif', fontWeight: 800, fontSize: 22 }}>{r.v}</div>
+            <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9.5, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>{r.l}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: 'flex', gap: 10, marginTop: 30, justifyContent: 'center' }}>
+        <button className="btn btn-soft" onClick={() => goto("home")}>Home</button>
+        <button className="btn btn-primary" onClick={() => goto("lesson")}>One more →</button>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+function BottomNav({ active, goto, onComingSoon }) {
+  const map = { home: 'home', learn: 'lesson', practice: 'practice' };
+  return (
+    <div className="sq-nav">
+      {[
+        { id: 'home',    ic: '🏠', label: 'Home' },
+        { id: 'learn',   ic: '📖', label: 'Learn' },
+        { id: 'practice',ic: '🎯', label: 'Practice' },
+        { id: 'profile', ic: '👤', label: 'Me' },
+      ].map(n => (
+        <button key={n.id} className={`nav-btn ${active === n.id ? 'active' : ''}`}
+                onClick={() => {
+                  if (n.id === 'profile') { onComingSoon && onComingSoon('Profile — coming soon'); return; }
+                  goto && goto(map[n.id]);
+                }}>
+          <span className="ic">{n.ic}</span>
+          {n.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+window.SQApp = App;
+
+</script>
+
+<script type="text/babel" data-presets="react">
+function Stage() {
+  const [ready, setReady] = React.useState(!!(window.SQApp && window.IOSDevice));
+  React.useEffect(() => {
+    if (ready) return;
+    const id = setInterval(() => {
+      if (window.SQApp && window.IOSDevice) { setReady(true); clearInterval(id); }
+    }, 50);
+    return () => clearInterval(id);
+  }, [ready]);
+
+  if (!ready) {
+    return <div style={{ padding: 40, color: '#5B4A82', fontFamily: 'Quicksand, sans-serif' }}>Loading Math Quest…</div>;
+  }
+
+  const SQApp = window.SQApp;
+  const IOSDevice = window.IOSDevice;
+  const isMobile = window.matchMedia('(max-width: 500px)').matches;
+
+  if (isMobile) {
+    return <SQApp />;
+  }
+  return (
+    <div className="phone-stage">
+      <div className="stage-strip ios-stage-strip">
+        <div className="mark">√</div>
+        <div style={{ fontSize: 15 }}>Math Quest — Square Root Method prototype</div>
+        <div className="pill">v2 · pastel + Quint</div>
+      </div>
+      <IOSDevice width={402} height={830} dark={false}>
+        <div className="ios-device-inner" style={{ height: '100%', overflow: 'auto', paddingTop: 46 }}>
+          <SQApp />
+        </div>
+      </IOSDevice>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Stage />);
+</script>
+
+</body>
+</html>
