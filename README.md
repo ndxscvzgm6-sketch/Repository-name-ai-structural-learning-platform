@@ -1,3 +1,12 @@
+# Repository contents
+
+- **`career/`** — Road-to-$200K Career Command Center: an interactive
+  strategy platform (`career/index.html`, open in any browser), plus the
+  research-backed strategy (`career/strategy.md`), LinkedIn rewrite package
+  (`career/linkedin-profile.md`), and ATS resume template
+  (`career/resume-uzair-ahmed-mohammed.md`).
+- **Math Quest** (`index.html`) — described below.
+
 # Math Quest
 
 A playful, mobile-first math learning app for the Square Root Method unit

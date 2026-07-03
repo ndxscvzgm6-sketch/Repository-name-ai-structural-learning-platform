@@ -1,0 +1,347 @@
+<title>Road to $200K — Career Command Center</title>
+<style>
+  :root{
+    --paper:#F4F6F8; --sheet:#FDFEFF; --ink:#1B242E; --ink-2:#4A5866;
+    --line:#D8DEE5; --line-strong:#9FB0BE;
+    --accent:#2456D6; --accent-ink:#FFFFFF; --accent-soft:#E4EBFB;
+    --money:#1E7A4C; --money-soft:#E2F2E9;
+    --warn:#A9731B; --warn-soft:#F7EEDC;
+    --shadow:0 1px 2px rgba(27,36,46,.06),0 4px 14px rgba(27,36,46,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#10161D; --sheet:#171F28; --ink:#E5EBF1; --ink-2:#93A2B1;
+      --line:#2A3541; --line-strong:#46566633;
+      --accent:#7DA2F7; --accent-ink:#0E1420; --accent-soft:#1E2C47;
+      --money:#5CBF8D; --money-soft:#173226;
+      --warn:#D9A65A; --warn-soft:#332815;
+      --shadow:none;
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#F4F6F8; --sheet:#FDFEFF; --ink:#1B242E; --ink-2:#4A5866;
+    --line:#D8DEE5; --line-strong:#9FB0BE;
+    --accent:#2456D6; --accent-ink:#FFFFFF; --accent-soft:#E4EBFB;
+    --money:#1E7A4C; --money-soft:#E2F2E9;
+    --warn:#A9731B; --warn-soft:#F7EEDC;
+    --shadow:0 1px 2px rgba(27,36,46,.06),0 4px 14px rgba(27,36,46,.05);
+  }
+  :root[data-theme="dark"]{
+    --paper:#10161D; --sheet:#171F28; --ink:#E5EBF1; --ink-2:#93A2B1;
+    --line:#2A3541; --line-strong:#46566633;
+    --accent:#7DA2F7; --accent-ink:#0E1420; --accent-soft:#1E2C47;
+    --money:#5CBF8D; --money-soft:#173226;
+    --warn:#D9A65A; --warn-soft:#332815;
+    --shadow:none;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:32px 32px; background-attachment:fixed;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:24px 20px 96px}
+  .mono{font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace}
+
+  header.masthead{background:var(--sheet);border:1.5px solid var(--line-strong);box-shadow:var(--shadow);padding:26px 28px;margin-bottom:18px}
+  .sheetno{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{margin:10px 0 6px;font-size:clamp(26px,4.5vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.08;text-wrap:balance}
+  h1 .amt{color:var(--accent)}
+  .thesis{max-width:64ch;color:var(--ink-2);margin:0}
+  .thesis strong{color:var(--ink)}
+
+  nav.tabs{position:sticky;top:0;z-index:5;display:flex;gap:6px;flex-wrap:wrap;background:var(--paper);padding:10px 0;border-bottom:1.5px solid var(--line-strong);margin-bottom:20px}
+  nav.tabs button{
+    font-family:ui-monospace,monospace;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;
+    border:1.5px solid var(--line-strong);background:var(--sheet);color:var(--ink-2);
+    padding:8px 14px;cursor:pointer
+  }
+  nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  nav.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  section.panel{display:none}
+  section.panel.active{display:block}
+  .card{background:var(--sheet);border:1.5px solid var(--line-strong);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:20px;font-weight:800;letter-spacing:-.01em}
+  .card h3{margin:18px 0 6px;font-size:15.5px;font-weight:700}
+  .eyebrow{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+  .card p{max-width:70ch}
+  .muted{color:var(--ink-2)}
+  .grid{display:grid;gap:14px}
+  @media(min-width:760px){.grid.c3{grid-template-columns:1fr 1fr 1fr}.grid.c2{grid-template-columns:1fr 1fr}}
+
+  .stat{border:1.5px solid var(--line-strong);padding:14px 16px;background:var(--sheet)}
+  .stat .v{font-family:ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:24px;font-weight:700;color:var(--money)}
+  .stat .k{font-size:12.5px;color:var(--ink-2)}
+
+  .track{border-left:5px solid var(--accent);padding-left:16px;margin:14px 0}
+  .track.b{border-left-color:var(--money)} .track.c{border-left-color:var(--warn)}
+  .badge{display:inline-block;font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.06em;padding:2px 8px;border:1px solid currentColor;margin-left:6px}
+  .badge.money{color:var(--money);background:var(--money-soft)}
+  .badge.acc{color:var(--accent);background:var(--accent-soft)}
+  .badge.warn{color:var(--warn);background:var(--warn-soft)}
+
+  .tablebox{overflow-x:auto;border:1.5px solid var(--line-strong)}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:14.5px}
+  th{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--ink-2);border-bottom:1.5px solid var(--line-strong);padding:10px 12px;background:var(--sheet)}
+  td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;background:var(--sheet)}
+  td.num{font-family:ui-monospace,monospace;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--money);font-weight:600}
+  tr:last-child td{border-bottom:none}
+
+  ul.check{list-style:none;padding:0;margin:8px 0}
+  ul.check li{display:flex;gap:10px;align-items:flex-start;padding:7px 8px;border-bottom:1px solid var(--line)}
+  ul.check li:last-child{border-bottom:none}
+  ul.check input{width:17px;height:17px;margin-top:3px;accent-color:var(--accent);flex:none;cursor:pointer}
+  ul.check label{cursor:pointer}
+  ul.check li.done label{text-decoration:line-through;color:var(--ink-2)}
+  .progressline{font-family:ui-monospace,monospace;font-size:12px;color:var(--ink-2);margin:2px 0 10px}
+  .bar{height:8px;border:1px solid var(--line-strong);background:var(--sheet);margin-top:4px}
+  .bar>i{display:block;height:100%;background:var(--accent);transition:width .3s}
+  @media (prefers-reduced-motion: reduce){.bar>i{transition:none}}
+
+  .note{border:1.5px dashed var(--line-strong);padding:12px 16px;margin:12px 0;font-size:14.5px;background:var(--sheet)}
+  .note.warn{border-color:var(--warn);color:var(--ink)}
+  code{font-family:ui-monospace,monospace;font-size:.92em;background:var(--accent-soft);padding:1px 5px}
+  footer{margin-top:28px;font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="sheetno"><span>SHT CC-01 · CAREER COMMAND CENTER</span><span>UZAIR AHMED MOHAMMED, P.E.</span><span>REV JUL 2026</span></div>
+    <h1>Road to <span class="amt">$200K</span> — run three tracks in parallel.</h1>
+    <p class="thesis"><strong>The structural engineer who codes.</strong> Owner-side data center engineering pays the target in 6–18 months; the AI × structural portfolio compounds toward $250k+; Exponent-tier forensics is the in-discipline fallback that also builds your green-card case. Every number in this tool comes from live postings, salary databases, and H-1B filing records.</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="dash">Dashboard</button>
+    <button role="tab" aria-selected="false" data-tab="road">12-Mo Roadmap</button>
+    <button role="tab" aria-selected="false" data-tab="targets">Targets & Comp</button>
+    <button role="tab" aria-selected="false" data-tab="play">Profile Playbook</button>
+    <button role="tab" aria-selected="false" data-tab="visa">Visa Thread</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <section class="panel active" id="dash">
+    <div class="grid c3">
+      <div class="stat"><div class="v">$180–250k</div><div class="k">Track A · big-tech data center structural (6–18 mo)</div></div>
+      <div class="stat"><div class="v">$200–315k</div><div class="k">Track B · AI × structural / FDE (12–36 mo)</div></div>
+      <div class="stat"><div class="v">$183–227k</div><div class="k">Track C · Exponent-tier forensics (2–4 yr)</div></div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <p class="eyebrow">Why not stay the course</p>
+      <h2>The design-firm ladder doesn't get there</h2>
+      <p>H-1B filings for structural engineers in Boston — including at LeMessurier — show a <strong>median base of $82,000</strong>, none above $150k. The ASCE 2025 survey median never touches $200k even at 20 years. $200k in a design firm is principal territory, 12–20 years out. The move is to sell the same license and judgment into markets that price them higher.</p>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">The three tracks</p>
+      <h2>Where your credentials price at $200k+</h2>
+      <div class="track">
+        <h3>A · Owner-side data center structural engineer <span class="badge acc">PRIMARY</span><span class="badge money">$180–250k TC</span></h3>
+        <p>2026 hyperscaler capex exceeds <strong>$700B</strong> (MSFT ~$190B, AMZN ~$200B, GOOG $180–190B, META $125–145B); the industry is short ~349–439k workers. Google's live "Data Center Engineer, Modular Structures" posting requires a PE + 3 yrs validating structural calcs — <strong>you meet the minimums today</strong> ($121–175k base + 15% bonus + equity). Meta Civil Engineer (DCE) postings: $167–230k + bonus + equity. Big tech sponsors H-1B transfers routinely.</p>
+      </div>
+      <div class="track b">
+        <h3>B · AI × structural engineering <span class="badge money">$200–315k</span></h3>
+        <p>Palantir FDSE median $211k TC (accepts engineering backgrounds); Scale AI FDE postings $252–315k; Anthropic Applied-AI SA $240–345k OTE; OpenAI H-1B filings median $300k. Construction vertical-AI is hiring licensed engineers now (GreenLite $49.5M Series B staffs in-house PEs; Trunk Tools, Structured AI, Genia). Gate: 12–24 months of shipping public code — already started with this repo.</p>
+      </div>
+      <div class="track c">
+        <h3>C · Forensics at a premium consultancy <span class="badge money">$183–227k</span></h3>
+        <p>Exponent Senior Engineer averages $183k; Senior Managing ~$202k base — with documented H-1B filings at $190–200k+. Your Falcon facade-forensics + LeMessurier pedigree is exactly their buildings profile. Take the SE exam (+20–30% evidence). Publications and testimony double as EB-1A/O-1 evidence.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Operating rhythm · every week</p>
+      <h2>The weekly loop</h2>
+      <div class="progressline" id="p-weekly"></div>
+      <ul class="check" data-group="weekly">
+        <li><input type="checkbox" id="w1"><label for="w1">3–5 tailored applications — within days of posting, each with a referral or recruiter touch</label></li>
+        <li><input type="checkbox" id="w2"><label for="w2">2 LinkedIn posts (one document carousel), never two in 24h</label></li>
+        <li><input type="checkbox" id="w3"><label for="w3">5 substantive comments/day (15+ words) on niche posts</label></li>
+        <li><input type="checkbox" id="w4"><label for="w4">≥1 commit to a bridge project (Python structural tool / ML model)</label></li>
+        <li><input type="checkbox" id="w5"><label for="w5">2 new warm connections (DC engineering managers, AEC-tech people)</label></li>
+        <li><input type="checkbox" id="w6"><label for="w6">30 min SE-exam or DfMA/modular study</label></li>
+      </ul>
+      <p class="muted" style="font-size:13px">Checkboxes reset each Monday. Progress saves in this browser.</p>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="panel" id="road">
+    <div class="card">
+      <p class="eyebrow">Phase 1 · Months 1–2</p>
+      <h2>Foundation</h2>
+      <div class="progressline" id="p-ph1"></div>
+      <ul class="check" data-group="ph1">
+        <li><input type="checkbox" id="a1"><label for="a1">Rewrite LinkedIn per <code>linkedin-profile.md</code> — headline, About, skills (pin Structural Engineering · Data Center Design · Python)</label></li>
+        <li><input type="checkbox" id="a2"><label for="a2">Open-to-Work ON, recruiters-only · titles incl. Data Center Engineer · locations: Seattle, Austin, NoVa, Columbus, Atlanta, Phoenix, Sunnyvale + Remote</label></li>
+        <li><input type="checkbox" id="a3"><label for="a3">Set Industry field = Civil Engineering; add P.E./F.E./OSHA-30 under Licenses; Featured = PE post + this repo</label></li>
+        <li><input type="checkbox" id="a4"><label for="a4">Finalize resume from <code>resume-uzair-ahmed-mohammed.md</code> — fill every [bracket] with real numbers, XYZ bullets, 1 page, PDF</label></li>
+        <li><input type="checkbox" id="a5"><label for="a5">Job alerts at Google/Meta/Microsoft/AWS/Oracle/NVIDIA careers + Vantage, QTS, Equinix, Aligned, CyrusOne, Crusoe, CoreWeave</label></li>
+        <li><input type="checkbox" id="a6"><label for="a6">Ship bridge project #1: Python automation of a real structural check, public on GitHub with README + screenshots</label></li>
+        <li><input type="checkbox" id="a7"><label for="a7">First 8 posts drafted (facade war stories, automation before/afters, "why data centers are a structural engineer's dream problem")</label></li>
+        <li><input type="checkbox" id="a8"><label for="a8">Consult an immigration attorney: NIW filing plan + EB-1A evidence checklist</label></li>
+      </ul>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Phase 2 · Months 3–6</p>
+      <h2>Pipeline</h2>
+      <div class="progressline" id="p-ph2"></div>
+      <ul class="check" data-group="ph2">
+        <li><input type="checkbox" id="b1"><label for="b1">2 coffee chats/week with DC engineering folks at hyperscalers (search "Data Center Engineering" + company on LinkedIn)</label></li>
+        <li><input type="checkbox" id="b2"><label for="b2">Interview prep: modular/prefab & DfMA, tilt-up/precast, vibration criteria, owner's-engineer scenarios, calc-audit stories</label></li>
+        <li><input type="checkbox" id="b3"><label for="b3">Ship bridge project #2: ML surrogate for an FEA workflow or AI plan-review prototype</label></li>
+        <li><input type="checkbox" id="b4"><label for="b4">Build & publish a VIKTOR app automating a structural workflow</label></li>
+        <li><input type="checkbox" id="b5"><label for="b5">Submit one article to STRUCTURE magazine / ASCE (EB-1A evidence + authority)</label></li>
+        <li><input type="checkbox" id="b6"><label for="b6">File EB-2 NIW; lock priority date</label></li>
+        <li><input type="checkbox" id="b7"><label for="b7">Register for SE exam (first section) + register for AECtech hackathon (NYC, fall)</label></li>
+      </ul>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Phase 3 · Months 6–12</p>
+      <h2>Convert</h2>
+      <div class="progressline" id="p-ph3"></div>
+      <ul class="check" data-group="ph3">
+        <li><input type="checkbox" id="c1"><label for="c1">On-site/virtual interview loops at ≥2 hyperscaler/colo owner-side roles</label></li>
+        <li><input type="checkbox" id="c2"><label for="c2">Negotiate on total comp citing posted bands (Google $121–175k + 15% + equity; Meta $167–230k+)</label></li>
+        <li><input type="checkbox" id="c3"><label for="c3">Compete at AECtech; meet TT CORE, Speckle, Autodesk, GreenLite-type people</label></li>
+        <li><input type="checkbox" id="c4"><label for="c4">Sit SE vertical + lateral sections</label></li>
+        <li><input type="checkbox" id="c5"><label for="c5">1,000–3,000 followers; open FDE/vertical-AI conversations (Palantir FDSE, Scale, GreenLite, Trunk Tools, Motif, Procore, Autodesk)</label></li>
+        <li><input type="checkbox" id="c6"><label for="c6">Accept an offer ≥$180k TC — or diagnose and rerun the loop with what you learned</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TARGETS -->
+  <section class="panel" id="targets">
+    <div class="card">
+      <p class="eyebrow">Track A · owner-side & mission-critical</p>
+      <h2>Primary targets</h2>
+      <div class="tablebox"><table>
+        <tr><th>Employer</th><th>Role pattern</th><th>Comp evidence</th><th>H-1B</th></tr>
+        <tr><td>Google</td><td>Data Center Engineer, Modular Structures / Structural SME</td><td class="num">$121–175k + 15% + equity</td><td>Sponsors; transfer-friendly</td></tr>
+        <tr><td>Meta</td><td>Civil/Structural Engineer, Data Center Engineering</td><td class="num">$167–230k + bonus + equity</td><td>Sponsors</td></tr>
+        <tr><td>Microsoft</td><td>CSA (Civil-Structural-Architectural) Engineer, Datacenters</td><td class="num">≈$150–230k TC</td><td>Sponsors</td></tr>
+        <tr><td>AWS / Amazon</td><td>Structural/CSA Engineer, Data Center Design Eng.</td><td class="num">≈$140–230k TC</td><td>Sponsors</td></tr>
+        <tr><td>Oracle / NVIDIA / Crusoe / CoreWeave</td><td>DC design & construction engineering</td><td class="num">verify per posting</td><td>Case-by-case</td></tr>
+        <tr><td>Vantage · QTS · Equinix · Aligned · CyrusOne · Switch · STACK</td><td>Owner's engineer / structural PM</td><td class="num">$140–200k</td><td>Mixed — verify</td></tr>
+        <tr><td>AECOM · Jacobs · DPR · Turner MC (stepping stones)</td><td>Structural Engineer, Data Centers</td><td class="num">$150–200k</td><td>Often NO sponsorship — confirm first</td></tr>
+      </table></div>
+      <div class="note warn">Consulting firms frequently mark postings "sponsorship not available" (AECOM's DC posting does). Spend those applications only after confirming; owner-side big tech is the H-1B-safe lane.</div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Track B · AI × structural</p>
+      <h2>Compounding targets</h2>
+      <div class="tablebox"><table>
+        <tr><th>Employer</th><th>Role pattern</th><th>Comp evidence</th><th>Notes</th></tr>
+        <tr><td>Palantir</td><td>Forward Deployed SWE (FDSE)</td><td class="num">$211k TC median</td><td>Accepts non-CS engineering + Python; proven sponsor</td></tr>
+        <tr><td>Scale AI</td><td>Forward Deployed Engineer</td><td class="num">$252–315k posted</td><td>Domain + shipping + client-facing</td></tr>
+        <tr><td>Anthropic / OpenAI</td><td>Applied AI SA / FDE</td><td class="num">$240–345k OTE / LCA median $300k</td><td>Stretch tier; vertical FDE tracks exist</td></tr>
+        <tr><td>Procore / Autodesk</td><td>Senior product engineer</td><td class="num">$198–275k TC</td><td>Real senior-SWE bar; Autodesk files 255 LCAs/yr</td></tr>
+        <tr><td>GreenLite</td><td>In-house engineer / plan examiner + AI</td><td class="num">$180–220k + equity (negotiate)</td><td>$49.5M Series B; hires licensed PEs — near-perfect fit</td></tr>
+        <tr><td>Trunk Tools · Structured AI · PermitFlow · Genia · Motif</td><td>Construction SME (AI trainer) / founding domain engineer</td><td class="num">$90–160k + equity</td><td>Stepping stone + equity bet, not the $200k destination</td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Track C · forensics</p>
+      <h2>Fallback targets</h2>
+      <div class="tablebox"><table>
+        <tr><th>Employer</th><th>Level to target</th><th>Comp evidence</th><th>Notes</th></tr>
+        <tr><td>Exponent</td><td>Senior Engineer → Senior Managing</td><td class="num">$183k avg → $202k base</td><td>H-1B filings documented at $190–200k+; facade/forensics fit</td></tr>
+        <tr><td>WJE · SGH · TT Forensics</td><td>Senior → Associate Principal</td><td class="num">$130–150k → $200k</td><td>Slower; strong brand + expert-track training</td></tr>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- PLAYBOOK -->
+  <section class="panel" id="play">
+    <div class="card">
+      <p class="eyebrow">LinkedIn · mechanics that matter</p>
+      <h2>Profile playbook</h2>
+      <h3>Headline (keywords recruiters actually search)</h3>
+      <p class="mono" style="font-size:14px;border:1.5px solid var(--line-strong);padding:10px 14px;background:var(--accent-soft)">Structural Engineer, P.E. | High-Rise &amp; Mission-Critical Structures | Data Center Design · Modular/Prefab · Steel &amp; Concrete | Python + AI for Structural Engineering | LeMessurier</p>
+      <ul>
+        <li><strong>Job-title filter reads Experience-entry titles only</strong> — put honest searchable terms there ("Structural Engineer — High-Rise &amp; Computational Design").</li>
+        <li><strong>Skills filter</strong> reads the Skills section + skills extracted from bullets — name tools explicitly (ETABS, SAP2000, RISA, Python). Limit is 100; tag skills to positions; pin Structural Engineering · Data Center Design · Python.</li>
+        <li><strong>Open to Work, recruiters-only = near-pure upside</strong> — it's a spotlight recruiters filter on first. Public green ring optional.</li>
+        <li>Set <strong>Industry = Civil Engineering</strong>; small profile edits every 2 weeks keep you in "recently updated / likely to respond" ranking.</li>
+        <li><strong>Zero visa language anywhere</strong> — recruiters boolean-NOT "H1B"/"sponsorship". Disclose truthfully only in application knockout questions.</li>
+      </ul>
+      <h3>Content engine — the empty niche</h3>
+      <p>Own <em>"AI + structural engineering, explained by someone who stamps drawings."</em> The biggest creator here has ~2.6k subscribers — and turned that into leading his firm's AI initiative. Cadence: 2–3 posts/week, best format = document carousels (5–10 slides), 800–1,000 characters, ≤3 hashtags. Rotate: build-in-public automation wins · Falcon forensic war stories · data center structural literacy · honest tool teardowns. Expect 1,000–3,000 followers and recruiter InMails starting months 3–6 — the algorithm now favors specific niches.</p>
+      <h3>Resume rules</h3>
+      <ul>
+        <li>Single column, standard headers, PDF. The "75% ATS auto-reject" stat is a debunked myth — the real filters are parsing corruption, human skimming, and applying late.</li>
+        <li>Every bullet: <strong>"Accomplished X, measured by Y, by doing Z."</strong> Use $ project value, SF, # buildings, hours saved.</li>
+        <li>Track A variant: experience-first, mirror posting vocabulary (modular, DfMA, mission-critical, tilt-up, owner's engineer). Track B variant: projects-first.</li>
+        <li>Apply in the first days of a posting; pair every application with a human touch.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- VISA -->
+  <section class="panel" id="visa">
+    <div class="card">
+      <p class="eyebrow">H-1B → green card</p>
+      <h2>The visa thread (runs under everything)</h2>
+      <ul>
+        <li><strong>Transfers are safe:</strong> in-country H-1B change-of-employer petitions are exempt from the $100k new-petition fee and need no lottery. Many recruiters don't know this — say it: <em>"H-1B transfer — no lottery, no $100k fee exposure."</em></li>
+        <li><strong>The fee helped you:</strong> it concentrated H-1B hiring into big tech — your Track A targets.</li>
+        <li><strong>File EB-2 NIW now:</strong> structural engineers doing infrastructure-safety + AI work have documented approvals; it frees you from employer-tethered PERM and locks a priority date.</li>
+        <li><strong>Build EB-1A/O-1 evidence deliberately</strong> (if India-born, the EB-2 queue is 15–25 yrs — EB-1 is the exit): publications (STRUCTURE, ASCE), open-source adoption, hackathon awards, talks, peer review, code committees. Every Track B artifact counts twice.</li>
+        <li><strong>No 1099 side income on H-1B</strong> — expert-witness and consulting work must wait or run W-2 through an employer like Exponent.</li>
+      </ul>
+      <div class="progressline" id="p-visa"></div>
+      <ul class="check" data-group="visa">
+        <li><input type="checkbox" id="v1"><label for="v1">Immigration attorney consult booked</label></li>
+        <li><input type="checkbox" id="v2"><label for="v2">NIW petition drafted & filed</label></li>
+        <li><input type="checkbox" id="v3"><label for="v3">First publication submitted</label></li>
+        <li><input type="checkbox" id="v4"><label for="v4">EB-1A evidence folder started (every talk, article, star, award)</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>Sources: live postings (Google, AECOM, Meta) · h1bdata.info LCA records · levels.fyi · ASCE 2025 salary report · USCIS guidance · full citations in strategy.md</footer>
+</div>
+
+<script>
+(function(){
+  var tabs=document.querySelectorAll('nav.tabs button');
+  tabs.forEach(function(b){b.addEventListener('click',function(){
+    tabs.forEach(function(x){x.setAttribute('aria-selected','false')});
+    b.setAttribute('aria-selected','true');
+    document.querySelectorAll('section.panel').forEach(function(p){p.classList.remove('active')});
+    document.getElementById(b.dataset.tab).classList.add('active');
+  })});
+
+  function weekKey(){var d=new Date();var onejan=new Date(d.getFullYear(),0,1);var wk=Math.ceil((((d-onejan)/86400000)+onejan.getDay()+1)/7);return d.getFullYear()+'w'+wk}
+  var KEY='uzair200k';
+  var store={};try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+  if(store._week!==weekKey()){ // reset weekly group each Monday-ish (ISO week change)
+    Object.keys(store).forEach(function(k){if(k.indexOf('weekly:')===0)delete store[k]});
+    store._week=weekKey();
+  }
+  function save(){localStorage.setItem(KEY,JSON.stringify(store))}
+  function refresh(group){
+    var list=document.querySelector('ul.check[data-group="'+group+'"]');if(!list)return;
+    var boxes=list.querySelectorAll('input');var done=0;
+    boxes.forEach(function(b){if(b.checked)done++;b.closest('li').classList.toggle('done',b.checked)});
+    var p=document.getElementById('p-'+(group==='weekly'?'weekly':group));
+    if(p){var pct=boxes.length?Math.round(done/boxes.length*100):0;
+      p.innerHTML=done+' / '+boxes.length+' complete <span class="bar"><i style="width:'+pct+'%"></i></span>'}
+  }
+  document.querySelectorAll('ul.check').forEach(function(list){
+    var group=list.dataset.group;
+    list.querySelectorAll('input').forEach(function(b){
+      b.checked=!!store[group+':'+b.id];
+      b.addEventListener('change',function(){store[group+':'+b.id]=b.checked;save();refresh(group)});
+    });
+    refresh(group);
+  });
+  save();
+})();
+</script>

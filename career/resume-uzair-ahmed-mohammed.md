@@ -60,4 +60,10 @@ Licensed Professional Engineer (P.E., Structural exam passed) with 6 years of co
 
 ---
 
-*Work authorization: H-1B (transfer-eligible). Do not put this on the resume itself — answer authorization questions in application forms only.*
+## USAGE NOTES (delete before sending)
+
+- **Format rules (research-backed):** single column, standard headers, PDF, no tables/text boxes/photos. One page if tight; 1.5–2 pages acceptable at your experience only if page 1 alone wins the interview. Everything decisive in the top third of page 1.
+- **Every bullet = XYZ formula:** "Accomplished [X] as measured by [Y], by doing [Z]." Fill in the bracketed placeholders with real numbers: building heights/SF, $ construction value, # of buildings assessed, hours saved by automation, model sizes.
+- **Two variants:** For **data center / owner-side roles** (Track A), keep this order (Experience first) and mirror posting vocabulary: modular, prefabricated, DfMA, mission-critical, owner's engineer, tilt-up, precast, vibration criteria. For **AEC-tech / AI roles** (Track B), move Independent Technical Projects above Experience and lead with the Python/ML work.
+- **Work authorization:** either omit entirely (answer knockout questions in the application truthfully), or include exactly one precise line near the bottom: *"H-1B — eligible for transfer (no lottery; exempt from the $100k new-petition fee)."* Never more than that, never in the summary.
+- **Apply within the first few days of a posting** — recruiters review first-come and pause postings at ~500–1,000 applicants. Pair every application with a referral or recruiter touch.

@@ -45,6 +45,15 @@ ETABS, SAP2000, RISA, STAAD.Pro, Revit, Facade Engineering, Forensic
 Engineering, Structural Analysis, Machine Learning, Construction
 Administration, Project Management
 
+## 4.5 How LinkedIn Recruiter actually finds you (from LinkedIn's own docs)
+
+- The **Job Titles filter reads only your Experience-entry titles** — not the headline. There's no synonym expansion. So your current role title should carry searchable terms where honest: e.g., *"Structural Engineer — High-Rise & Computational Design"* (clarifies real duties; never invent a title HR wouldn't verify).
+- The **Skills filter** matches your Skills section AND skills extracted from your experience bullets — so write tool names explicitly in bullets ("ETABS", "Python", "SAP2000"), and load the Skills section (limit is 100; tag skills to specific positions).
+- The **Keywords filter** reads the whole profile — headline, About, certifications. That's where the headline earns its keep, plus human skim.
+- **Set your Industry field deliberately** ("Civil Engineering" — a wrong industry silently excludes you from filtered searches).
+- Ranking favors people **likely to respond**: recently updated profiles rank higher. Make a small profile edit every couple of weeks while searching.
+- There is **no visa filter** in Recruiter — visa screening happens by keyword. This is exactly why H-1B never appears anywhere on the profile.
+
 ## 5. Settings checklist (do these today — 15 minutes)
 
 - [ ] Custom URL already good (`/in/uzair-ahmed-mohammed`)
@@ -58,9 +67,20 @@ Administration, Project Management
 
 ## 6. 90-day content engine (visibility = inbound)
 
-**Cadence:** 2 posts/week (Tue + Thu mornings ET). Comment substantively on
-5 posts/day in the niche (this drives more profile views than posting, at 1/10
-the effort).
+**Cadence (2026 algorithm data):** 2–3 posts/week, never more than 1 per 24h
+(posts cannibalize each other). Best format by engagement: **document
+carousels (5–10 slides)** — architecture diagrams, before/after screenshots,
+annotated calcs. Keep posts 800–1,000 characters, plain language, ≤3 hashtags,
+no external links in the post body. Comment substantively (15+ words) on 5
+posts/day in the niche — commenting drives profile views at a tenth of the
+effort of posting.
+
+**Calibrated expectations (so you don't quit at month 2):** realistic growth
+for a niche technical creator starting now is ~1,000–3,000 followers in 12
+months; early posts reach 300–1,500 impressions with occasional 5–10× carousel
+spikes; recruiter InMails and DM inquiries typically start around months 3–6
+of consistent posting. The interest-graph algorithm now actively favors
+specific niches like yours over generic content.
 
 **Your unfair content niche — nobody owns it yet:**
 *"AI + structural engineering, explained by someone who actually stamps drawings."*
