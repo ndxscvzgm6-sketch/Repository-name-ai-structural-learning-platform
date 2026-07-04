@@ -5,6 +5,12 @@
   research-backed strategy (`career/strategy.md`), LinkedIn rewrite package
   (`career/linkedin-profile.md`), and ATS resume template
   (`career/resume-uzair-ahmed-mohammed.md`).
+- **`career/datacenter-course/`** — Data Center Literacy: a full 11-lesson
+  self-paced course (open `career/datacenter-course/index.html` in any
+  browser) teaching data center power, cooling, reliability, the AI density
+  shift, and the structural engineering of mission-critical facilities —
+  written for a structural engineer going owner-side, with quizzes, an
+  83-term glossary, interview prep, and verified 2025–2026 figures.
 - **Math Quest** (`index.html`) — described below.
 
 # Math Quest

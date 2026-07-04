@@ -1,0 +1,1169 @@
+<title>Data Center Literacy — A Structural Engineer's Course</title>
+<style>
+  :root{
+    --paper:#F5F6F4; --sheet:#FFFFFF; --ink:#171C22; --ink-2:#586470;
+    --line:#DDE2E0; --line-strong:#A6B0B4;
+    --accent:#0E6E8C; --accent-ink:#FFFFFF; --accent-soft:#DCEEF3;
+    --power:#B5691A; --power-soft:#F6EAD9;
+    --cool:#1C6FB0; --cool-soft:#DEECF7;
+    --struct:#2E7D4F; --struct-soft:#DDF0E4;
+    --danger:#B23A48; --danger-soft:#F6E1E3;
+    --shadow:0 1px 2px rgba(23,28,34,.06),0 6px 22px rgba(23,28,34,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#0E1317; --sheet:#161C22; --ink:#E7ECEF; --ink-2:#93A0AB;
+      --line:#262E36; --line-strong:#3a4650;
+      --accent:#54B7D4; --accent-ink:#08161B; --accent-soft:#123039;
+      --power:#E0A15C; --power-soft:#33240F;
+      --cool:#6FB2E6; --cool-soft:#122636;
+      --struct:#6DC58C; --struct-soft:#122a1c;
+      --danger:#E88592; --danger-soft:#331519;
+      --shadow:none;
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#F5F6F4; --sheet:#FFFFFF; --ink:#171C22; --ink-2:#586470;
+    --line:#DDE2E0; --line-strong:#A6B0B4;
+    --accent:#0E6E8C; --accent-ink:#FFFFFF; --accent-soft:#DCEEF3;
+    --power:#B5691A; --power-soft:#F6EAD9;
+    --cool:#1C6FB0; --cool-soft:#DEECF7;
+    --struct:#2E7D4F; --struct-soft:#DDF0E4;
+    --danger:#B23A48; --danger-soft:#F6E1E3;
+    --shadow:0 1px 2px rgba(23,28,34,.06),0 6px 22px rgba(23,28,34,.06);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1317; --sheet:#161C22; --ink:#E7ECEF; --ink-2:#93A0AB;
+    --line:#262E36; --line-strong:#3a4650;
+    --accent:#54B7D4; --accent-ink:#08161B; --accent-soft:#123039;
+    --power:#E0A15C; --power-soft:#33240F;
+    --cool:#6FB2E6; --cool-soft:#122636;
+    --struct:#6DC58C; --struct-soft:#122a1c;
+    --danger:#E88592; --danger-soft:#331519;
+    --shadow:none;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font:16px/1.62 Georgia,"Iowan Old Style","Palatino Linotype",serif;-webkit-font-smoothing:antialiased}
+  .ui{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .mono{font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace}
+
+  /* layout */
+  .shell{display:grid;grid-template-columns:1fr;max-width:1180px;margin:0 auto}
+  @media(min-width:940px){.shell{grid-template-columns:288px 1fr;gap:0}}
+  aside{border-right:1.5px solid var(--line-strong);padding:20px 16px 60px;background:var(--sheet)}
+  @media(min-width:940px){aside{position:sticky;top:0;height:100vh;overflow-y:auto}}
+  main{padding:24px 22px 100px;min-width:0;max-width:820px}
+
+  .brand{font-family:system-ui,sans-serif}
+  .brand .kick{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+  .brand h1{font-family:system-ui,sans-serif;font-size:19px;font-weight:800;letter-spacing:-.01em;margin:4px 0 2px;line-height:1.15}
+  .brand p{font-size:12.5px;color:var(--ink-2);margin:0}
+
+  .overall{margin:16px 0 8px;font-family:ui-monospace,monospace;font-size:11px;color:var(--ink-2)}
+  .obar{height:7px;border:1px solid var(--line-strong);background:var(--paper);margin-top:5px;border-radius:2px;overflow:hidden}
+  .obar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .35s}
+  @media (prefers-reduced-motion: reduce){.obar>i{transition:none}}
+
+  nav.toc{font-family:system-ui,sans-serif;margin-top:12px;display:flex;flex-direction:column;gap:2px}
+  nav.toc .grp{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);margin:14px 6px 4px}
+  nav.toc button{display:flex;gap:9px;align-items:baseline;text-align:left;border:none;background:none;color:var(--ink);
+    font:inherit;font-size:13.5px;padding:7px 8px;border-radius:6px;cursor:pointer;width:100%;line-height:1.3}
+  nav.toc button:hover{background:var(--paper)}
+  nav.toc button[aria-current="true"]{background:var(--accent-soft);color:var(--ink);font-weight:700}
+  nav.toc button .n{font-family:ui-monospace,monospace;font-size:11px;color:var(--ink-2);flex:none;width:20px}
+  nav.toc button[aria-current="true"] .n{color:var(--accent)}
+  nav.toc button .dot{margin-left:auto;flex:none;width:9px;height:9px;border-radius:50%;border:1.5px solid var(--line-strong);align-self:center}
+  nav.toc button.done .dot{background:var(--struct);border-color:var(--struct)}
+
+  /* article */
+  .lead{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+  main h2{font-family:system-ui,sans-serif;font-size:clamp(24px,4vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:2px 0 6px;text-wrap:balance}
+  .sub{font-size:17px;color:var(--ink-2);margin:0 0 18px;font-style:italic}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:11px;color:var(--ink-2);border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line);padding:9px 0;margin-bottom:22px}
+  main h3{font-family:system-ui,sans-serif;font-size:19px;font-weight:750;margin:28px 0 8px;letter-spacing:-.01em;scroll-margin-top:20px}
+  main p{margin:12px 0;max-width:68ch}
+  main li{margin:6px 0;max-width:66ch}
+  main strong{color:var(--ink)}
+  .obj{background:var(--paper);border:1.5px solid var(--line-strong);border-radius:8px;padding:14px 18px;margin:14px 0}
+  .obj .ui{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:0 0 4px}
+  .obj ul{margin:6px 0 0;padding-left:20px}
+
+  .call{border-left:5px solid var(--line-strong);border-radius:0 8px 8px 0;padding:12px 16px;margin:18px 0;background:var(--sheet);box-shadow:var(--shadow)}
+  .call .tag{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:3px}
+  .call p{margin:4px 0}
+  .call.angle{border-color:var(--struct);background:var(--struct-soft)} .call.angle .tag{color:var(--struct)}
+  .call.power{border-color:var(--power);background:var(--power-soft)} .call.power .tag{color:var(--power)}
+  .call.cool{border-color:var(--cool);background:var(--cool-soft)} .call.cool .tag{color:var(--cool)}
+  .call.key{border-color:var(--accent);background:var(--accent-soft)} .call.key .tag{color:var(--accent)}
+  .call.warn{border-color:var(--danger);background:var(--danger-soft)} .call.warn .tag{color:var(--danger)}
+
+  .byn{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:18px 0}
+  .byn .cell{border:1.5px solid var(--line-strong);border-radius:8px;padding:12px 14px;background:var(--sheet)}
+  .byn .v{font-family:ui-monospace,monospace;font-size:22px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1}
+  .byn .k{font-family:system-ui,sans-serif;font-size:12px;color:var(--ink-2);margin-top:3px}
+
+  .diagram{border:1.5px solid var(--line-strong);border-radius:10px;padding:16px;margin:18px 0;background:var(--sheet);overflow-x:auto}
+  .flow{display:flex;align-items:stretch;gap:0;min-width:min-content;font-family:system-ui,sans-serif}
+  .flow .node{border:1.5px solid var(--line-strong);border-radius:7px;padding:8px 10px;min-width:92px;background:var(--paper);text-align:center;display:flex;flex-direction:column;justify-content:center}
+  .flow .node b{font-size:12.5px} .flow .node span{font-size:10.5px;color:var(--ink-2);margin-top:2px}
+  .flow .arr{align-self:center;color:var(--accent);font-weight:700;padding:0 7px;font-family:ui-monospace,monospace}
+  .cap{font-family:system-ui,sans-serif;font-size:12px;color:var(--ink-2);margin-top:10px;text-align:center}
+
+  table.data{border-collapse:collapse;width:100%;font-family:system-ui,sans-serif;font-size:13.5px;margin:16px 0;min-width:520px}
+  .scroll{overflow-x:auto}
+  table.data th{text-align:left;font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);border-bottom:1.5px solid var(--line-strong);padding:8px 10px}
+  table.data td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.data td.n{font-family:ui-monospace,monospace;white-space:nowrap}
+
+  /* quiz */
+  .quiz{border:1.5px solid var(--accent);border-radius:10px;padding:18px 20px;margin:26px 0 10px;background:var(--sheet)}
+  .quiz .ui.h{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  .q{margin:14px 0;padding-bottom:6px}
+  .q .stem{font-family:system-ui,sans-serif;font-weight:650;font-size:15px;margin-bottom:8px}
+  .q .opt{display:block;font-family:system-ui,sans-serif;font-size:14px;border:1.5px solid var(--line-strong);border-radius:7px;padding:9px 12px;margin:6px 0;cursor:pointer;background:var(--paper)}
+  .q .opt:hover{border-color:var(--accent)}
+  .q .opt.correct{border-color:var(--struct);background:var(--struct-soft)}
+  .q .opt.wrong{border-color:var(--danger);background:var(--danger-soft)}
+  .q .opt input{margin-right:8px}
+  .q .exp{font-family:system-ui,sans-serif;font-size:13px;color:var(--ink-2);margin-top:6px;padding:8px 12px;border-left:3px solid var(--struct);background:var(--struct-soft);border-radius:0 6px 6px 0;display:none}
+  .q.answered .exp{display:block}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
+  button.act{font-family:system-ui,sans-serif;font-size:14px;font-weight:600;border:1.5px solid var(--accent);background:var(--accent);color:var(--accent-ink);padding:9px 16px;border-radius:8px;cursor:pointer}
+  button.act.ghost{background:none;color:var(--accent)}
+  button.act:focus-visible,nav.toc button:focus-visible,.opt:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+  .score{font-family:ui-monospace,monospace;font-size:13px;color:var(--ink-2)}
+
+  .pager{display:flex;justify-content:space-between;gap:12px;margin-top:36px;border-top:1.5px solid var(--line);padding-top:18px}
+  .pager button{font-family:system-ui,sans-serif;font-size:13.5px;border:1.5px solid var(--line-strong);background:var(--sheet);color:var(--ink);padding:10px 14px;border-radius:8px;cursor:pointer;max-width:48%;text-align:left}
+  .pager button:hover:not(:disabled){border-color:var(--accent)}
+  .pager button:disabled{opacity:.35;cursor:default}
+  .pager button .lbl{display:block;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+  .pager button.next{text-align:right;margin-left:auto}
+
+  /* glossary + generic */
+  .search{width:100%;font-family:system-ui,sans-serif;font-size:15px;padding:11px 14px;border:1.5px solid var(--line-strong);border-radius:9px;background:var(--sheet);color:var(--ink);margin:6px 0 16px}
+  .term{border-bottom:1px solid var(--line);padding:11px 2px}
+  .term dt{font-family:system-ui,sans-serif;font-weight:750;font-size:15px}
+  .term dd{margin:3px 0 0;color:var(--ink-2);font-size:14.5px;max-width:70ch}
+  .term .cat{font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-left:8px}
+  .reslist{display:grid;gap:12px}
+  .res{border:1.5px solid var(--line-strong);border-radius:9px;padding:13px 16px;background:var(--sheet)}
+  .res a{font-family:system-ui,sans-serif;font-weight:700;font-size:15px;color:var(--accent);text-decoration:none}
+  .res a:hover{text-decoration:underline}
+  .res p{margin:4px 0 0;font-size:13.5px;color:var(--ink-2)}
+  .res .cat{font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+  .ivq{border-left:4px solid var(--accent);padding:10px 16px;margin:14px 0;background:var(--sheet);border-radius:0 8px 8px 0;box-shadow:var(--shadow)}
+  .ivq .q2{font-family:system-ui,sans-serif;font-weight:700;font-size:15.5px}
+  .ivq .a2{font-size:14px;color:var(--ink-2);margin-top:6px}
+  .ivq .a2 b{color:var(--ink)}
+
+  a.inline{color:var(--accent)}
+  .topbar{display:none}
+  @media(max-width:939px){
+    .topbar{display:flex;position:sticky;top:0;z-index:20;background:var(--sheet);border-bottom:1.5px solid var(--line-strong);
+      padding:10px 14px;gap:12px;align-items:center;font-family:system-ui,sans-serif}
+    .topbar button{font-family:ui-monospace,monospace;font-size:12px;border:1.5px solid var(--line-strong);background:var(--paper);color:var(--ink);padding:7px 11px;border-radius:7px;cursor:pointer}
+    .topbar b{font-size:13px}
+    aside.hide{display:none}
+  }
+  .themebtn{margin-top:20px;font-family:ui-monospace,monospace;font-size:11px;border:1.5px solid var(--line-strong);background:var(--paper);color:var(--ink-2);padding:6px 10px;border-radius:7px;cursor:pointer}
+</style>
+
+<div class="topbar">
+  <button id="menu" aria-label="Toggle contents">☰ Contents</button>
+  <b id="mobcrumb">Data Center Literacy</b>
+</div>
+
+<div class="shell">
+  <aside id="side">
+    <div class="brand">
+      <div class="kick">Field Course · Rev 1</div>
+      <h1>Data Center Literacy</h1>
+      <p>For the structural engineer going owner-side. Built for Uzair.</p>
+    </div>
+    <div class="overall ui">
+      <span id="ovtext">0 of 0 lessons complete</span>
+      <div class="obar"><i id="ovbar"></i></div>
+    </div>
+    <nav class="toc" id="toc" aria-label="Course contents"></nav>
+    <button class="themebtn" id="theme">◐ Toggle theme</button>
+  </aside>
+
+  <main id="main" tabindex="-1">
+    <!-- rendered by JS -->
+  </main>
+</div>
+
+<script>
+/* ============================ COURSE DATA ============================ */
+/* Content authored for a structural engineer. Numbers verified against
+   Uptime Institute, ASHRAE TC 9.9, NVIDIA spec sheets, DCD, SemiAnalysis
+   (2025-2026). See Resources lesson for sources. */
+
+const A = (tag, cls) => `<div class="call ${cls}"><span class="tag">${tag}</span>`;
+const END = `</div>`;
+
+const COURSE = [
+{
+  group:"Start here", id:"orientation", n:"00",
+  title:"Orientation: why a structural engineer needs this",
+  sub:"The building is the smallest line item and the biggest constraint.",
+  min:8,
+  objectives:[
+    "Explain why hyperscalers hire structural engineers onto owner-side data center teams",
+    "Describe the mental model: a data center is a machine for turning electricity into computation and heat",
+    "Know how to use this course and what 'literacy' means for interviews"
+  ],
+  body:`
+  <p>You already know how to design a building. What you do <em>not</em> yet speak fluently is the language of the thing the building exists to protect: the <strong>power and cooling machine</strong> inside it. Owner-side data center teams at Google, Meta, Microsoft, and AWS do not need you to become an electrical or mechanical engineer. They need a structural engineer who understands enough of the whole system to <strong>coordinate intelligently, anticipate loads before they are handed to you, and never be the person who says "nobody told me about the 40-ton chiller."</strong></p>
+
+  <p>That is what "literacy" means here. By the end of this course you will be able to sit in a design review with electrical, mechanical, and controls engineers and follow every acronym, know which decisions drive your structural loads, and speak about reliability the way owners think about it. That fluency is precisely what separates a $120k design-firm structural engineer from a $180–250k owner-side one.</p>
+
+  ${A("The one mental model to keep","key")}
+  <p>A data center is a machine that converts <strong>electricity → computation → heat</strong>, and must never stop. Almost every design decision — structural included — falls out of three questions: <em>How much power comes in? How do we get the heat out? What happens when a component fails?</em> Hold that model and the rest of this course hangs off it.</p>
+  ${END}
+
+  <p>The industry is in the middle of the largest construction boom in its history — over <strong>$700 billion</strong> of hyperscaler capital spending planned for 2026 alone — and it is bottlenecked on people who understand mission-critical facilities. AI has broken the old assumptions: racks that used to draw 5–10 kilowatts now draw <strong>over 100</strong>, which changes power, cooling, and — directly in your lane — floor loads, equipment weights, and vibration. You are arriving at exactly the moment the structural problems got interesting.</p>
+
+  ${A("How to use this course","angle")}
+  <p>Ten lessons, roughly 8–15 minutes each. Every lesson ends with a short self-check quiz; your scores and completion are saved in this browser. Watch for the <strong style="color:var(--struct)">green "Structural Angle"</strong> callouts — those are the parts that are literally your job. There is a searchable Glossary and an Interview Prep lesson at the end. Do them in order the first time; after that, jump around.</p>
+  ${END}
+  `,
+  terms:[
+    ["Mission critical","A facility or system where downtime causes severe financial, safety, or operational loss — designed to run continuously."],
+    ["Owner-side / owner's engineer","An engineer working for the data center owner (e.g., Google) who sets standards and reviews/validates the design consultants' work, rather than producing the stamped design."],
+    ["Hyperscaler","A company operating data centers at massive scale for its own cloud/AI (Google, Microsoft, Meta, Amazon, Oracle)."]
+  ],
+  quiz:[
+    {q:"What is the single mental model this course builds everything on?",
+     o:["A data center is a big warehouse with servers",
+        "A data center converts electricity into computation and heat, and must never stop",
+        "A data center is primarily a cooling problem",
+        "A data center is a Tier IV building"],
+     a:1, e:"Power in → compute → heat out, with continuous uptime. Nearly every design decision, structural included, follows from those three questions."},
+    {q:"What do owner-side teams most need from a structural engineer?",
+     o:["To become a licensed electrical engineer",
+        "To produce the stamped MEP design",
+        "To understand the whole system well enough to coordinate and anticipate loads",
+        "To operate the facility day-to-day"],
+     a:2, e:"Literacy and coordination — not that you take over other disciplines. You anticipate the loads the machine imposes on your structure."}
+  ]
+},
+{
+  group:"The machine", id:"anatomy", n:"01",
+  title:"Anatomy of a data center",
+  sub:"Whitespace, grey space, and the campus around them.",
+  min:12,
+  objectives:[
+    "Name the major spaces in a data center and what lives in each",
+    "Distinguish colocation, hyperscale, and edge facilities",
+    "Understand the campus scale: buildings, substations, generator yards, water"
+  ],
+  body:`
+  <p>Walk into a data center and you are really walking through two kinds of space. <strong>Whitespace</strong> (or "white space") is the raised, cooled, secured room where the IT equipment lives — rows of racks full of servers, storage, and networking gear. It is the revenue-generating space; everything else exists to keep it alive. <strong>Grey space</strong> (or "back-of-house") is everything supporting it: electrical rooms, UPS and battery rooms, mechanical/cooling plant, generator yards, fuel storage, switchgear, loading docks.</p>
+
+  ${A("By the numbers — a typical hyperscale building","key")}
+  <p>A single modern hyperscale data hall building is often <strong>hundreds of thousands of square feet</strong>, single- or two-story, drawing tens to <strong>hundreds of megawatts</strong>. Campuses cluster several such buildings plus their own electrical substation. The ratio of grey-to-white space has been <em>growing</em> as power density rises — the machine supporting each square foot of IT keeps getting bigger.</p>
+  ${END}
+
+  <h3>The rack, the row, the hall</h3>
+  <p>The atomic unit is the <strong>rack</strong> (or cabinet) — a standardized steel frame, typically 42U or taller ("U" = 1.75 in of vertical mounting height). Racks line up in <strong>rows</strong>, rows form a <strong>data hall</strong>, and halls are grouped into a building. Racks are arranged so their fronts face each other (cold aisle) and backs face each other (hot aisle) — you will see why in the cooling lesson. What matters structurally right now: a row of racks is a <strong>line of heavy, concentrated, rolling loads</strong> on your floor, and the trend is straight up.</p>
+
+  <div class="diagram"><div class="flow">
+    <div class="node"><b>Campus</b><span>multiple buildings + substation</span></div><div class="arr">▸</div>
+    <div class="node"><b>Building</b><span>100k–1M+ sf</span></div><div class="arr">▸</div>
+    <div class="node"><b>Data hall</b><span>rows of racks</span></div><div class="arr">▸</div>
+    <div class="node"><b>Row</b><span>hot/cold aisles</span></div><div class="arr">▸</div>
+    <div class="node"><b>Rack</b><span>42U, the unit</span></div>
+  </div><div class="cap">Scale hierarchy — the whole campus exists to serve the rack.</div></div>
+
+  <h3>Three business models, three structural problems</h3>
+  <div class="scroll"><table class="data">
+    <tr><th>Type</th><th>Who / what</th><th>Structural character</th></tr>
+    <tr><td><b>Hyperscale</b></td><td>One owner (Google/Meta/AWS) at huge scale, purpose-built, often for AI training</td><td>Standardized, repeatable, schedule-driven, tilt-up + steel, extreme loads for AI</td></tr>
+    <tr><td><b>Colocation ("colo")</b></td><td>Operator (Equinix, Digital Realty, QTS) leases space/power to many tenants</td><td>Flexible, must suit many tenants; often multi-story in urban markets</td></tr>
+    <tr><td><b>Edge</b></td><td>Small facilities close to users for low latency; sometimes prefab modular units</td><td>Small footprint, often modular/containerized — prefab structural work</td></tr>
+  </table></div>
+
+  ${A("Structural Angle — read the program before the loads","angle")}
+  <p>Whether a project is hyperscale, colo, or edge tells you almost everything about your structural approach before you see a single number. Hyperscale = a <strong>kit-of-parts you'll repeat dozens of times</strong>, so an hour saved in the typical bay is worth a thousand hours across the fleet. Colo = flexibility and multi-tenant floor loading. Edge = modular/prefab, which is a different design-and-connection problem entirely. Owner's engineers think in fleets, not one-off buildings.</p>
+  ${END}
+  `,
+  terms:[
+    ["Whitespace","The raised, cooled, secure room housing IT racks — the revenue space."],
+    ["Grey space","Back-of-house supporting space: electrical, mechanical, UPS/battery, generators."],
+    ["Rack / cabinet","Standardized steel frame (e.g., 42U) holding servers; the atomic unit of the data hall."],
+    ["Data hall","A room full of rows of racks; buildings contain one or more halls."],
+    ["Colocation (colo)","A facility where an operator leases space and power to multiple tenant companies."],
+    ["Edge data center","A small facility placed near end users to reduce latency; often modular."]
+  ],
+  quiz:[
+    {q:"Which space actually generates revenue and drives all supporting design?",
+     o:["Grey space","Whitespace","The generator yard","The loading dock"], a:1,
+     e:"Whitespace houses the IT racks. Everything in grey space exists to keep the whitespace alive."},
+    {q:"A hyperscale project's biggest structural implication versus a one-off building is:",
+     o:["It uses weaker materials","Standardization/repeatability makes per-bay optimization hugely valuable",
+        "It never uses tilt-up","It has no equipment loads"], a:1,
+     e:"Hyperscalers repeat a kit-of-parts across a fleet, so optimizing the typical bay pays off many times over."},
+    {q:"'2 racks at 42U' primarily tells a structural engineer about:",
+     o:["The paint color","Concentrated, heavy, rolling floor loads in rows","Fire rating only","The Wi-Fi"], a:1,
+     e:"Rows of racks are lines of concentrated, heavy, and rolling loads — and AI is pushing rack weight and power up sharply."}
+  ]
+},
+{
+  group:"The machine", id:"power", n:"02",
+  title:"The power train: utility to chip",
+  sub:"Follow one electron from the grid to a GPU — and weigh everything it passes through.",
+  min:15,
+  objectives:[
+    "Trace the electrical path from utility to rack and name each component",
+    "Explain backup power: generators, fuel, paralleling",
+    "Identify which power components drive structural loads (weight, vibration, anchorage)"
+  ],
+  body:`
+  <p>Power is the master constraint of a data center — sites are chosen for it, and the whole facility is sized in <strong>megawatts of IT load</strong>. Follow the path once and you will understand 80% of the grey space.</p>
+
+  <div class="diagram"><div class="flow">
+    <div class="node"><b>Utility</b><span>grid, MV</span></div><div class="arr">▸</div>
+    <div class="node"><b>Substation</b><span>step down</span></div><div class="arr">▸</div>
+    <div class="node"><b>MV switchgear</b><span>distribute</span></div><div class="arr">▸</div>
+    <div class="node"><b>Transformer</b><span>to LV</span></div><div class="arr">▸</div>
+    <div class="node"><b>UPS</b><span>ride-through</span></div><div class="arr">▸</div>
+    <div class="node"><b>PDU / RPP</b><span>to rows</span></div><div class="arr">▸</div>
+    <div class="node"><b>Busway</b><span>overhead</span></div><div class="arr">▸</div>
+    <div class="node"><b>Rack PDU</b><span>to servers</span></div>
+  </div><div class="cap">The power train. Every box is heavy, and several are your structural problem.</div></div>
+
+  <h3>Grid to building</h3>
+  <p>Utility power arrives at <strong>medium voltage</strong> and hits an on-site <strong>substation</strong> that steps it down. From there, <strong>switchgear</strong> (big cabinets of breakers and buses that distribute and protect circuits) feeds <strong>transformers</strong> that drop voltage again for use. These are among the <strong>heaviest single pieces of equipment</strong> on the site — large transformers and switchgear line-ups are measured in tons, sit on housekeeping pads, and often live outdoors or in dedicated electrical rooms.</p>
+
+  <h3>Ride-through: the UPS</h3>
+  <p>The grid is not perfectly reliable, and servers cannot blink. The <strong>UPS (Uninterruptible Power Supply)</strong> bridges the gap between a utility failure and the generators coming online — seconds to minutes. Two dominant flavors: <strong>battery</strong> (rooms of VRLA or lithium-ion batteries) and <strong>flywheel/rotary</strong> (kinetic energy). Battery rooms are a classic structural surprise.</p>
+
+  ${A("Structural Angle — the battery room","angle")}
+  <p>A room full of UPS batteries is one of the <strong>heaviest floor loads in the building</strong>. Traditional VRLA (flooded lead-acid) strings, tiered 2–3 high, commonly impose <strong>~250–450 psf</strong> — often <em>exceeding</em> a raised floor's rating and forcing spreader plates or a slab. The chemistry choice swings your design: <strong>lithium-ion (LFP) weighs ~60–80% less and takes ~50–80% less floor space</strong> for the same backup, which is a big reason new AI builds favor it. Batteries also mean spill containment, seismic anchorage of tall racks (ASCE 7 Ch. 13 — Lesson 07), and sometimes hydrogen ventilation. If someone hands you "just an electrical room," ask what's in it. <em>(Confirm the psf against the actual battery spec — it's project- and chemistry-specific.)</em></p>
+  ${END}
+
+  <h3>Distribution to the rack</h3>
+  <p>Downstream of the UPS, power reaches the <strong>PDU (Power Distribution Unit)</strong> and <strong>RPP (Remote Power Panel)</strong>, which break the big feeders into circuits for rows and racks. A floor-standing PDU (which often contains its own transformer) weighs on the order of <strong>5,000–10,000 lb</strong> — a concentrated load you sign off on. Modern halls distribute power overhead via <strong>busway</strong> (a rigid bus system) rather than under-floor conduit — those are <strong>hung loads on your roof or ceiling structure</strong>, along with cable tray, and they need seismic bracing. Finally the <strong>rack PDU</strong> (a power strip in the rack, usually dual A-side/B-side — the visible face of 2N) feeds each server's power supply.</p>
+
+  <h3>Backup: generators and fuel</h3>
+  <p>When the utility fails, <strong>standby generators</strong> (diesel, increasingly natural gas) carry the whole facility. Units cluster around a <strong>2.0–2.5 MW</strong> sweet spot (lineups run ~1.5–4 MW), and campuses have <em>many</em> — Amazon's Manassas, VA site alone has <strong>93 generators at 2.5 MW each</strong>; Virginia had over 10,500 permitted data center generator units by end of 2025. They sit in a <strong>generator yard</strong> or enclosures, fed by <strong>fuel storage</strong> — small "day tanks" at each unit topped from large bulk tanks holding <strong>24–48 hours</strong> of full-load fuel — with <strong>paralleling switchgear</strong> that syncs them and an <strong>ATS (Automatic Transfer Switch)</strong> that flips the load over in ~10–60 seconds.</p>
+
+  ${A("Structural Angle — generators and fuel","angle")}
+  <p>Generators are heavy, <strong>vibrate</strong>, and are life-safety-critical, so they get robust pads, vibration isolation, and — because the facility must survive to run them — high seismic/wind performance and <strong>Risk Category IV</strong>-level anchorage (Lesson 07). Fuel tanks add large concentrated weights, containment berms, and their own foundations. Exhaust, radiators, and load banks all hang or mount somewhere. The generator yard is a structural project inside the project.</p>
+  ${END}
+
+  ${A("By the numbers","power")}
+  <p><b>MW = the unit.</b> A facility is sized by IT load in megawatts. <b>Generators</b> commonly 2–3 MW each, many per campus. <b>Transformers & switchgear</b>: tons apiece. <b>Rack power</b>: historically 5–10 kW; AI racks now 100+ kW — which cascades into more transformers, more UPS, more busway, more weight, everywhere.</p>
+  ${END}
+  `,
+  terms:[
+    ["Substation","On-site facility stepping medium-voltage utility power down for the campus."],
+    ["Switchgear","Cabinets of breakers/buses that distribute and protect electrical circuits; very heavy line-ups."],
+    ["Transformer","Device that changes voltage level; among the heaviest equipment on site."],
+    ["UPS (Uninterruptible Power Supply)","System (battery or flywheel) that carries the load through the gap between utility loss and generator start."],
+    ["PDU / RPP","Power Distribution Unit / Remote Power Panel — break feeders into circuits for rows and racks."],
+    ["Busway","Rigid overhead bus system distributing power to racks; a hung structural load."],
+    ["Standby generator","Engine-generator (diesel/gas) that powers the whole facility during a utility outage."],
+    ["ATS (Automatic Transfer Switch)","Switch that automatically transfers load from utility to generator power."],
+    ["Day tank / bulk tank","Small local and large central fuel storage for generators."]
+  ],
+  quiz:[
+    {q:"The UPS exists primarily to:",
+     o:["Cool the servers","Bridge the seconds/minutes between utility failure and generators starting",
+        "Step down utility voltage","Distribute power to racks"], a:1,
+     e:"Servers can't blink; the UPS provides ride-through until standby generators take the load."},
+    {q:"Which is famously one of the heaviest floor loads in the building?",
+     o:["The reception desk","A UPS battery room","The break room","Cable tray"], a:1,
+     e:"Battery rooms concentrate very large weights — often designed on the order of 250+ psf, plus containment and seismic anchorage."},
+    {q:"Why do standby generators typically get Risk Category IV-level anchorage?",
+     o:["They're cheap","The facility must survive an event in order to run them, and they vibrate & are life-safety critical",
+        "They're lightweight","Code doesn't care about them"], a:1,
+     e:"Backup power is what keeps a mission-critical facility alive, so its supports and anchorage are held to the highest performance level."},
+    {q:"AI pushing rack power from ~10 kW to 100+ kW structurally means:",
+     o:["Nothing changes","More/heavier transformers, UPS, busway and higher floor loads everywhere",
+        "Only the paint changes","Fewer generators"], a:1,
+     e:"Higher rack power cascades through the entire power train — more and heavier equipment, and heavier floors."}
+  ]
+},
+{
+  group:"The machine", id:"reliability", n:"03",
+  title:"Redundancy, reliability & the Tier standard",
+  sub:"How owners buy the promise that it never goes down.",
+  min:13,
+  objectives:[
+    "Define N, N+1, 2N and distributed redundancy with examples",
+    "Explain the Uptime Institute Tier Standard (I–IV) and the key ideas of concurrent maintainability and fault tolerance",
+    "Connect redundancy choices to structural quantity and layout"
+  ],
+  body:`
+  <p>Owners do not buy servers; they buy <strong>uptime</strong>. The entire discipline of reliability is about surviving both <em>failures</em> and <em>maintenance</em> without dropping the IT load. Two vocabularies dominate: <strong>redundancy notation</strong> and the <strong>Uptime Institute Tiers</strong>.</p>
+
+  <h3>Redundancy notation</h3>
+  <p><strong>N</strong> is exactly the capacity needed to carry the load — no spare. Everything else adds margin:</p>
+  <div class="scroll"><table class="data">
+    <tr><th>Notation</th><th>Meaning</th><th>Example</th></tr>
+    <tr><td class="n"><b>N</b></td><td>Just enough capacity, no redundancy</td><td>4 chillers carry the load; need all 4</td></tr>
+    <tr><td class="n"><b>N+1</b></td><td>One spare beyond need</td><td>Need 4, install 5; any one can fail/service</td></tr>
+    <tr><td class="n"><b>N+2</b></td><td>Two spares</td><td>Need 4, install 6</td></tr>
+    <tr><td class="n"><b>2N</b></td><td>Two complete independent systems (A + B)</td><td>Two full power paths; lose one entirely, still 100%</td></tr>
+    <tr><td class="n"><b>2N+1</b></td><td>Two full systems plus a spare</td><td>Highest common commercial resilience level</td></tr>
+    <tr><td class="n"><b>Distributed / block</b></td><td>3+ systems share load (e.g., "3-to-make-2"); or a shared reserve "catcher" block</td><td>~2N resilience at ~N+1 cost — how hyperscalers actually optimize to buy less heavy gear</td></tr>
+  </table></div>
+  <p>That last row matters: hyperscalers rarely pay for pure 2N everywhere. A common real build is <strong>N+1 on transformers and generators, 2N on UPS/PDU</strong>, with <strong>distributed or block-redundant</strong> schemes to get near-2N reliability while buying less (heavy, expensive) equipment — a reliability decision with a direct structural footprint.</p>
+
+  ${A("Structural Angle — redundancy is a quantity of equipment","angle")}
+  <p>Redundancy is invisible in a one-line diagram but very visible on your floor plan: <strong>2N doubles the equipment</strong> — twice the generators, UPS, cooling, and therefore twice the pads, weight, anchorage, and yard space. When an owner upgrades a project from N+1 to 2N, your equipment loads and layout change materially. Always know the redundancy target; it sizes your grey space.</p>
+  ${END}
+
+  <h3>The Uptime Institute Tier Standard</h3>
+  <p>The <strong>Uptime Institute</strong> publishes the industry's canonical <strong>Tier Standard</strong> (Tiers I–IV), covering both <em>Topology</em> (the design) and <em>Operational Sustainability</em>. The two ideas that matter most:</p>
+  <ul>
+    <li><strong>Concurrently Maintainable (Tier III):</strong> any single component or distribution path can be taken out of service for maintenance <em>without</em> dropping the IT load. You can fix things while running.</li>
+    <li><strong>Fault Tolerant (Tier IV):</strong> the facility can sustain an unplanned <em>failure</em> of any single component or path with no impact — redundant and physically isolated ("compartmentalized") systems.</li>
+  </ul>
+  <div class="scroll"><table class="data">
+    <tr><th>Tier</th><th>Idea</th><th>Rough availability*</th></tr>
+    <tr><td class="n"><b>I</b></td><td>Basic capacity, no redundancy</td><td>~99.671%</td></tr>
+    <tr><td class="n"><b>II</b></td><td>Redundant capacity components (N+1 gear)</td><td>~99.741%</td></tr>
+    <tr><td class="n"><b>III</b></td><td>Concurrently maintainable</td><td>~99.982%</td></tr>
+    <tr><td class="n"><b>IV</b></td><td>Fault tolerant, compartmentalized</td><td>~99.995%</td></tr>
+  </table></div>
+  <p class="cap" style="text-align:left">*Availability figures are the historically cited values; treat them as directional. The real distinction is the design capability, not the decimal.</p>
+
+  ${A("Watch out — how to sound like an insider on 'Tier'","warn")}
+  <p>Three things separate the fluent from the new: (1) A tier <strong>only counts when the Uptime Institute certifies it</strong> — countless facilities are marketed as "designed to Tier III" with no certification. (2) There are <em>distinct</em> certifications: <strong>Design Documents (TCDD)</strong> vs <strong>Constructed Facility (TCCF)</strong> vs Operational Sustainability — a design cert does not prove the built building meets the tier. (3) The precise <strong>availability percentages</strong> you'll see quoted (99.982%, 99.995%…) are legacy figures Uptime itself has <strong>distanced from and no longer guarantees</strong> — cite the <em>capability</em> (concurrently maintainable / fault tolerant), not the decimals. Also: Uptime "Tiers" ≠ the separate ANSI/TIA-942 "Rated 1–4" telecom standard. Getting these right signals you actually know the sector.</p>
+  ${END}
+
+  <h3>Commissioning (Cx), Levels 1–5</h3>
+  <p>Before a facility goes live it is <strong>commissioned</strong> — a rigorous, staged proof that every system performs and fails over as designed: <strong>L1</strong> factory acceptance testing, <strong>L2</strong> installation verification, <strong>L3</strong> startup/energization, <strong>L4</strong> functional testing under normal and failure conditions, and <strong>L5</strong> the <strong>Integrated Systems Test</strong> ("pull-the-plug") where the whole facility is subjected to a simulated real utility failure to prove generators, UPS, cooling, and controls hand off seamlessly. It's where "we think it works" becomes "we proved it." Note that L5 can impose temporary <strong>load-bank testing loads</strong> you may need to account for.</p>
+
+  ${A("Structural Angle — you enable maintainability physically","angle")}
+  <p>Concurrent maintainability is not only electrical — it is <strong>access and space</strong>. Equipment must be removable and replaceable while the facility runs, which drives clear structural openings, removal paths, crane/hoist points, knock-out panels, and layout. When mechanical says "we need to pull a 40-ton chiller without shutting down," that is a structural coordination problem you own.</p>
+  ${END}
+  `,
+  terms:[
+    ["N","Exactly the capacity required to carry the load, with no redundancy."],
+    ["N+1","One redundant unit beyond the required capacity."],
+    ["2N","Two complete, independent systems; either alone carries 100% of the load."],
+    ["Concurrently maintainable","Any component/path can be serviced without dropping the IT load (Uptime Tier III)."],
+    ["Fault tolerant","Facility withstands an unplanned single failure with no load impact (Uptime Tier IV)."],
+    ["Uptime Institute Tier Standard","The canonical I–IV classification of data center topology and operations."],
+    ["Commissioning (Cx)","Staged testing proving all systems perform and fail over as designed before go-live."],
+    ["Availability / SLA","Uptime expressed as a percentage; the Service Level Agreement is the contractual promise of it."]
+  ],
+  quiz:[
+    {q:"'2N' means:",
+     o:["Two spare units","Two complete independent systems, either carrying 100%",
+        "Twice the servers","Two commissioning levels"], a:1,
+     e:"2N is full duplication of the system — lose one entire path and still run at 100%. It roughly doubles the equipment (and your loads)."},
+    {q:"Tier III's defining capability is:",
+     o:["Fault tolerance","Concurrent maintainability — service any part without dropping load",
+        "No redundancy","Cheapest construction"], a:1,
+     e:"Tier III = concurrently maintainable. Tier IV adds fault tolerance (surviving an unplanned failure)."},
+    {q:"Why does concurrent maintainability concern the structural engineer?",
+     o:["It doesn't","Removing/replacing equipment while running drives openings, removal paths, and hoist points",
+        "It only affects paint","It reduces floor loads"], a:1,
+     e:"Maintainability is physical: clear structural openings and equipment removal paths are a structural coordination task."},
+    {q:"Upgrading a design from N+1 to 2N structurally tends to:",
+     o:["Halve the equipment","Roughly double equipment, pads, weight and yard space",
+        "Change nothing","Only affect software"], a:1,
+     e:"2N duplicates entire systems, materially increasing your equipment loads and grey-space layout."}
+  ]
+},
+{
+  group:"The machine", id:"cooling", n:"04",
+  title:"Cooling & thermal: getting the heat out",
+  sub:"Every watt in becomes a watt of heat. The cooling plant is half your rooftop.",
+  min:14,
+  objectives:[
+    "Explain why cooling scales directly with IT power",
+    "Distinguish air cooling, chilled-water systems, and liquid cooling",
+    "Understand PUE and why cooling equipment dominates structural coordination on the roof and in the yard"
+  ],
+  body:`
+  <p>Here is the physics that governs half the building: <strong>essentially all electrical power delivered to IT equipment turns into heat.</strong> A 100 MW data center is, thermally, a 100 MW heater. If you cannot move that heat out continuously, the machine cooks itself in minutes. Cooling is not an accessory — it is co-equal with power, and it is where an enormous amount of heavy, vibrating equipment ends up on <em>your</em> roof and in <em>your</em> yard.</p>
+
+  <h3>Air cooling (the traditional approach)</h3>
+  <p>Cold air is pushed through the racks; hot air is captured and rejected. The room units are <strong>CRAC</strong> (Computer Room Air Conditioner) or <strong>CRAH</strong> (Computer Room Air Handler). The distinction is worth knowing cold: <strong>CRA-C = Compressor onboard</strong> (a self-contained direct-expansion AC unit); <strong>CRA-H = Hydronic</strong> (just a fan and a chilled-water coil, no compressor — the cooling is made centrally by chillers). Large facilities overwhelmingly use CRAHs on a central chilled-water plant because it's far more efficient at scale. Cold air is delivered through a <strong>raised-floor plenum</strong> or overhead, and <strong>hot-aisle/cold-aisle containment</strong> physically separates hot and cold streams so they don't mix — the single biggest air-side efficiency win. <strong>Economizers</strong> ("free cooling") use cool outside air or water to skip mechanical refrigeration when the climate allows — a big reason data centers cluster in cool, dry regions.</p>
+
+  ${A("The number that forced the whole industry to change","cool")}
+  <p>Practical air cooling tops out around <strong>~40–50 kW per rack</strong>, even with full containment and rear-door assist. Below that, air works. Above it — which is exactly where AI racks now live — you physically cannot move the heat with air, and you must go liquid. That single threshold is the hinge the entire 2025–2026 redesign turns on.</p>
+  ${END}
+
+  <h3>Chilled-water systems (the big iron)</h3>
+  <p>At scale, cooling runs on water. <strong>Chillers</strong> produce chilled water; <strong>cooling towers</strong> reject heat to the atmosphere by evaporation; <strong>pumps</strong> move water through <strong>distribution piping</strong>; sometimes <strong>thermal storage tanks</strong> buffer the system. This is the heaviest, most vibration-prone, most water-laden equipment in the facility.</p>
+
+  ${A("Structural Angle — the rooftop and yard are cooling territory","angle")}
+  <p>Chillers and cooling towers are frequently on the <strong>roof</strong> or in a dedicated <strong>yard</strong>, which means: very large concentrated dead loads, <strong>full-of-water operating weights</strong> (design for filled, not shipping, weight), <strong>vibration isolation</strong> from rotating machinery, seismic anchorage of tall/heavy units, screening walls that catch wind, and piping loads distributed across the structure. A hyperscale roof can carry thousands of tons of mechanical equipment. When a mechanical engineer moves a chiller, your roof framing changes.</p>
+  ${END}
+
+  <h3>Liquid cooling (the AI shift)</h3>
+  <p>Air can only carry so much heat, and AI blew past the limit. Today's GPU racks are cooled with liquid brought <em>to the chip</em>:</p>
+  <ul>
+    <li><strong>Direct-to-chip (DLC) / cold plates:</strong> liquid circulates through plates sitting directly on the processors — the dominant approach for current AI racks.</li>
+    <li><strong>Rear-door heat exchangers:</strong> a liquid-cooled radiator on the back of the rack.</li>
+    <li><strong>Immersion cooling:</strong> entire servers submerged in dielectric fluid — single-phase or two-phase. <strong>Immersion tanks are extremely heavy</strong> (fluid + hardware).</li>
+    <li><strong>CDU (Coolant Distribution Unit):</strong> the interface that circulates and controls coolant to the racks.</li>
+  </ul>
+
+  ${A("Structural Angle — liquid means weight, and leaks","angle")}
+  <p>Liquid cooling changes your loads in three ways: (1) <strong>more weight</strong> — coolant, CDUs, manifolds, and especially immersion tanks concentrate serious load on the slab; (2) <strong>leak and containment</strong> — fluid over energized electronics demands drip trays, containment, and floor drainage you coordinate; (3) <strong>piping distribution</strong> everywhere. This is the single biggest reason AI has made data center structural engineering harder and better paid.</p>
+  ${END}
+
+  ${A("By the numbers — PUE","cool")}
+  <p><strong>PUE (Power Usage Effectiveness)</strong> = total facility power ÷ IT power. A perfect 1.0 means every watt goes to computing; the rest is "overhead," mostly cooling. Uptime Institute's 2025 survey puts the <strong>industry average at ~1.54 — essentially flat for six years</strong> (the easy gains were captured long ago). Best-in-class hyperscalers run about <strong>1.09</strong> (Google and Meta fleet-wide); two-phase immersion can reach ~1.02–1.05. The whole gap between 1.09 and 1.54 is cooling strategy, climate, and containment. Also watch <strong>WUE (Water Usage Effectiveness)</strong> — liters of water per kWh of IT — because evaporative cooling <em>lowers</em> PUE but <em>raises</em> WUE; you can't minimize both, and the industry is now engineering water out (Microsoft's next-gen closed-loop designs target zero evaporative water).</p>
+  ${END}
+
+  ${A("The thermal rulebook","key")}
+  <p><strong>ASHRAE Technical Committee 9.9</strong> publishes the thermal guidelines the industry designs to — recommended and allowable temperature/humidity envelopes for air cooling, and the newer water-cooling classes for liquid systems. You don't need to memorize the envelopes, but knowing "ASHRAE TC 9.9" is the reference shows fluency.</p>
+  ${END}
+  `,
+  terms:[
+    ["CRAC / CRAH","Computer Room Air Conditioner (DX) / Air Handler (chilled-water) — the room cooling units."],
+    ["Hot-aisle/cold-aisle containment","Physical separation of hot and cold airstreams to cool efficiently."],
+    ["Economizer / free cooling","Using cool outside air or water to avoid running mechanical refrigeration."],
+    ["Chiller","Machine producing chilled water for cooling; heavy, vibrating plant equipment."],
+    ["Cooling tower","Rejects heat to atmosphere by evaporation; large rooftop/yard load, water-laden."],
+    ["Direct-to-chip (DLC)","Liquid cooling via cold plates mounted directly on processors; standard for AI racks."],
+    ["Immersion cooling","Submerging servers in dielectric fluid; tanks are extremely heavy."],
+    ["CDU (Coolant Distribution Unit)","Circulates and controls coolant delivery to liquid-cooled racks."],
+    ["PUE","Power Usage Effectiveness = total facility power ÷ IT power; ~1.1 best, ~1.5 average."],
+    ["ASHRAE TC 9.9","The technical committee whose guidelines define data center thermal design envelopes."]
+  ],
+  quiz:[
+    {q:"Why does cooling scale directly with IT power?",
+     o:["It doesn't","Essentially all electrical power to IT becomes heat that must be removed",
+        "Because of lighting","Because of Wi-Fi"], a:1,
+     e:"A data center is thermally a heater equal to its IT power; all that energy must be continuously rejected."},
+    {q:"When designing roof support for a cooling tower, use its:",
+     o:["Empty shipping weight","Operating weight full of water","Half weight","Weight doesn't matter"], a:1,
+     e:"Design for the filled, operating weight — plus vibration isolation, seismic anchorage, and wind on screening."},
+    {q:"AI GPU racks are pushing the industry toward liquid cooling because:",
+     o:["Air is cheaper","Air can no longer carry the heat density of 100+ kW racks",
+        "Water is prettier","Liquid uses less space always"], a:1,
+     e:"Air-cooling hits a density ceiling; direct-to-chip and immersion bring liquid to the heat — adding weight and containment for you."},
+    {q:"A PUE of 1.1 versus 1.5 means:",
+     o:["1.5 is more efficient","1.1 wastes less power on overhead like cooling",
+        "They're identical","PUE measures water"], a:1,
+     e:"PUE = total ÷ IT power; closer to 1.0 is better. Best hyperscalers ~1.1; industry average ~1.5–1.6."}
+  ]
+},
+{
+  group:"The AI inflection", id:"ai", n:"05",
+  title:"The AI revolution: why every assumption changed",
+  sub:"The reason your floor loads, weights, and pay all went up at once.",
+  min:11,
+  objectives:[
+    "Explain how AI training clusters differ from traditional cloud data centers",
+    "Quantify the jump in rack power and weight and its structural consequences",
+    "Connect the AI buildout to the career opportunity"
+  ],
+  body:`
+  <p>Everything you have learned so far was stable for two decades. Then generative AI arrived and broke the assumptions all at once — and it did so in ways that land squarely on the structural engineer's desk.</p>
+
+  <h3>Training clusters are a different animal</h3>
+  <p>A traditional cloud data center is many independent servers doing small tasks. An <strong>AI training cluster</strong> is tens of thousands of GPUs working as <em>one machine</em>, wired together with extreme-bandwidth networking, running flat-out for weeks. That forces GPUs to be packed as densely as physically possible (to keep them close for speed), which drives power and heat per rack to levels the industry never designed for.</p>
+
+  ${A("By the numbers — the density jump","power")}
+  <p>A conventional rack drew <strong>5–10 kW</strong>. A current flagship AI rack — NVIDIA's <strong>GB200 NVL72</strong> — draws roughly <strong>120–132 kW</strong> and its deployed compute rack weighs about <strong>1,360 kg (~3,000 lb)</strong> in a ~2 ft × 3.5 ft footprint. The successor <strong>GB300 NVL72</strong> is ~1,500 kg and 132–140 kW; the coming <strong>Vera Rubin NVL72</strong> rack is ~4,000 lb with roadmaps pointing toward <strong>370–600 kW per rack</strong>. That is a <strong>10×+ jump in power and a large jump in concentrated weight in the same floor area</strong> — and the trajectory is still climbing.</p>
+  ${END}
+
+  ${A("Watch out — which weight are you loading?","warn")}
+  <p>Be precise: the ~1,360 kg / 3,000 lb figure is the <strong>deployed compute rack</strong>. Some sources quote ~3,000 <em>kg</em> — that's the <strong>full delivered system</strong> (compute rack + separate NVLink switch rack + CDU + PDU, shipped as four pieces). It matters enormously whether you're checking one floor tile or a whole row. Always confirm against the current NVIDIA/integrator spec sheet for your project's exact SKU.</p>
+  ${END}
+
+  ${A("Structural Angle — this is why AI data centers are hard","angle")}
+  <p>Compress the consequences: (1) <strong>Floor loads</strong> — heavier racks concentrated in dense rows push slab design, point loads, and floor flatness for rolling 3,000 lb cabinets. (2) <strong>Liquid cooling</strong> — 120 kW can't be air-cooled, so you inherit CDUs, manifolds, coolant weight, and containment. (3) <strong>More of everything upstream</strong> — 10× power means far more transformers, UPS, battery, and busway, each with weight and anchorage. (4) <strong>Retrofit pain</strong> — cramming AI racks into buildings designed for 10 kW air-cooled loads is a structural-assessment problem (your Falcon forensic/retrofit background is directly relevant). This is the concrete reason owner-side structural roles for AI facilities pay what they do.</p>
+  ${END}
+
+  <h3>The scale of the moment</h3>
+  <p>The hyperscalers are collectively spending <strong>over $700 billion in 2026</strong>, building gigawatt-scale campuses (single sites now planned at 1–5 GW). The binding constraints are power availability, cooling, and — repeatedly cited across the industry — <strong>people who understand mission-critical facilities</strong>. You are learning exactly the literacy that shortage is about.</p>
+
+  ${A("Career tie-in","key")}
+  <p>Every structural challenge above is a talking point in an owner-side interview. "I understand that a GB200-class rack at ~120 kW and ~3,000 lb forces liquid cooling and drives slab point-loads and floor-flatness requirements, and that retrofitting legacy halls is a structural-assessment problem" — that single sentence signals you are not a generic structural engineer. That is the return on this course.</p>
+  ${END}
+  `,
+  terms:[
+    ["AI training cluster","Tens of thousands of GPUs operated as one tightly-networked machine, at extreme density."],
+    ["GPU","Graphics Processing Unit — the high-power chip that does AI computation; drives the density problem."],
+    ["Rack density (kW/rack)","Power drawn per rack; jumped from ~5–10 kW to 100+ kW with AI."],
+    ["Gigawatt campus","A data center site planned around 1,000+ MW of power — the new hyperscale AI scale."],
+    ["Retrofit","Adapting an existing facility for new (denser, heavier) equipment — a structural-assessment problem."]
+  ],
+  quiz:[
+    {q:"How does an AI training cluster differ from traditional cloud?",
+     o:["It's smaller","Tens of thousands of GPUs act as one dense, tightly-networked machine",
+        "It uses no power","It doesn't need cooling"], a:1,
+     e:"Training runs GPUs as a single machine at maximum density, driving unprecedented power and heat per rack."},
+    {q:"A GB200 NVL72-class AI rack is roughly:",
+     o:["5 kW and 200 lb","~120–132 kW and ~3,000 lb (deployed compute rack) in one cabinet","1 kW and 50 lb","Weightless"], a:1,
+     e:"~120–132 kW and ~1,360 kg (~3,000 lb) for the deployed compute rack — a 10×+ power jump. Note ~3,000 kg refers to the full 4-piece delivered system; verify the exact spec."},
+    {q:"Which is NOT a direct structural consequence of AI density?",
+     o:["Higher slab point loads and floor-flatness needs","Inheriting liquid-cooling weight and containment",
+        "More upstream power equipment to support","The servers choosing their own paint color"], a:3,
+     e:"Floor loads, liquid-cooling weight, and more upstream equipment are all yours; paint is not a structural consequence."},
+    {q:"Why is retrofitting old halls for AI a structural opportunity for you specifically?",
+     o:["It isn't","Assessing whether legacy structure can carry denser/heavier/liquid-cooled loads is forensic/retrofit work",
+        "Because it needs no analysis","Because AI racks are lighter"], a:1,
+     e:"Evaluating existing structures for far heavier loads is exactly the forensic/retrofit skillset — a direct bridge from your Falcon experience."}
+  ]
+},
+{
+  group:"Your job", id:"gravity", n:"06",
+  title:"Structural design I — gravity & the building shell",
+  sub:"Floor loads, equipment weights, roofs, and the systems that carry them.",
+  min:15,
+  objectives:[
+    "Select and justify a structural system for a data center",
+    "Reason about floor live loads for IT, batteries, and heavy equipment",
+    "Account for rooftop mechanical and equipment support loads"
+  ],
+  body:`
+  <p>Now we're fully in your lane. This lesson is the gravity system; the next is lateral and nonstructural. The theme throughout: a data center is a <strong>building shaped entirely by the equipment it carries</strong>, on a <strong>schedule that dominates every decision</strong>.</p>
+
+  <h3>The structural system</h3>
+  <p>Most hyperscale data centers are <strong>single-story or low-rise</strong>, long-span, with wide column bays to keep the data halls flexible and column-free. The dominant systems:</p>
+  <ul>
+    <li><strong>Tilt-up concrete walls + steel roof/frame</strong> — the hyperscaler favorite for speed: cast wall panels on-site, tilt them up, drop in a steel roof. Fast, repeatable, and cheap at scale.</li>
+    <li><strong>Precast concrete</strong> — factory panels, even faster erection, quality-controlled.</li>
+    <li><strong>Structural steel / PEMB</strong> — long spans, fast steel erection.</li>
+    <li><strong>Cast-in-place concrete</strong> — more common in multi-story urban colo where floor stiffness and vibration matter.</li>
+  </ul>
+
+  ${A("Structural Angle — schedule is the design driver","angle")}
+  <p>In most buildings you optimize for cost or material. In hyperscale data centers you optimize for <strong>speed and repeatability</strong>, because the owner is building the same box dozens of times and every week of schedule is enormous revenue. That is why tilt-up + steel wins, why standardized details matter more than clever ones, and why <strong>Design for Manufacturing and Assembly (DfMA)</strong> and modular/prefab (Lesson 08) are central. An owner's engineer who reduces cycle time is worth a fortune.</p>
+  ${END}
+
+  <h3>Floor loads — the heart of it</h3>
+  <p>Here is the most important single fact in your data center structural toolkit: <strong>the code minimum is dangerously below reality.</strong> ASCE 7-22's "computer use / access floor" value is only <strong>100 psf uniform (or a 2,000 lb concentrated point load)</strong> — but a single loaded rack imposes 400+ psf on its own footprint. So you never design to the code minimum; you design to the <strong>actual rack layout</strong>, computing an equivalent load that produces the same slab forces.</p>
+  <div class="scroll"><table class="data">
+    <tr><th>Basis</th><th>Uniform live load</th><th>Note</th></tr>
+    <tr><td>ASCE 7-22 minimum (computer/access floor)</td><td class="n">100 psf <em>or</em> 2,000 lb point</td><td>The floor — never the design target</td></tr>
+    <tr><td>UFC 3-301-01 (military IT rooms)</td><td class="n">150 psf</td><td>A common government baseline</td></tr>
+    <tr><td>Legacy enterprise (Intel-type)</td><td class="n">~250–350 psf</td><td>The old rule of thumb</td></tr>
+    <tr><td><b>Modern AI data hall</b></td><td class="n"><b>~300–500 psf</b></td><td>Engineered to the actual rack layout</td></tr>
+    <tr><td>VRLA battery / UPS room</td><td class="n">~250–450 psf</td><td>Often the governing case; chemistry-dependent</td></tr>
+    <tr><td>Raised access floor (RAF) self-weight</td><td class="n">~12 psf dead</td><td>Plus its own limited point-load rating</td></tr>
+  </table></div>
+
+  ${A("Structural Angle — the concentrated load is the sneaky governing case","angle")}
+  <p>A ~1,360 kg rack rolls in on 4–6 casters, concentrating <strong>~500–750 lb per caster over a few square inches</strong> during installation — this often governs slab and raised-floor design more than the uniform load. Check all three: (1) uniform live load, (2) the ASCE concentrated point load, and (3) the caster/moving loads along the delivery path (spreader plates distribute these during roll-in).</p>
+  ${END}
+
+  ${A("Watch out — 'raised floor' means two different things","warn")}
+  <p>A <strong>raised access floor</strong> (removable panels on pedestals, historically a ~2–3 ft plenum for cold-air delivery) is <em>not</em> the structural floor — loads pass through the pedestals to the slab below, and the panels themselves are rated only ~1,000 kg/m² (~250 kg/tile). That's <em>far</em> below an AI rack's point loads, which is a primary reason modern AI halls move to <strong>slab-on-grade</strong> with overhead air and busway. Know which one you have; they load and detail completely differently.</p>
+  ${END}
+
+  ${A("Floor flatness — a spec you'll actually write","key")}
+  <p>Because you roll multi-thousand-pound racks across the slab and they must sit dead-level (or cabinet doors bind and racks rock), <strong>floor flatness/levelness</strong> matters and gets specified per <strong>ASTM E1155</strong> as FF (flatness) / FL (levelness) numbers. Heavy racking floors typically call for <strong>FF 35 / FL 25</strong>; "very flat" floors for tall racks go to <strong>FF 50 / FL 35</strong>. It's a small detail that signals real sector experience.</p>
+  ${END}
+
+  <h3>Equipment support & housekeeping pads</h3>
+  <p>Every big machine sits on something you design: <strong>housekeeping pads</strong> under indoor equipment, <strong>generator and transformer pads</strong> in the yard, <strong>fuel tank foundations</strong>, and support steel for CRAH units and CDUs. These are concentrated dead loads with anchorage requirements (next lesson).</p>
+
+  <h3>The roof is a mechanical deck</h3>
+  <p>On many data centers the roof is effectively a second equipment yard: <strong>chillers, cooling towers, air handlers, exhaust, screening walls, and increasingly solar</strong>. That means large concentrated loads, operating (water-filled) weights, vibration isolation, wind on tall screens, snow, and dense penetration coordination — all stacked on the same framing.</p>
+
+  ${A("By the numbers — orders of magnitude","key")}
+  <p>Anchors to reason with: ordinary office floor ~50 psf live; modern AI data halls ~300–500 psf; VRLA battery/UPS rooms ~250–450 psf; a floor-standing PDU 5,000–10,000 lb; a hyperscale roof can carry <strong>thousands of tons</strong> of water-filled mechanical equipment. Always design to the actual equipment schedule and vendor point loads, not rules of thumb.</p>
+  ${END}
+  `,
+  terms:[
+    ["Tilt-up construction","Casting concrete wall panels on-site and tilting them into place; fast and favored by hyperscalers."],
+    ["Precast concrete","Factory-cast structural panels erected on-site for speed and quality control."],
+    ["PEMB","Pre-Engineered Metal Building — a fast, long-span steel system."],
+    ["Raised access floor","Removable floor panels on pedestals over a plenum; loads pass through pedestals to the slab."],
+    ["Slab-on-grade","A ground-bearing concrete slab; increasingly used for heavy AI halls instead of raised floors."],
+    ["Housekeeping pad","A raised concrete pad supporting indoor equipment."],
+    ["Floor flatness (FF/FL)","Tolerance metrics for slab flatness/levelness — important for rolling heavy racks."],
+    ["DfMA","Design for Manufacturing and Assembly — designing for fast, repeatable, prefabricated construction."]
+  ],
+  quiz:[
+    {q:"Why do hyperscalers favor tilt-up concrete + steel roofs?",
+     o:["It's the strongest possible system","Speed and repeatability across a fleet of near-identical buildings",
+        "It's the only code-compliant option","It avoids all equipment loads"], a:1,
+     e:"Schedule and repeatability dominate; tilt-up + steel is fast, cheap at scale, and easy to standardize."},
+    {q:"A raised access floor is:",
+     o:["The main structural floor","A removable panel system on pedestals; loads pass through to the slab below",
+        "Always required for AI","Made of steel decking only"], a:1,
+     e:"It's an access/plenum system with its own point-load rating; heavy AI halls increasingly use slab-on-grade instead."},
+    {q:"When designing a data center roof, a defining challenge is:",
+     o:["It carries no equipment","Large concentrated, water-filled, vibrating mechanical loads plus wind on screens",
+        "Only snow load matters","It's identical to an office roof"], a:1,
+     e:"Data center roofs are effectively equipment yards — chillers, towers, screens, solar — with big concentrated and dynamic loads."},
+    {q:"The correct basis for floor and equipment loads is:",
+     o:["A single rule-of-thumb psf","The actual equipment schedule and vendor point loads",
+        "Office occupancy values","Whatever is fastest to assume"], a:1,
+     e:"Design to the real equipment — schedules and vendor point loads — because data center loads vary enormously and keep rising."}
+  ]
+},
+{
+  group:"Your job", id:"lateral", n:"07",
+  title:"Structural design II — lateral, seismic & anchorage",
+  sub:"Keeping a facility that must never stop standing and its equipment attached.",
+  min:13,
+  objectives:[
+    "Explain why data centers carry a high Risk Category and what that changes",
+    "Describe seismic and wind demands for mission-critical facilities",
+    "Understand nonstructural component anchorage (ASCE 7 Ch. 13) as a core part of the work"
+  ],
+  body:`
+  <p>A mission-critical facility has an unusual structural requirement: it must not merely <em>survive</em> an extreme event with life safety intact — it should ideally <strong>keep operating</strong> through and after one. That single expectation ripples through your lateral system, your importance factors, and an enormous amount of equipment anchorage.</p>
+
+  <h3>Risk Category and importance</h3>
+  <p>Buildings are assigned a <strong>Risk Category (I–IV)</strong> under the IBC/ASCE 7, which sets the <strong>importance factor</strong> and the stringency of seismic, wind, snow, and flood design. Ordinary buildings are Risk Category II (Ie = 1.0). Mission-critical data centers are frequently designed to <strong>Risk Category III (Ie = 1.25) or IV (Ie = 1.5)</strong> — and RC IV drives roughly <strong>50% higher seismic forces</strong> than an ordinary building.</p>
+
+  ${A("Structural Angle — the Risk Category nuance that marks you as sharp","angle")}
+  <p>Here's the subtlety most people get wrong, so getting it right stands out: the code does <em>not</em> automatically classify every private data center as Risk Category IV — strictly, many would fall to RC II. In practice, <strong>owners frequently <em>elect</em> RC III or IV as a performance objective</strong>, because <strong>business continuity</strong> (keep running through the event), not life safety alone, drives the higher standard. So the correct framing is "data centers are <em>designed to</em> RC III/IV performance because continuous operation demands it," not "code mandates RC IV." Always confirm the specific owner standard and IBC table on your project. Saying it this way in an interview signals you understand both the code and the business.</p>
+  ${END}
+
+  <h3>Lateral system</h3>
+  <p>The lateral system (braced frames, shear walls — tilt-up panels often double as shear walls, moment frames) resists wind and seismic. Two things make data centers distinctive: (1) <strong>heavy equipment high in the building</strong> (rooftop chillers/towers) raises the center of mass and seismic demand; (2) the <strong>continuity expectation</strong> pushes toward stiffer, more robust systems and tighter drift control to protect equipment and connections.</p>
+
+  <h3>Nonstructural anchorage — quietly the biggest job</h3>
+  <p>Here is what surprises engineers new to the sector: a huge fraction of the structural work is <strong>anchoring all that equipment</strong>. <strong>ASCE 7-22 Chapter 13</strong> governs seismic design of <strong>nonstructural components</strong> via the component force equation <span class="mono">F<sub>p</sub></span> (which scales with S<sub>DS</sub>, component factors a<sub>p</sub>/R<sub>p</sub>, the component importance factor I<sub>p</sub>, and height in the structure). Every generator, transformer, UPS, battery rack, chiller, cooling tower, CRAH, CDU, busway, cable tray, and piping run must be anchored so it neither fails nor becomes a projectile, and so critical systems keep working. In an RC IV facility, <strong>I<sub>p</sub> = 1.5 for essentially every component</strong> needed for operation — so almost nothing is exempt. The common threshold: components over <strong>~400 lb (or with I<sub>p</sub> &gt; 1.0)</strong> need <strong>PE-stamped anchorage calculations</strong>, with the concrete anchors designed per <strong>ACI 318 Chapter 17</strong>. On a hyperscale hall that's thousands of components.</p>
+
+  ${A("By the numbers — where the hours go","key")}
+  <p>On many mission-critical projects, <strong>nonstructural component anchorage and equipment support</strong> consume more engineering hours than the primary building frame. Designation of components as <em>life-safety</em> or <em>operationally critical</em> (with associated component importance factors) drives the demand. Fluency in ASCE 7 Ch. 13 is a genuine differentiator in interviews.</p>
+  ${END}
+
+  <h3>Vibration</h3>
+  <p>Rotating and reciprocating equipment — generators, chillers, pumps, cooling towers, CRAH fans — generate <strong>vibration</strong>. You design <strong>vibration isolation</strong> (spring/pad isolators, inertia bases; a common rule for reciprocating machines is a foundation mass ~2× the machine weight) to protect the structure. And there are real <strong>limits near sensitive IT equipment</strong> — some network switches and spinning media tolerate steady-state vibration only on the order of <strong>~0.0005 g-rms (10–200 Hz)</strong>, which constrains where you may place rotating equipment relative to the white space. Footfall/walking vibration of steel floors is checked per <strong>AISC Design Guide 11</strong>. Vibration coordination sits at the intersection of structural, mechanical, and equipment vendors — exactly the multi-disciplinary space owner's engineers live in.</p>
+
+  ${A("Watch out — wind, flood, and the whole hazard set","warn")}
+  <p>Continuity means <em>all</em> hazards matter more: high wind design (and screening walls that act as sails), flood avoidance and site selection (owners avoid flood plains for obvious reasons), snow on equipment-laden roofs, and even progressive-collapse or security considerations on some projects. "It must keep running" is a performance statement that touches every load case.</p>
+  ${END}
+  `,
+  terms:[
+    ["Risk Category (I–IV)","IBC/ASCE 7 classification setting importance factor and design stringency; data centers often III or IV."],
+    ["Importance factor","A multiplier increasing design demands for higher-consequence buildings."],
+    ["Lateral system","Braced frames, shear walls, or moment frames resisting wind and seismic loads."],
+    ["Nonstructural components","Equipment and systems (not the frame) that must be anchored — ASCE 7 Chapter 13."],
+    ["ASCE 7 Chapter 13","The provisions governing seismic design and anchorage of nonstructural components."],
+    ["Component importance factor","A factor raising anchorage demand for life-safety or operationally critical components."],
+    ["Vibration isolation","Isolators/inertia bases that limit transmission of equipment vibration to the structure."]
+  ],
+  quiz:[
+    {q:"Data centers often carry a higher Risk Category because:",
+     o:["They're tall","Their value and required continuity (incl. functioning backup power) demand higher performance",
+        "They're painted differently","Code forbids Category II everywhere"], a:1,
+     e:"Higher Risk Category raises the importance factor and stringency, and reflects the need to keep critical systems functional."},
+    {q:"ASCE 7 Chapter 13 governs:",
+     o:["Foundation depth","Seismic design and anchorage of nonstructural components (equipment)",
+        "Paint specifications","Fire sprinkler flow"], a:1,
+     e:"Ch. 13 is nonstructural component anchorage — a huge share of data center structural work given the thousands of components."},
+    {q:"On many mission-critical projects, equipment anchorage:",
+     o:["Is trivial","Can consume more engineering hours than the primary frame",
+        "Is done by the electrician","Isn't required"], a:1,
+     e:"Anchoring thousands of critical components is a major effort and a real interview differentiator."},
+    {q:"Vibration isolation is primarily a:",
+     o:["Single-discipline afterthought","Multi-disciplinary coordination among structural, mechanical, and vendors",
+        "Cosmetic choice","Software setting"], a:1,
+     e:"Isolating generators, chillers, and pumps sits exactly in the cross-disciplinary space owner's engineers operate in."}
+  ]
+},
+{
+  group:"Your job", id:"delivery", n:"08",
+  title:"Construction, delivery & the owner's engineer",
+  sub:"How these get built impossibly fast — and where you sit in it.",
+  min:12,
+  objectives:[
+    "Compare delivery models (design-build, EPC) and the owner's-engineer role",
+    "Explain modular/prefabrication and DfMA in data centers",
+    "Understand why schedule and standardization govern structural decisions"
+  ],
+  body:`
+  <p>You now understand the machine and the structure. The last piece is <strong>how the thing gets delivered</strong> — because in this sector the delivery method shapes the engineering as much as the loads do.</p>
+
+  <h3>Delivery models and your seat</h3>
+  <ul>
+    <li><strong>Owner / operator:</strong> the hyperscaler (Google, Meta). They set standards, own the fleet, and employ <strong>owner's engineers</strong>.</li>
+    <li><strong>Owner's engineer:</strong> works for the owner to <strong>set design standards, review and validate</strong> the consultants' work, and safeguard the owner's interests — <em>this is the role you are targeting.</em> You are not usually the Engineer of Record; you are the technical conscience of the owner.</li>
+    <li><strong>EOR (Engineer of Record):</strong> the design consultant who stamps the structural design.</li>
+    <li><strong>Design-build:</strong> one entity holds both design and construction — fast, common in data centers.</li>
+    <li><strong>EPC (Engineering, Procurement, Construction):</strong> a single contract to engineer, procure, and build — common for large, fast, industrial-scale programs.</li>
+    <li><strong>GC / design-builder:</strong> DPR, Turner, Holder, Mortenson, Clayco and similar specialize in mission-critical construction.</li>
+  </ul>
+
+  ${A("Structural Angle — owner's engineer is a different mode of practice","angle")}
+  <p>As an owner's engineer you spend less time drawing and more time <strong>auditing calculations, interrogating assumptions, coordinating disciplines, and improving the standard detail that will be reused fleet-wide.</strong> This is precisely the skill you built reviewing others' work and doing forensic assessment at Falcon, plus the design depth from LeMessurier. Frame your experience this way: "I've both produced stamped high-rise design and independently assessed others' structures — I can validate a consultant's data center package and catch what's missing."</p>
+  ${END}
+
+  <h3>Modular & prefabrication — the speed weapon</h3>
+  <p>To hit impossible schedules, the industry moves work off the critical path and into factories:</p>
+  <ul>
+    <li><strong>Prefabricated MEP skids / modules:</strong> power and cooling systems assembled and tested in a factory as complete "skids" or enclosures, then delivered and connected on-site — the preferred-qualification language you saw in the Google posting ("modular and prefabricated structures... enclosures for MEP equipment").</li>
+    <li><strong>Modular data center components:</strong> whole power/cooling blocks, even entire data halls, delivered as repeatable units.</li>
+    <li><strong>DfMA (Design for Manufacturing and Assembly):</strong> designing components to be manufactured and assembled efficiently — standardized connections, tolerances, and repeatable details.</li>
+  </ul>
+
+  ${A("Structural Angle — prefab is a connections-and-tolerances problem","angle")}
+  <p>Modular construction shifts the structural challenge from member design to <strong>connections, tolerances, transport, lifting/rigging, and interface coordination</strong>. A prefab MEP skid has to be structurally framed, craned, set, and tied in within tight manufacturing tolerances — the "gaskets, hinges, weather sealing, strict manufacturing tolerances" language in the job postings is literally the structural detailing of prefab enclosures. Getting fluent in DfMA is one of the highest-leverage things you can add to your resume for this sector.</p>
+  ${END}
+
+  <h3>Why schedule rules everything</h3>
+  <p>An AI data center that comes online months earlier can be worth hundreds of millions in captured compute. Modular strategies cut construction schedules <strong>30–50%</strong> — delivery has compressed from 24–36 months toward 16–20, and some prefabricated data halls have been stood up in ~17 weeks versus 6–9 months conventional. That economics is why owners standardize relentlessly, prefabricate aggressively, and prize engineers who <strong>reduce cycle time without adding risk</strong>. When you propose a structural approach on one of these projects, the first question is often not "is it cheaper?" but "is it faster and repeatable?"</p>
+
+  ${A("Bringing it together","key")}
+  <p>You've now walked the whole system: the machine (power, cooling, reliability), the AI inflection that broke the old rules, your gravity and lateral/anchorage work, and the delivery model you'll sit in. The final lesson turns this into the language and questions of the interview.</p>
+  ${END}
+  `,
+  terms:[
+    ["Owner's engineer","An engineer employed by the owner to set standards and review/validate consultants' designs."],
+    ["EOR (Engineer of Record)","The design engineer who stamps/takes responsibility for the design."],
+    ["Design-build","A delivery model where one entity holds both design and construction."],
+    ["EPC","Engineering, Procurement, Construction — a single contract to deliver the whole project."],
+    ["Prefabricated MEP skid","Factory-built, pre-tested power/cooling assembly delivered and connected on-site."],
+    ["Modular construction","Building from repeatable, factory-made units to compress schedule."],
+    ["DfMA","Design for Manufacturing and Assembly — designing for efficient factory production and site assembly."]
+  ],
+  quiz:[
+    {q:"The role you're targeting, the owner's engineer, primarily:",
+     o:["Stamps the structural design as EOR","Sets standards and reviews/validates consultants' work for the owner",
+        "Runs the cranes","Sells the servers"], a:1,
+     e:"Owner's engineers safeguard the owner by setting standards and validating others' designs — matching your review/forensic background."},
+    {q:"Prefabricated MEP skids shift the structural challenge toward:",
+     o:["Bigger members only","Connections, tolerances, transport, lifting, and interface coordination",
+        "Nothing structural","Paint durability"], a:1,
+     e:"Modular work is a connections-and-tolerances problem — exactly the 'strict manufacturing tolerances' language in the job postings."},
+    {q:"On a hyperscale AI project, a structural proposal is judged first on:",
+     o:["Cheapest material","Whether it's faster and repeatable without adding risk",
+        "Architectural beauty","Color"], a:1,
+     e:"Schedule economics dominate; standardization and speed win because earlier online = captured compute worth hundreds of millions."},
+    {q:"Why is DfMA fluency high-leverage for your resume?",
+     o:["It isn't","Postings explicitly seek modular/prefab and manufacturing-tolerance experience",
+        "It's unrelated to data centers","It replaces the PE"], a:1,
+     e:"The target job descriptions call out modular, prefabricated structures and manufacturing tolerances directly."}
+  ]
+},
+{
+  group:"Apply it", id:"interview", n:"09",
+  title:"Speaking the language: interview prep",
+  sub:"Turn literacy into offers.",
+  min:12,
+  objectives:[
+    "Rehearse strong answers to real data center structural interview questions",
+    "Practice weaving reliability/coordination awareness into structural answers",
+    "Know how to signal owner's-engineer readiness"
+  ],
+  body:`
+  <p>This lesson is a rehearsal, not new theory. Below are representative questions for structural engineers interviewing for owner-side and owner's-engineer data center roles, each with what a strong answer <em>demonstrates</em>. Say them out loud until they're natural. (More live examples in the Interview Prep tab if you split this out.)</p>
+
+  <div class="ivq"><div class="q2">1. "Walk me through the loads you'd expect on a data center IT floor."</div>
+  <div class="a2"><b>Show:</b> uniform + concentrated rack loads, the AI jump (~3,000 lb / ~120 kW racks driving point loads and floor flatness), battery/UPS rooms at ~250+ psf, equipment housekeeping pads, and that you'd design to the <b>actual equipment schedule and vendor point loads</b>, not a rule of thumb.</div></div>
+
+  <div class="ivq"><div class="q2">2. "What's different about a data center roof versus an office roof?"</div>
+  <div class="a2"><b>Show:</b> it's an equipment deck — chillers/cooling towers at operating (water-filled) weight, vibration isolation, screening walls as wind surfaces, snow on an equipment-laden roof, dense penetrations. You think about the roof as a mechanical yard.</div></div>
+
+  <div class="ivq"><div class="q2">3. "How does AI change the structural design?"</div>
+  <div class="a2"><b>Show:</b> the density jump (10×+ power, ~3,000 lb racks), forced liquid cooling and its weight/containment, more upstream power equipment, and retrofit-assessment of legacy halls. This one answer signals you're current.</div></div>
+
+  <div class="ivq"><div class="q2">4. "Explain concurrent maintainability and how it affects you structurally."</div>
+  <div class="a2"><b>Show:</b> Tier III concept — service any component without dropping load — and that <b>structurally</b> it means removal paths, openings, and hoist points so a chiller can be pulled while the facility runs. Reliability literacy + structural translation.</div></div>
+
+  <div class="ivq"><div class="q2">5. "What Risk Category would you use, and why does it matter?"</div>
+  <div class="a2"><b>Show:</b> often III or IV (verify per code/owner), because continuity and backup-power function demand it; it scales the importance factor and triggers stricter nonstructural (Ch. 13) anchorage. Add: owners often exceed code minimums.</div></div>
+
+  <div class="ivq"><div class="q2">6. "How much of this job is nonstructural component anchorage?"</div>
+  <div class="a2"><b>Show:</b> a great deal — ASCE 7 Ch. 13 anchorage of thousands of components (generators, UPS, batteries, chillers, busway, CDUs), sometimes more hours than the frame. Naming Ch. 13 unprompted is a strong signal.</div></div>
+
+  <div class="ivq"><div class="q2">7. "Why do hyperscalers use tilt-up, and what would you standardize?"</div>
+  <div class="a2"><b>Show:</b> speed + repeatability across a fleet; you'd standardize the typical bay, connections, and equipment-support details, and lean into DfMA/prefab to cut cycle time — the owner's-engineer mindset.</div></div>
+
+  <div class="ivq"><div class="q2">8. "You're reviewing a consultant's structural package. What do you check first?"</div>
+  <div class="a2"><b>Show:</b> the owner's-engineer instinct — confirm design criteria (Risk Category, loads, redundancy basis), then equipment schedule vs floor/roof loads, anchorage completeness (Ch. 13), removal/maintainability paths, and coordination gaps with MEP. Tie to your forensic/review experience.</div></div>
+
+  <div class="ivq"><div class="q2">9. "Tell me about coordinating with mechanical and electrical."</div>
+  <div class="a2"><b>Show:</b> concrete examples — chiller weights/vibration, busway hung loads, generator pads, liquid-cooling containment — and that you proactively ask disciplines for equipment weights and future-load allowances before they become surprises.</div></div>
+
+  <div class="ivq"><div class="q2">10. "What do you not know yet about data centers?"</div>
+  <div class="a2"><b>Show:</b> honesty + trajectory. Name the specific things you're actively learning (a course like this, DfMA, the current NVIDIA hardware specs), and connect to your transferable strengths (high-rise design + forensic assessment + you build software). Owners hire slope, not just position.</div></div>
+
+  ${A("The one-sentence positioning to rehearse","key")}
+  <p>"I bring stamped high-rise structural design from LeMessurier and independent structural assessment from forensic/restoration work — so I can both design and <em>validate</em> a data center package — and I understand the machine well enough to anticipate the loads AI-era power and liquid cooling impose before they reach my desk." Deliver that with specifics and you are no longer a generic structural candidate.</p>
+  ${END}
+
+  ${A("Final structural-angle reminder","angle")}
+  <p>You do not need to out-electrical the electrical engineer. You need to (1) speak the whole machine fluently, (2) own gravity, lateral, anchorage, and vibration cold, and (3) think like an owner — schedule, standardization, validation, coordination. This course gave you (1) and framed (3); your PE and experience already carry (2). Now go book the coffee chats and apply.</p>
+  ${END}
+  `,
+  terms:[
+    ["Owner's-engineer mindset","Prioritizing standards, validation, coordination, schedule, and fleet-wide repeatability over one-off design."],
+    ["Design criteria basis","The agreed loads, Risk Category, and redundancy target that anchor a review — check these first."]
+  ],
+  quiz:[
+    {q:"Asked how AI changes structural design, the strongest answer names:",
+     o:["Only that racks are heavier","Density jump, forced liquid cooling weight/containment, more upstream equipment, and retrofit assessment",
+        "That nothing changes","Paint and lighting"], a:1,
+     e:"The complete, current answer ties density → liquid cooling → upstream equipment → retrofit, showing you're up to date."},
+    {q:"Reviewing a consultant's package, an owner's engineer checks first:",
+     o:["The title block font","Design criteria (Risk Category, loads, redundancy), then loads vs schedule, anchorage, maintainability, coordination",
+        "The cheapest option","Nothing"], a:1,
+     e:"Confirm the basis of design first, then validate loads, anchorage completeness (Ch. 13), maintainability, and coordination."},
+    {q:"The best framing of your background for this role is:",
+     o:["'I only design high-rises'","'I've both designed (LeMessurier) and independently assessed (forensics) structures, so I can design and validate'",
+        "'I have no relevant experience'","'I want to switch to electrical'"], a:1,
+     e:"Design + independent assessment = exactly the owner's-engineer validate-others'-work profile; lead with that."}
+  ]
+},
+{
+  group:"Reference", id:"resources", n:"10",
+  title:"Where to go deeper — verified resources",
+  sub:"The sources behind this course and your next steps.",
+  min:6,
+  objectives:["Find authoritative sources to deepen each domain","Know which credentials/courses are worth money and time"],
+  body:`
+  <p>This course is your on-ramp; these are the roads. Use the Glossary and Interview tabs alongside them. Links open in a new tab.</p>
+  <p><em>Sources for the numbers in this course, and where to go beyond it, are listed in the <strong>Resources</strong> tab in the sidebar navigation below the lessons.</em> Every figure here (rack weights/power, PUE, Tier definitions, ASCE/ASHRAE references) is drawn from Uptime Institute, ASHRAE TC 9.9, NVIDIA spec sheets, DCD, and SemiAnalysis; treat specific numbers as directional and confirm against current primary sources for real design work.</p>
+  ${A("Your immediate next three moves","key")}
+  <p>1. Take the free/low-cost primers in the Resources tab (Uptime, ASHRAE Datacom intro, DCD). 2. Add "data center literacy — mission-critical facilities" and the specifics you learned here to your LinkedIn and resume. 3. Book two coffee chats with data center engineers this month and use the Interview Prep lesson to rehearse. Literacy that stays in your head doesn't get you hired; literacy you <em>speak</em> does.</p>
+  ${END}
+  `,
+  terms:[],
+  quiz:[]
+}
+];
+
+/* ============================ GLOSSARY (aggregated + extras) ============================ */
+const EXTRA_TERMS = [
+  ["kW / rack","Power drawn per rack — the key density metric; ~5–10 kW traditional, 100+ kW for AI.","Power"],
+  ["MW (megawatt)","The unit a facility's IT capacity is sized in; campuses now reach the gigawatt scale.","Power"],
+  ["Latency","Delay in data travel; low latency is why edge data centers sit near users.","IT"],
+  ["Availability","Uptime as a percentage (e.g., 99.982%); the core promise owners sell.","Reliability"],
+  ["SLA","Service Level Agreement — the contractual uptime/performance guarantee.","Reliability"],
+  ["Compartmentalization","Physically isolating redundant systems so one failure/fire can't take both (Tier IV).","Reliability"],
+  ["Single point of failure","Any component whose failure alone drops the load; redundancy exists to eliminate these.","Reliability"],
+  ["WUE","Water Usage Effectiveness — water consumed per unit of IT energy.","Cooling"],
+  ["Free cooling / economizer","Using cool outside air/water to avoid mechanical refrigeration.","Cooling"],
+  ["Rear-door heat exchanger","A liquid-cooled radiator on a rack's back door for higher density.","Cooling"],
+  ["Dielectric fluid","Non-conductive liquid used in immersion cooling.","Cooling"],
+  ["Plenum","The under-floor or overhead space distributing cooling air.","Cooling"],
+  ["Inertia base","A heavy base under equipment to reduce vibration transmission.","Structural"],
+  ["Point load","A concentrated load at a small area — critical for racks and equipment feet.","Structural"],
+  ["Housekeeping pad","Raised concrete pad supporting indoor equipment.","Structural"],
+  ["Screening wall","Architectural/structural wall hiding rooftop equipment; acts as a wind surface.","Structural"],
+  ["Rigging / lifting plan","The plan for craning and setting heavy or prefabricated components.","Construction"],
+  ["Critical vs non-critical load","IT/essential load that must never drop vs support loads that may.","Power"],
+  ["Basis of design (BOD)","The document capturing design criteria, loads, and redundancy targets.","Process"],
+  ["Grey space ratio","The growing proportion of support space to whitespace as density rises.","General"]
+];
+
+/* ============================ INTERVIEW BANK (sidebar tab) ============================ */
+const INTERVIEW = [
+  ["Walk me through the electrical path from the utility to a server.","Trace utility → substation → MV switchgear → transformer → UPS → PDU/RPP → busway → rack PDU → PSU; note which pieces are heavy (transformers, switchgear, batteries) — shows whole-system literacy."],
+  ["What redundancy target would you assume and how does it change your work?","Ask for it explicitly; explain 2N roughly doubles equipment, pads, weight, and yard space vs N+1 — shows you connect reliability to structural quantity."],
+  ["A mechanical engineer says they need to remove a chiller without shutting down. Your response?","That's concurrent maintainability made physical — provide removal paths, structural openings, and hoist/crane points; coordinate early."],
+  ["How would you approach floor design for an AI hall?","Design to actual rack point loads (~3,000 lb cabinets), floor flatness for rolling, consider slab-on-grade vs raised floor, liquid-cooling weight and containment."],
+  ["What keeps a data center running in an earthquake, structurally?","Appropriate Risk Category/importance factor, robust lateral system with drift control, and thorough ASCE 7 Ch. 13 anchorage so critical equipment stays attached and functional."],
+  ["Where do most of the structural engineering hours go on these projects?","Often nonstructural anchorage and equipment support (Ch. 13) — thousands of components — plus coordination, not just the primary frame."],
+  ["Why tilt-up, and how would you speed the schedule further?","Speed/repeatability at fleet scale; push standardization, prefab MEP skids, and DfMA to cut cycle time."],
+  ["How do you handle rooftop cooling equipment?","Design to operating (water-filled) weight, isolate vibration, anchor for seismic, account for wind on screens and snow, coordinate penetrations."],
+  ["What's your process reviewing another firm's structural package?","Confirm basis of design first (Risk Category, loads, redundancy), then loads vs equipment schedule, anchorage completeness, maintainability paths, and MEP coordination gaps."],
+  ["What don't you know yet, and how are you closing the gap?","Name specifics (DfMA, current NVIDIA specs, mission-critical courses) and your transferable strengths — owners hire trajectory."]
+];
+</script>
+
+<script>
+/* ============================ APP ============================ */
+(function(){
+  const main=document.getElementById('main');
+  const tocEl=document.getElementById('toc');
+  const KEY='dc-literacy-v1';
+  let store={}; try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+  store.done=store.done||{}; store.quiz=store.quiz||{};
+  const save=()=>localStorage.setItem(KEY,JSON.stringify(store));
+
+  // virtual pages: lessons + glossary + interview + resources
+  const PAGES = COURSE.map(m=>({type:'lesson',m})).concat([
+    {type:'glossary'},{type:'interview'},{type:'resources'}
+  ]);
+  let idx = store.last!=null && store.last<PAGES.length ? store.last : 0;
+
+  function lessonsDone(){return COURSE.filter(m=>store.done[m.id]).length}
+  function buildTOC(){
+    tocEl.innerHTML='';
+    let lastGroup=null;
+    COURSE.forEach((m,i)=>{
+      if(m.group!==lastGroup){lastGroup=m.group;
+        const g=document.createElement('div');g.className='grp';g.textContent=m.group;tocEl.appendChild(g)}
+      const b=document.createElement('button');
+      b.innerHTML=`<span class="n">${m.n}</span><span>${m.title}</span><span class="dot"></span>`;
+      if(store.done[m.id])b.classList.add('done');
+      if(PAGES[idx].type==='lesson'&&PAGES[idx].m.id===m.id)b.setAttribute('aria-current','true');
+      b.onclick=()=>go(i); tocEl.appendChild(b);
+    });
+    const g=document.createElement('div');g.className='grp';g.textContent='Reference tools';tocEl.appendChild(g);
+    [['Glossary',COURSE.length],['Interview question bank',COURSE.length+1],['Resources & sources',COURSE.length+2]].forEach(([label,pi])=>{
+      const b=document.createElement('button');b.innerHTML=`<span class="n">·</span><span>${label}</span>`;
+      if(idx===pi)b.setAttribute('aria-current','true');
+      b.onclick=()=>go(pi);tocEl.appendChild(b);
+    });
+    const ld=lessonsDone();
+    document.getElementById('ovtext').textContent=`${ld} of ${COURSE.length} lessons complete`;
+    document.getElementById('ovbar').style.width=(ld/COURSE.length*100)+'%';
+  }
+
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+  function renderLesson(m){
+    const objs=m.objectives.map(o=>`<li>${o}</li>`).join('');
+    const terms=m.terms.length?`<h3>Key terms from this lesson</h3><dl>${m.terms.map(t=>`<div class="term"><dt>${t[0]}</dt><dd>${t[1]}</dd></div>`).join('')}</dl>`:'';
+    let quiz='';
+    if(m.quiz.length){
+      quiz=`<div class="quiz"><p class="ui h">Self-check · ${m.quiz.length} questions</p><form id="qf">`+
+        m.quiz.map((q,qi)=>{
+          const opts=q.o.map((o,oi)=>`<label class="opt" data-qi="${qi}" data-oi="${oi}"><input type="radio" name="q${qi}" value="${oi}">${esc(o)}</label>`).join('');
+          return `<div class="q" data-qi="${qi}"><div class="stem">${qi+1}. ${esc(q.stem||q.q||'')}</div>${opts}<div class="exp">${esc(q.e)}</div></div>`;
+        }).join('')+
+        `</form><div class="btnrow"><button class="act" id="check">Check answers</button>
+         <button class="act ghost" id="markdone">Mark lesson complete</button>
+         <span class="score" id="qscore"></span></div></div>`;
+    } else {
+      quiz=`<div class="btnrow"><button class="act ghost" id="markdone">Mark lesson complete</button></div>`;
+    }
+    main.innerHTML=`
+      <p class="lead">Lesson ${m.n} · ${m.group}</p>
+      <h2>${m.title}</h2>
+      <p class="sub">${m.sub}</p>
+      <div class="meta"><span>~${m.min} min</span><span>${m.quiz.length} self-check Qs</span><span>${store.done[m.id]?'✓ completed':'not yet complete'}</span></div>
+      <div class="obj"><p class="ui">In this lesson you will</p><ul>${objs}</ul></div>
+      ${m.body}
+      ${terms}
+      ${quiz}
+      <div class="pager"></div>`;
+    // quiz wiring
+    m.quiz.forEach((q,qi)=>{
+      main.querySelectorAll(`.opt[data-qi="${qi}"]`).forEach(op=>{
+        op.addEventListener('click',()=>{ /* allow re-answer before check */ });
+      });
+    });
+    const checkBtn=main.querySelector('#check');
+    if(checkBtn){
+      checkBtn.onclick=(e)=>{e.preventDefault();let correct=0;
+        m.quiz.forEach((q,qi)=>{
+          const qEl=main.querySelector(`.q[data-qi="${qi}"]`);
+          const sel=qEl.querySelector('input:checked');
+          qEl.querySelectorAll('.opt').forEach(o=>o.classList.remove('correct','wrong'));
+          qEl.querySelectorAll(`.opt`)[q.a].classList.add('correct');
+          if(sel){const oi=+sel.value; if(oi===q.a)correct++; else qEl.querySelectorAll('.opt')[oi].classList.add('wrong');}
+          qEl.classList.add('answered');
+        });
+        store.quiz[m.id]={correct,total:m.quiz.length};save();
+        main.querySelector('#qscore').textContent=`Score: ${correct}/${m.quiz.length}`;
+        if(correct===m.quiz.length){markDone(m)}
+      };
+    }
+    const md=main.querySelector('#markdone');
+    if(md)md.onclick=(e)=>{e.preventDefault();markDone(m);md.textContent='✓ Completed';};
+    renderPager();
+  }
+
+  function markDone(m){store.done[m.id]=true;save();buildTOC();
+    const meta=main.querySelector('.meta');if(meta)meta.lastElementChild.textContent='✓ completed';}
+
+  function renderGlossary(){
+    const all=[];
+    COURSE.forEach(m=>m.terms.forEach(t=>all.push([t[0],t[1],m.group])));
+    EXTRA_TERMS.forEach(t=>all.push(t));
+    const seen=new Set();const uniq=all.filter(t=>{const k=t[0].toLowerCase();if(seen.has(k))return false;seen.add(k);return true;})
+      .sort((a,b)=>a[0].localeCompare(b[0]));
+    main.innerHTML=`<p class="lead">Reference</p><h2>Glossary</h2>
+      <p class="sub">${uniq.length} terms every data center structural engineer should own.</p>
+      <input class="search" id="gs" placeholder="Filter terms… (e.g. UPS, tilt-up, PUE)">
+      <dl id="glist">${uniq.map(t=>`<div class="term" data-t="${(t[0]+' '+t[1]).toLowerCase()}"><dt>${t[0]}<span class="cat">${t[2]}</span></dt><dd>${t[1]}</dd></div>`).join('')}</dl>
+      <div class="pager"></div>`;
+    const gs=main.querySelector('#gs');
+    gs.oninput=()=>{const v=gs.value.toLowerCase();
+      main.querySelectorAll('#glist .term').forEach(el=>{el.style.display=el.dataset.t.includes(v)?'':'none'})};
+    renderPager();
+  }
+  function renderInterview(){
+    main.innerHTML=`<p class="lead">Reference</p><h2>Interview question bank</h2>
+      <p class="sub">Rehearse until natural. Each answer note is what you're demonstrating.</p>
+      ${INTERVIEW.map((q,i)=>`<div class="ivq"><div class="q2">${i+1}. ${q[0]}</div><div class="a2">${q[1]}</div></div>`).join('')}
+      <div class="pager"></div>`;
+    renderPager();
+  }
+  function renderResources(){
+    const R=[
+      ["Reliability & standards",[
+        ["Uptime Institute — Tier Standard & education","https://uptimeinstitute.com/","The canonical Tier I–IV topology/operations standard and professional education (Accredited Tier Specialist)."],
+        ["Uptime Institute Journal","https://journal.uptimeinstitute.com/","Free articles on reliability, efficiency, and mission-critical operations."]
+      ]],
+      ["Thermal & mechanical",[
+        ["ASHRAE Technical Committee 9.9 / Datacom series","https://tc0909.ashraetcs.org/","The thermal guidelines and Datacom book series the industry designs to."],
+        ["Open Compute Project (OCP)","https://www.opencompute.org/","Hyperscaler-driven open hardware & facility designs, incl. liquid cooling and rack specs."]
+      ]],
+      ["Industry literacy & news",[
+        ["DCD Academy / DatacenterDynamics","https://www.datacenterdynamics.com/","News plus the paid FMCI foundations course (facilities-focused; the professional cert path)."],
+        ["Data Center Frontier","https://www.datacenterfrontier.com/","Excellent free coverage of hyperscale projects, design, and the AI buildout."],
+        ["SemiAnalysis","https://newsletter.semianalysis.com/","Deep technical analysis of AI datacenters, power, and cooling (some paid)."]
+      ]],
+      ["Structural-specific (start here)",[
+        ["STRUCTURE Magazine — 'Design Parameters for Data Center Facilities'","https://www.structuremag.org/article/design-parameters-for-data-center-facilities/","FREE and the single best structural primer: reconciles ASCE 7's 100 psf minimum vs real ~240–350 psf demand, rack point loads, and vibration sensitivity. Read first."],
+        ["Palisade Eng. — 'Data Center Seismic Anchorage: ASCE 7-22 Ch. 13'","https://www.pe-se.com/blog/data-center-seismic-anchorage-requirements","FREE, practical guide to Risk Category IV, Ip = 1.5, the Fp equation, and the >400 lb anchorage threshold."],
+        ["ASHRAE Datacom Book 5 — Structural & Vibration Guidelines","https://www.ashrae.org/technical-resources/bookstore/datacom-series","The datacom-specific structural/vibration reference — the key ASHRAE title for a structural engineer."],
+        ["AISC Design Guide 11 — Floor Vibrations","https://www.aisc.org/publications/steel-design-guides/","The governing method for footfall vibration of steel-framed floors (free with AISC access)."],
+        ["ACI PRC-551.2 / Tilt-Up Concrete Association","https://tilt-up.org/","Tilt-up panel design (the dominant hyperscale enclosure) — guidance and courses."],
+        ["ASCE 7-22 (loads incl. Ch. 13 nonstructural)","https://www.asce.org/","Risk Category, importance factors, seismic/wind, and nonstructural anchorage provisions."]
+      ]],
+      ["AEC firms doing this work (study & network)",[
+        ["Walter P Moore — Mission Critical","https://www.walterpmoore.com/markets/mission-critical","Data center structural & vibration-monitoring practice; good reference articles."],
+        ["DPR Construction — Mission Critical / prefab","https://www.dpr.com/construction/mission-critical","A leading mission-critical builder; prefab/DfMA insight."],
+        ["Clark Pacific — Data Centers (precast/prefab)","https://www.clarkpacific.com/products/data-centers/","Precast/prefab structural systems for data centers."]
+      ]],
+      ["Community (network here)",[
+        ["7x24 Exchange","https://www.7x24exchange.org/","Mission-critical facilities professional org with regional chapters and events."],
+        ["Infrastructure Masons (iMasons)","https://imasons.org/","The digital-infrastructure industry professional community."]
+      ]]
+    ];
+    main.innerHTML=`<p class="lead">Reference</p><h2>Resources & sources</h2>
+      <p class="sub">Where to go deeper — and the authorities behind this course's numbers.</p>
+      ${R.map(([grp,items])=>`<h3>${grp}</h3><div class="reslist">${items.map(it=>`<div class="res"><div class="cat">${grp}</div><a href="${it[1]}" target="_blank" rel="noopener">${it[0]} ↗</a><p>${it[2]}</p></div>`).join('')}</div>`).join('')}
+      <div class="call key" style="margin-top:22px"><span class="tag">Accuracy note</span><p>Specific figures in this course (AI rack power/weight, PUE, Tier availability, load ranges) are drawn from the sources above as of 2025–2026 and are meant to build intuition. For real design or a live interview, confirm against the current primary source — especially NVIDIA's spec sheet for your project's hardware and the governing code edition.</p></div>
+      <div class="pager"></div>`;
+    renderPager();
+  }
+
+  function renderPager(){
+    const p=main.querySelector('.pager');if(!p)return;
+    const prev=idx>0?PAGES[idx-1]:null, next=idx<PAGES.length-1?PAGES[idx+1]:null;
+    const label=pg=>pg.type==='lesson'?pg.m.title:(pg.type==='glossary'?'Glossary':pg.type==='interview'?'Interview bank':'Resources');
+    p.innerHTML=`
+      <button ${prev?'':'disabled'} id="prev"><span class="lbl">◂ Previous</span>${prev?label(prev):'Start'}</button>
+      <button class="next" ${next?'':'disabled'} id="next"><span class="lbl">Next ▸</span>${next?label(next):'End'}</button>`;
+    if(prev)p.querySelector('#prev').onclick=()=>go(idx-1);
+    if(next)p.querySelector('#next').onclick=()=>go(idx+1);
+  }
+
+  function render(){
+    const pg=PAGES[idx];
+    if(pg.type==='lesson')renderLesson(pg.m);
+    else if(pg.type==='glossary')renderGlossary();
+    else if(pg.type==='interview')renderInterview();
+    else renderResources();
+    document.getElementById('mobcrumb').textContent = pg.type==='lesson'?`${pg.m.n} · ${pg.m.title}`:label2(pg);
+    buildTOC();
+    main.focus({preventScroll:true});
+    window.scrollTo({top:0,behavior:'auto'});
+    if(window.innerWidth<940)document.getElementById('side').classList.add('hide');
+  }
+  function label2(pg){return pg.type==='glossary'?'Glossary':pg.type==='interview'?'Interview bank':'Resources'}
+  function go(i){idx=i;store.last=i;save();render()}
+
+  // mobile menu + theme
+  document.getElementById('menu').onclick=()=>document.getElementById('side').classList.toggle('hide');
+  document.getElementById('theme').onclick=()=>{
+    const cur=document.documentElement.getAttribute('data-theme');
+    const nowDark=cur? cur==='dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', nowDark?'light':'dark');
+  };
+
+  render();
+})();
+</script>
