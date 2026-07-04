@@ -1,0 +1,1637 @@
+<title>Mission-Critical Facility Engineering — The Program</title>
+<style>
+  :root{
+    --bg:#F7F5F1; --panel:#FFFFFF; --ink:#1C1E21; --ink2:#5B6168;
+    --line:#E2DED6; --lineS:#B9B2A5;
+    --amber:#9A5B00; --amberInk:#FFFFFF; --amberSoft:#F4E8D4;
+    --grid:#177245; --gridSoft:#DFF0E6;
+    --mech:#155E8A; --mechSoft:#DEEDF6;
+    --alert:#A83232; --alertSoft:#F6E2E2;
+    --shadow:0 1px 2px rgba(28,30,33,.05),0 6px 20px rgba(28,30,33,.06);
+  }
+  @media (prefers-color-scheme: dark){:root{
+    --bg:#0E1113; --panel:#15191C; --ink:#E9E7E2; --ink2:#9AA0A6;
+    --line:#262B2F; --lineS:#3C434A;
+    --amber:#E5A455; --amberInk:#181205; --amberSoft:#2E2213;
+    --grid:#5FBF8A; --gridSoft:#12291C;
+    --mech:#6FAFD6; --mechSoft:#122430;
+    --alert:#E08585; --alertSoft:#301718;
+    --shadow:none;
+  }}
+  :root[data-theme="light"]{
+    --bg:#F7F5F1; --panel:#FFFFFF; --ink:#1C1E21; --ink2:#5B6168;
+    --line:#E2DED6; --lineS:#B9B2A5;
+    --amber:#9A5B00; --amberInk:#FFFFFF; --amberSoft:#F4E8D4;
+    --grid:#177245; --gridSoft:#DFF0E6;
+    --mech:#155E8A; --mechSoft:#DEEDF6;
+    --alert:#A83232; --alertSoft:#F6E2E2;
+    --shadow:0 1px 2px rgba(28,30,33,.05),0 6px 20px rgba(28,30,33,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1113; --panel:#15191C; --ink:#E9E7E2; --ink2:#9AA0A6;
+    --line:#262B2F; --lineS:#3C434A;
+    --amber:#E5A455; --amberInk:#181205; --amberSoft:#2E2213;
+    --grid:#5FBF8A; --gridSoft:#12291C;
+    --mech:#6FAFD6; --mechSoft:#122430;
+    --alert:#E08585; --alertSoft:#301718;
+    --shadow:none;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15.5px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace}
+
+  .shell{display:grid;grid-template-columns:1fr;max-width:1200px;margin:0 auto}
+  @media(min-width:960px){.shell{grid-template-columns:300px 1fr}}
+  aside{border-right:1.5px solid var(--lineS);padding:20px 16px 60px;background:var(--panel)}
+  @media(min-width:960px){aside{position:sticky;top:0;height:100vh;overflow-y:auto}}
+  main{padding:26px 24px 110px;min-width:0;max-width:840px}
+
+  .brand .kick{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber)}
+  .brand h1{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:5px 0 3px;line-height:1.18}
+  .brand p{font-size:12px;color:var(--ink2);margin:0}
+  .statusrow{display:flex;gap:8px;margin:12px 0 4px;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+  .pill{border:1px solid var(--lineS);padding:3px 8px;border-radius:999px;color:var(--ink2)}
+  .pill.on{border-color:var(--grid);color:var(--grid)}
+  .overall{margin:10px 0 6px;font-family:ui-monospace,monospace;font-size:11px;color:var(--ink2)}
+  .obar{height:7px;border:1px solid var(--lineS);background:var(--bg);margin-top:5px;border-radius:2px;overflow:hidden}
+  .obar>i{display:block;height:100%;background:var(--amber);width:0;transition:width .35s}
+  @media (prefers-reduced-motion:reduce){.obar>i{transition:none}}
+
+  nav.toc{margin-top:10px;display:flex;flex-direction:column;gap:1px}
+  nav.toc .grp{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin:15px 6px 5px;border-top:1px solid var(--line);padding-top:11px}
+  nav.toc .grp:first-child{border-top:none;padding-top:0}
+  nav.toc button{display:flex;gap:9px;align-items:baseline;text-align:left;border:none;background:none;color:var(--ink);
+    font:inherit;font-size:13px;padding:6px 8px;border-radius:6px;cursor:pointer;width:100%;line-height:1.32}
+  nav.toc button:hover{background:var(--bg)}
+  nav.toc button[aria-current="true"]{background:var(--amberSoft);font-weight:700}
+  nav.toc button .n{font-family:ui-monospace,monospace;font-size:10.5px;color:var(--ink2);flex:none;width:24px}
+  nav.toc button[aria-current="true"] .n{color:var(--amber)}
+  nav.toc button .dot{margin-left:auto;flex:none;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--lineS);align-self:center}
+  nav.toc button.done .dot{background:var(--grid);border-color:var(--grid)}
+
+  .lead{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin:0 0 6px}
+  main h2{font-size:clamp(23px,4vw,31px);font-weight:800;letter-spacing:-.02em;line-height:1.12;margin:2px 0 6px;text-wrap:balance}
+  .sub{font-size:16px;color:var(--ink2);margin:0 0 16px}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:10.5px;color:var(--ink2);border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line);padding:8px 0;margin-bottom:20px;text-transform:uppercase;letter-spacing:.06em}
+  main h3{font-size:18px;font-weight:750;margin:26px 0 8px;letter-spacing:-.01em}
+  main p{margin:11px 0;max-width:70ch}
+  main li{margin:6px 0;max-width:68ch}
+  .obj{background:var(--bg);border:1.5px solid var(--lineS);border-radius:8px;padding:13px 17px;margin:14px 0}
+  .obj .h{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin:0 0 4px}
+  .obj ul{margin:6px 0 0;padding-left:20px}
+
+  .call{border-left:5px solid var(--lineS);border-radius:0 8px 8px 0;padding:11px 16px;margin:16px 0;background:var(--panel);box-shadow:var(--shadow)}
+  .call .tag{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:3px}
+  .call p{margin:4px 0}
+  .call.se{border-color:var(--grid);background:var(--gridSoft)} .call.se .tag{color:var(--grid)}
+  .call.pw{border-color:var(--amber);background:var(--amberSoft)} .call.pw .tag{color:var(--amber)}
+  .call.me{border-color:var(--mech);background:var(--mechSoft)} .call.me .tag{color:var(--mech)}
+  .call.al{border-color:var(--alert);background:var(--alertSoft)} .call.al .tag{color:var(--alert)}
+  .case{border:1.5px solid var(--alert);border-radius:10px;padding:14px 18px;margin:18px 0;background:var(--panel)}
+  .case .ch{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--alert);margin:0 0 4px}
+  .case b.t{font-size:15.5px}
+  .case p{margin:7px 0}
+  .case .lesson{border-top:1px dashed var(--lineS);margin-top:9px;padding-top:8px;font-size:14px}
+  .case .lesson b{color:var(--alert)}
+
+  .diagram{border:1.5px solid var(--lineS);border-radius:10px;padding:15px;margin:16px 0;background:var(--panel);overflow-x:auto}
+  .flow{display:flex;align-items:stretch;min-width:min-content}
+  .flow .node{border:1.5px solid var(--lineS);border-radius:7px;padding:7px 9px;min-width:88px;background:var(--bg);text-align:center;display:flex;flex-direction:column;justify-content:center}
+  .flow .node b{font-size:12px} .flow .node span{font-size:10px;color:var(--ink2);margin-top:2px}
+  .flow .arr{align-self:center;color:var(--amber);font-weight:700;padding:0 6px;font-family:ui-monospace,monospace}
+  .cap{font-size:12px;color:var(--ink2);margin-top:9px;text-align:center}
+
+  .scroll{overflow-x:auto}
+  table.data{border-collapse:collapse;width:100%;font-size:13.5px;margin:14px 0;min-width:540px}
+  table.data th{text-align:left;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);border-bottom:1.5px solid var(--lineS);padding:8px 10px}
+  table.data td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.data td.n{font-family:ui-monospace,monospace;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  .quiz{border:1.5px solid var(--amber);border-radius:10px;padding:17px 19px;margin:26px 0 10px;background:var(--panel)}
+  .quiz .qh{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin:0 0 10px}
+  .q{margin:14px 0}
+  .q .stem{font-weight:650;font-size:14.5px;margin-bottom:8px}
+  .q .opt{display:block;font-size:13.5px;border:1.5px solid var(--lineS);border-radius:7px;padding:8px 12px;margin:6px 0;cursor:pointer;background:var(--bg)}
+  .q .opt:hover{border-color:var(--amber)}
+  .q .opt.correct{border-color:var(--grid);background:var(--gridSoft)}
+  .q .opt.wrong{border-color:var(--alert);background:var(--alertSoft)}
+  .q .opt input{margin-right:8px}
+  .q .exp{font-size:13px;color:var(--ink2);margin-top:6px;padding:8px 12px;border-left:3px solid var(--grid);background:var(--gridSoft);border-radius:0 6px 6px 0;display:none}
+  .q.answered .exp{display:block}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px;align-items:center}
+  button.act{font-size:14px;font-weight:600;border:1.5px solid var(--amber);background:var(--amber);color:var(--amberInk);padding:9px 16px;border-radius:8px;cursor:pointer}
+  button.act.ghost{background:none;color:var(--amber)}
+  button.act:focus-visible,nav.toc button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .score{font-family:ui-monospace,monospace;font-size:13px;color:var(--ink2)}
+
+  .pager{display:flex;justify-content:space-between;gap:12px;margin-top:34px;border-top:1.5px solid var(--line);padding-top:16px}
+  .pager button{font-size:13px;border:1.5px solid var(--lineS);background:var(--panel);color:var(--ink);padding:10px 14px;border-radius:8px;cursor:pointer;max-width:48%;text-align:left}
+  .pager button:hover:not(:disabled){border-color:var(--amber)}
+  .pager button:disabled{opacity:.35;cursor:default}
+  .pager button .lbl{display:block;font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+  .pager button.next{text-align:right;margin-left:auto}
+
+  .search{width:100%;font-size:15px;padding:11px 14px;border:1.5px solid var(--lineS);border-radius:9px;background:var(--panel);color:var(--ink);margin:6px 0 14px}
+  .term{border-bottom:1px solid var(--line);padding:10px 2px}
+  .term dt{font-weight:750;font-size:14.5px}
+  .term dd{margin:3px 0 0;color:var(--ink2);font-size:14px;max-width:72ch}
+  .term .cat{font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-left:8px}
+
+  .fc{max-width:560px;margin:20px auto;perspective:1000px}
+  .fcCard{border:1.5px solid var(--lineS);border-radius:14px;background:var(--panel);box-shadow:var(--shadow);
+    min-height:240px;display:flex;align-items:center;justify-content:center;padding:28px;text-align:center;cursor:pointer}
+  .fcCard .front{font-size:21px;font-weight:750}
+  .fcCard .back{font-size:15.5px;color:var(--ink2);display:none}
+  .fcCard.flipped .front{display:none}.fcCard.flipped .back{display:block}
+  .fcnav{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+  .fcmeta{text-align:center;font-family:ui-monospace,monospace;font-size:11px;color:var(--ink2);margin-top:8px}
+
+  .ivq{border-left:4px solid var(--amber);padding:10px 16px;margin:13px 0;background:var(--panel);border-radius:0 8px 8px 0;box-shadow:var(--shadow)}
+  .ivq .q2{font-weight:700;font-size:15px}
+  .ivq .a2{font-size:13.5px;color:var(--ink2);margin-top:6px}
+  .ivq .a2 b{color:var(--ink)}
+  details.reveal{border:1.5px dashed var(--lineS);border-radius:8px;padding:10px 14px;margin:10px 0}
+  details.reveal summary{cursor:pointer;font-weight:650;font-size:14px;color:var(--amber)}
+  details.reveal .body{margin-top:8px;font-size:14px;color:var(--ink2)}
+
+  .reslist{display:grid;gap:11px}
+  .res{border:1.5px solid var(--lineS);border-radius:9px;padding:12px 15px;background:var(--panel)}
+  .res a{font-weight:700;font-size:14.5px;color:var(--amber);text-decoration:none}
+  .res a:hover{text-decoration:underline}
+  .res p{margin:3px 0 0;font-size:13px;color:var(--ink2)}
+  a.inline{color:var(--amber)}
+  code{font-family:ui-monospace,monospace;font-size:.9em;background:var(--amberSoft);padding:1px 5px;border-radius:4px}
+
+  .topbar{display:none}
+  @media(max-width:959px){
+    .topbar{display:flex;position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1.5px solid var(--lineS);
+      padding:10px 14px;gap:12px;align-items:center}
+    .topbar button{font-family:ui-monospace,monospace;font-size:12px;border:1.5px solid var(--lineS);background:var(--bg);color:var(--ink);padding:7px 11px;border-radius:7px;cursor:pointer}
+    .topbar b{font-size:13px}
+    aside.hide{display:none}
+  }
+  .themebtn{margin-top:18px;font-family:ui-monospace,monospace;font-size:11px;border:1.5px solid var(--lineS);background:var(--bg);color:var(--ink2);padding:6px 10px;border-radius:7px;cursor:pointer}
+</style>
+
+<div class="topbar">
+  <button id="menu" aria-label="Toggle contents">☰ Program</button>
+  <b id="mobcrumb">Mission-Critical Facility Engineering</b>
+</div>
+
+<div class="shell">
+  <aside id="side">
+    <div class="brand">
+      <div class="kick">Professional Program · Rev 1</div>
+      <h1>Mission-Critical Facility Engineering</h1>
+      <p>The full discipline — power, cooling, reliability, operations. Built for Uzair Ahmed Mohammed, P.E.</p>
+    </div>
+    <div class="statusrow"><span class="pill on">● Systems normal</span><span class="pill" id="lessonpill">19 lessons</span></div>
+    <div class="overall">
+      <span id="ovtext">0 of 19 complete</span>
+      <div class="obar"><i id="ovbar"></i></div>
+    </div>
+    <nav class="toc" id="toc" aria-label="Program contents"></nav>
+    <button class="themebtn" id="theme">◐ Toggle theme</button>
+  </aside>
+  <main id="main" tabindex="-1"><!-- rendered --></main>
+</div>
+<script>
+const A=(t,c)=>`<div class="call ${c}"><span class="tag">${t}</span>`;
+const E=`</div>`;
+const CASE=(h,t)=>`<div class="case"><p class="ch">${h}</p><b class="t">${t}</b>`;
+
+const COURSE=[
+/* ================= UNIT A ================= */
+{unit:"Unit A · The Discipline", id:"a1", n:"A1",
+ title:"What mission-critical means",
+ sub:"A consequence class, not a building type — and a discipline with its own physics, economics, and culture.",
+ min:14,
+ objectives:[
+  "Define mission-critical by consequence of failure, not by facility type",
+  "Map the family of mission-critical facilities and what each protects",
+  "Understand the discipline's three pillars: design topology, physical infrastructure, operations"
+ ],
+ body:`
+ <p><strong>Mission-critical facility engineering</strong> is the discipline of designing, building, and operating facilities where interruption is not an inconvenience but a catastrophe — measured in lives, in millions of dollars per hour, or in national consequence. The defining question is never "what does this building do?" It is: <strong>"what happens in the first sixty seconds after it stops?"</strong></p>
+ <p>Answer that question honestly and everything else in this program follows: the redundancy, the generators, the commissioning rituals, the operating discipline, and the money.</p>
+
+ <h3>The family of mission-critical facilities</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Facility</th><th>What stopping means</th><th>Signature systems</th></tr>
+  <tr><td><b>Data centers</b> (hyperscale, colo, enterprise, edge)</td><td>Digital services down; for AI training, a multi-week run lost; SLA penalties; ~$1M+/hr for major operators</td><td>UPS, generators, chilled water/liquid cooling, fire suppression sized around live electronics</td></tr>
+  <tr><td><b>Hospitals</b></td><td>Life support, ORs, imaging fail — people die; codes mandate essential power (NEC Art. 517, NFPA 99/110)</td><td>Essential electrical system with life-safety/critical/equipment branches, 10-second generator pickup</td></tr>
+  <tr><td><b>Semiconductor fabs</b></td><td>A voltage sag of milliseconds scraps wafer batches worth millions; restart takes days</td><td>Ultra-clean power, vibration-isolated slabs (nm-level tools), ultrapure water, bulk gases</td></tr>
+  <tr><td><b>Trading floors / financial processing</b></td><td>Market access lost; regulatory exposure; the 2023 Equinix Singapore outage froze 2.5M bank transactions</td><td>2N power chains, diverse network paths, tight change control</td></tr>
+  <tr><td><b>Control centers</b> (grid, air traffic, 911, rail)</td><td>The operators who manage everyone else's emergency go blind</td><td>Hardened construction, redundant everything, human-factors design</td></tr>
+  <tr><td><b>Labs / pharma / biobanks</b></td><td>Decades of samples or a production batch lost to hours of warm freezer</td><td>Redundant cooling/power for cold chains, environmental monitoring</td></tr>
+ </table></div>
+ <p>You are aiming at data centers, but hiring managers think of this as <em>one</em> discipline — the same reliability logic, the same commissioning culture, the same acronyms move across all of these. Fluency transfers, and so do careers.</p>
+
+ ${A("The three pillars — hold this structure","pw")}
+ <p>Everything in this program hangs on three pillars. <strong>1) Topology</strong>: the redundancy architecture on paper (N+1, 2N, concurrent maintainability) — Unit E. <strong>2) Physical infrastructure</strong>: the electrical and mechanical machines that implement the topology — Units B and C. <strong>3) Operations</strong>: the humans, procedures, and maintenance that keep the promise for 20 years — Unit E. Facilities fail when any one pillar is weak. The industry's dirty secret, which you'll see in the outage data (A3), is that the third pillar fails most often.</p>
+ ${E}
+
+ <h3>The economics that justify everything</h3>
+ <p>Mission-critical infrastructure looks absurdly overbuilt until you price downtime. Industry surveys consistently put a majority of serious outages above <strong>$100,000 per incident</strong>, with a growing share above $1M. Single famous incidents run far higher: Delta Air Lines' 2016 Atlanta data center power failure grounded ~2,000 flights and was reported at <strong>~$150M</strong>; British Airways' 2017 power-handling error stranded 75,000 passengers over a holiday weekend. Against numbers like that, a second generator plant, a third chiller, and a permanent commissioning team are cheap insurance.</p>
+ <p>That asymmetry — <em>infrastructure cost is trivial next to failure cost</em> — is the economic engine of the entire sector, and the reason its engineers are paid above the market for ordinary buildings.</p>
+
+ ${A("Structural Angle","se")}
+ <p>For the structural engineer, "mission-critical" translates to: the building itself is treated as a component of a machine whose availability is being purchased. Your Risk Category, your equipment anchorage, your vibration limits, and your maintainability provisions (removal paths, hoist beams) are all downstream of a business decision about consequence. Learn to trace every structural requirement back to the consequence it protects against — that's how owner's engineers argue for (or against) cost.</p>
+ ${E}
+ `,
+ terms:[
+  ["Mission-critical facility","A facility where interruption causes severe safety, financial, or societal consequence; designed and operated for continuity."],
+  ["SLA (Service Level Agreement)","Contractual promise of availability/performance; the commercial form of reliability."],
+  ["Essential electrical system","A hospital's code-mandated backup power architecture (life safety / critical / equipment branches)."],
+  ["Topology","The redundancy architecture of a facility's systems, independent of specific equipment."],
+  ["Consequence of failure","The real driver of mission-critical design decisions — lives, dollars/hour, or societal impact."]
+ ],
+ quiz:[
+  {q:"What defines a facility as mission-critical?",
+   o:["Its square footage","The consequence of interruption","Having a generator","Being owned by a tech company"],a:1,
+   e:"Consequence of failure — lives, dollars per hour, societal impact — defines the class and drives every design decision."},
+  {q:"The three pillars of the discipline are:",
+   o:["Steel, concrete, glass","Topology, physical infrastructure, operations","Power, water, gas","Design, permits, marketing"],a:1,
+   e:"Redundancy architecture on paper, the machines that implement it, and the operations that keep the promise — facilities fail when any pillar is weak."},
+  {q:"Why does the economics justify seemingly overbuilt infrastructure?",
+   o:["Materials are cheap","Failure cost (often $100k–$150M per incident) dwarfs infrastructure cost","Codes require gold plating","It doesn't"],a:1,
+   e:"Delta's 2016 outage was reported near $150M. Against that, redundant plants are cheap insurance — the economic engine of the sector."},
+  {q:"Which is NOT typically a mission-critical facility?",
+   o:["A semiconductor fab","A hospital","A 911 control center","A suburban strip mall"],a:3,
+   e:"Fabs, hospitals, and control centers all carry severe consequence of interruption; a strip mall does not."}
+ ]
+},
+{unit:"Unit A · The Discipline", id:"a2", n:"A2",
+ title:"The mathematics of availability",
+ sub:"Nines, MTBF, and why topology beats better components every time.",
+ min:15,
+ objectives:[
+  "Convert between availability percentages and downtime ('the nines')",
+  "Use MTBF/MTTR to compute availability of a component",
+  "Combine components in series and parallel — and see why redundancy is the only way up"
+ ],
+ body:`
+ <p>Reliability talk sounds qualitative until someone opens a spreadsheet. This lesson gives you the four equations that underlie every Tier rating, every redundancy debate, and every "five nines" claim. They are simple — and once you can run them, you can out-argue most people in the room.</p>
+
+ <h3>1. The nines</h3>
+ <p><strong>Availability</strong> = fraction of time the service is up. The industry counts in "nines":</p>
+ <div class="scroll"><table class="data">
+  <tr><th>Availability</th><th>Name</th><th>Downtime per year</th></tr>
+  <tr><td class="n">99%</td><td>two nines</td><td class="n">~3.65 days</td></tr>
+  <tr><td class="n">99.9%</td><td>three nines</td><td class="n">~8.77 hours</td></tr>
+  <tr><td class="n">99.99%</td><td>four nines</td><td class="n">~52.6 minutes</td></tr>
+  <tr><td class="n">99.999%</td><td>five nines</td><td class="n">~5.26 minutes</td></tr>
+  <tr><td class="n">99.9999%</td><td>six nines</td><td class="n">~31.6 seconds</td></tr>
+ </table></div>
+ <p>Each added nine costs roughly an order of magnitude more engineering and discipline. Knowing that 99.99% still allows nearly an hour a year reframes what "reliable" means.</p>
+
+ <h3>2. Component availability: MTBF and MTTR</h3>
+ <p><strong>MTBF</strong> (Mean Time Between Failures) is how long a component typically runs before failing. <strong>MTTR</strong> (Mean Time To Repair) is how long it stays broken. Then:</p>
+ <p class="mono" style="font-size:16px;background:var(--amberSoft);padding:10px 14px;border-radius:8px;display:inline-block">A = MTBF / (MTBF + MTTR)</p>
+ <p><em>Worked example:</em> a UPS with MTBF = 100,000 hours (~11.4 years) and MTTR = 8 hours: A = 100,000 / 100,008 = <strong>99.992%</strong>. Sounds superb — until you put it in series with everything else.</p>
+
+ <h3>3. Series: the chain multiplies down</h3>
+ <p>Systems in <strong>series</strong> (each one needed) multiply availabilities: <span class="mono">A_total = A₁ × A₂ × A₃…</span></p>
+ <p><em>Worked example:</em> utility interface 99.98% × switchgear 99.99% × UPS 99.992% × PDU 99.995% × busway 99.999% ≈ <strong>99.956%</strong> — about 3.9 hours of expected downtime a year, from five individually excellent components. <strong>Chains only get worse.</strong> This is the mathematical reason a single-path facility can never be truly high-availability, no matter how premium its equipment.</p>
+
+ <h3>4. Parallel: redundancy multiplies the failure probabilities</h3>
+ <p>Redundant systems in <strong>parallel</strong> (either can carry the load) fail only if <em>both</em> fail: <span class="mono">A_pair = 1 − (1−A)²</span></p>
+ <p><em>Worked example:</em> one 99.95% power path → ~4.4 hr/yr down. Two independent 99.95% paths → 1 − (0.0005)² = <strong>99.999975%</strong> — theoretical seconds per year. That leap, from hours to seconds, is why <strong>2N topology beats a better component every time</strong>. You cannot buy a 99.99997% UPS; you can buy two ordinary ones and independence.</p>
+
+ ${A("Watch out — the fine print that separates pros from brochures","al")}
+ <p>The parallel equation assumes <strong>independent failures</strong>. Real facilities violate that constantly: both paths pass through one room (fire), one control system (bad firmware), one operating team (human error), one utility. These <strong>common-mode failures</strong> are why real facilities never hit the theoretical numbers, why Tier IV requires <em>physical compartmentalization</em> of redundant systems, and why the outage data (next lesson) is dominated by causes the math above doesn't model. When someone quotes theoretical availability, ask: "independent how?"</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Compartmentalization is structural work: fire-rated separations between A-side and B-side electrical rooms, separated risers and duct routes, sometimes separate buildings for generator plants. When reliability engineers say "physically isolated," you are the one who draws what that means. And the maintainability half of MTTR is physical too — a chiller that takes 3 days to remove because nobody provided a removal path has tripled its MTTR and dragged down the whole facility's availability.</p>
+ ${E}
+ `,
+ terms:[
+  ["Availability","Uptime fraction, usually in 'nines'; 99.99% ≈ 52.6 min/yr of downtime."],
+  ["MTBF","Mean Time Between Failures — average run time between component failures."],
+  ["MTTR","Mean Time To Repair — average time a failed component stays down; maintainability shrinks it."],
+  ["Series reliability","Chained dependencies multiply availabilities down; chains only get worse."],
+  ["Parallel redundancy","Independent duplicates: A = 1−(1−A)ⁿ; the only way to add nines."],
+  ["Common-mode failure","One event or dependency that defeats 'independent' redundant systems simultaneously."]
+ ],
+ quiz:[
+  {q:"99.99% availability allows roughly how much downtime per year?",
+   o:["5 minutes","52 minutes","8.8 hours","3.7 days"],a:1,
+   e:"Four nines ≈ 52.6 minutes/year. Five nines ≈ 5.26 minutes. Each nine is ~10× harder."},
+  {q:"A component with MTBF 100,000 hr and MTTR 8 hr has availability of about:",
+   o:["99.2%","99.92%","99.992%","100%"],a:2,
+   e:"A = 100,000/(100,008) ≈ 99.992%. MTBF/(MTBF+MTTR) is the workhorse equation."},
+  {q:"Five components in series, each ~99.99%, give a system availability:",
+   o:["Better than any component","Equal to the best component","Worse than any single component","Exactly 99.99%"],a:2,
+   e:"Series availabilities multiply: the chain is always worse than its weakest link — the case for redundancy."},
+  {q:"Two independent 99.95% paths in parallel are theoretically:",
+   o:["99.90%","99.95%","99.999975%","Impossible to compute"],a:2,
+   e:"1−(0.0005)² ≈ 99.999975%. Topology, not component quality, is how you add nines."},
+  {q:"Why do real facilities miss theoretical parallel availability?",
+   o:["Math error","Common-mode failures: shared rooms, controls, utilities, and humans break independence","Utilities forbid it","Components are fake"],a:1,
+   e:"The equation assumes independence; fires, firmware, and people are shared. Hence Tier IV's physical compartmentalization."}
+ ]
+},
+{unit:"Unit A · The Discipline", id:"a3", n:"A3",
+ title:"Why facilities actually fail",
+ sub:"The outage data — and the uncomfortable truth that people, not machines, break data centers.",
+ min:13,
+ objectives:[
+  "Cite the real distribution of outage causes (Uptime Institute data)",
+  "Explain why power — specifically UPS — leads the league table",
+  "Internalize the human-error finding and what it implies for design and career"
+ ],
+ body:`
+ <p>Everything so far is theory. This is the scoreboard. The Uptime Institute's <em>Annual Outage Analysis</em> (the industry's standard reference, most recently 2025) tracks what actually takes facilities down, and the results should reorganize your intuitions.</p>
+
+ <h3>The league table of causes</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Cause family</th><th>Share of impactful outages</th><th>Notes</th></tr>
+  <tr><td><b>Power</b></td><td class="n">~45% (2025 report)</td><td>The #1 cause year after year — most often <b>UPS failures</b>, then generators and transfer gear</td></tr>
+  <tr><td><b>IT & networking</b></td><td class="n">~23%</td><td>Rising — configuration/change-management errors in ever-more-complex systems</td></tr>
+  <tr><td><b>Cooling</b></td><td class="n">next tier</td><td>Less frequent than power but brutal at high density — minutes to overheat (see the Singapore case)</td></tr>
+  <tr><td><b>Fire, water, external</b></td><td class="n">small but severe</td><td>Rare; catastrophic when they land (OVHcloud)</td></tr>
+ </table></div>
+
+ ${A("The irony to remember","pw")}
+ <p>The single most common source of major outages is a failure of the <strong>UPS — the machine whose only job is preventing outages</strong>. The protection layer is itself the leading risk. That is not an argument against UPS; it is the argument for redundancy <em>of</em> the protection (2N UPS), for battery monitoring, and for rigorous maintenance — and it explains why interviewers light up when a candidate understands failure modes of the safety systems themselves.</p>
+ ${E}
+
+ <h3>The human factor</h3>
+ <p>Across the Uptime data: <strong>nearly 40% of organizations suffered a major outage caused by human error in the past three years</strong>, and of those incidents, <strong>about 85% trace to staff failing to follow procedures — or the procedures themselves being wrong</strong>. In the 2025 report, procedure-related human error <em>rose</em> ten points over the prior year, likely a symptom of an industry growing faster than it can train people.</p>
+ <p>Sit with that: the dominant failure mode of the world's most engineered buildings is <em>someone skipped a step</em>. The discipline's response is Unit E — procedures (MOPs/SOPs/EOPs), commissioning, drills, and designs that make the wrong action hard (interlocks, labeling, physical separation).</p>
+
+ ${CASE("Case file · human error at scale","British Airways, May 2017 — ~75,000 passengers stranded")}
+ <p>During work at a BA data center near Heathrow, power was interrupted and then — reportedly — <strong>reconnected improperly, causing a power surge</strong> that damaged servers and crippled BA's global operations over a holiday weekend. Reported costs ran to the tens of millions of pounds plus lasting reputational damage.</p>
+ <p class="lesson"><b>Lesson:</b> the outage wasn't the failure — the <em>recovery</em> was. Restoration procedures are as critical as failure response; energization sequences must be engineered, written, and drilled. "Who is allowed to reconnect power, following what document?" is a real design-review question.</p>
+ ${E}
+
+ ${CASE("Case file · the protection became the fire","OVHcloud SBG2, Strasbourg, March 2021 — a data center destroyed")}
+ <p>Fire destroyed the five-story SBG2 building and damaged neighbors; ~3.6 million websites went dark, and some customer data was permanently lost. Firefighters traced the seat of the blaze to a <strong>UPS room — one unit had been extensively serviced that same morning</strong>; investigators also noted the <strong>absence of automatic fire suppression</strong>, delayed electrical cutoff, and a free-cooling airflow design that helped feed the fire.</p>
+ <p class="lesson"><b>Lesson:</b> layered causes, all preventable: maintenance as a risk window, no suppression in the highest-risk room, and building design that accelerated spread. Also the career lesson — post-incident, the entire industry tightened UPS-room fire protection. Failures write the next revision of the standards.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Read the OVH case as a structural engineer: fire compartmentation, suppression coordination, and smoke/airflow paths are life-safety <em>and</em> availability systems. And read the human-error data as an owner's-engineer mandate: design so the dangerous states are physically hard to reach — separated rooms so one wrench can't touch both paths, clear equipment labeling sightlines, maintenance access that doesn't require working blind over live gear.</p>
+ ${E}
+ `,
+ terms:[
+  ["Uptime Annual Outage Analysis","The industry's standard yearly study of outage causes and severity."],
+  ["Impactful outage","An outage with material service/financial consequence (Uptime's tracked category)."],
+  ["Change management","The controlled process for modifying live systems; its failures drive the rising IT-cause share."],
+  ["Maintenance risk window","The elevated failure probability during and immediately after service work."],
+  ["Restoration procedure","The engineered, written sequence for safely returning systems to service — where BA failed."]
+ ],
+ quiz:[
+  {q:"The leading cause of impactful data center outages is:",
+   o:["Cooling","Power — most often UPS failures","Squirrels","Software bugs"],a:1,
+   e:"Power ≈ 45% of impactful outages in Uptime's 2025 analysis, most often the UPS itself — the protection layer is the leading risk."},
+  {q:"Of human-error outages, roughly what share trace to procedures not followed or procedures being wrong?",
+   o:["15%","50%","85%","100%"],a:2,
+   e:"~85% — which is why operations discipline (Unit E) is a design input, not an afterthought."},
+  {q:"The OVHcloud fire's key compounding factor was:",
+   o:["Earthquake","No automatic fire suppression in the UPS room plus airflow that spread the fire","Flooding","Sabotage"],a:1,
+   e:"A serviced UPS was the suspected origin; absent suppression, delayed cutoff, and free-cooling airflow turned it catastrophic."},
+  {q:"The British Airways 2017 lesson is that:",
+   o:["Outages are unavoidable","Recovery/energization procedures are as critical as failure response","Airlines shouldn't use computers","Generators are useless"],a:1,
+   e:"The damage came from improper power restoration — engineered, drilled restoration sequences are part of the design."}
+ ]
+},
+/* ================= UNIT B ================= */
+{unit:"Unit B · Electrical Systems", id:"b1", n:"B1",
+ title:"Reading the one-line",
+ sub:"The single drawing that explains the whole electrical facility — learn to walk it like a pro.",
+ min:14,
+ objectives:[
+  "Read a one-line (single-line) diagram from utility to rack",
+  "Name the function and physical reality of each block: substation, switchgear, transformers, boards",
+  "Spot A/B path separation and redundancy on the drawing"
+ ],
+ body:`
+ <p>Every electrical conversation in a mission-critical facility happens over one document: the <strong>one-line diagram</strong> (single-line). It compresses three-phase reality into a single line per circuit, showing sources, transformations, protection, and paths. When an interviewer slides a one-line across the table — and at hyperscalers they do — they are testing whether you can <em>walk the electron</em> and narrate what each block does.</p>
+
+ <div class="diagram"><div class="flow">
+  <div class="node"><b>Utility</b><span>HV/MV grid</span></div><div class="arr">▸</div>
+  <div class="node"><b>Substation</b><span>50–100 MVA, step-down</span></div><div class="arr">▸</div>
+  <div class="node"><b>MV swgr</b><span>11–33 kV breakers</span></div><div class="arr">▸</div>
+  <div class="node"><b>Unit xfmr</b><span>~2.5–3 MVA → 415/480 V</span></div><div class="arr">▸</div>
+  <div class="node"><b>LV swgr</b><span>480 V boards</span></div><div class="arr">▸</div>
+  <div class="node"><b>UPS</b><span>+ battery</span></div><div class="arr">▸</div>
+  <div class="node"><b>PDU/RPP</b><span>row distribution</span></div><div class="arr">▸</div>
+  <div class="node"><b>Busway</b><span>overhead</span></div><div class="arr">▸</div>
+  <div class="node"><b>Rack</b><span>A + B feeds</span></div>
+ </div><div class="cap">The canonical path. On a real one-line you'd see this drawn twice — an A side and a B side — with generators teeing in at the switchgear.</div></div>
+
+ <h3>Walking the blocks</h3>
+ <ul>
+  <li><strong>Substation:</strong> utility power arrives at high/medium voltage; large power transformers (tens of MVA) step it down. Outdoors, oil-filled, on massive pads with oil containment. Grid interconnection is usually the project's longest-lead item — "speed to power" decides sites.</li>
+  <li><strong>Medium-voltage switchgear:</strong> lineups of vacuum breakers and protective relays distributing 11–33 kV around the campus. Long, heavy, floor-anchored cabinets in dedicated rooms.</li>
+  <li><strong>Unit/distribution transformers:</strong> step MV down to utilization voltage — commonly <strong>415/480 V</strong> three-phase. Roughly one per 2.5–3 MVA block; dry-type indoors or oil-type outside.</li>
+  <li><strong>LV switchgear/switchboards:</strong> thousands of amps of 480 V distribution to UPS systems, mechanical plants, and house loads. Front-and-rear-access lineups with strict working clearances (NEC 110.26).</li>
+  <li><strong>Downstream:</strong> UPS (B2) → PDUs/RPPs which transform and branch power to rows → overhead <strong>busway</strong> with tap-off boxes at each rack → dual rack PDUs (A/B).</li>
+ </ul>
+
+ ${A("How to spot redundancy on the drawing","pw")}
+ <p>Look for: <strong>two utility feeds</strong> (or utility + generator plant tying in through paralleling gear), <strong>bus ties</strong> (breakers linking A and B boards so one side can feed the other during maintenance), <strong>dual risers</strong> to every hall, and <strong>every IT rack fed twice</strong> (A-side and B-side cords). If you can point to the drawing and say "here's my concurrent-maintainability path when this breaker is racked out," you've passed the literacy test.</p>
+ ${E}
+
+ ${A("Emerging: the DC-power future","me")}
+ <p>Hyperscalers are pushing past 480 V AC for AI loads: the OCP "Mt Diablo" collaboration (Microsoft/Meta/Google) is standardizing <strong>±400 V DC</strong> side-car power racks and disaggregated power to scale racks from 100 kW toward 1 MW. You don't need to design it — you need to recognize the term and its driver: at 1 MW per rack, conventional low-voltage AC distribution runs out of copper.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Every block on the one-line is a load with a footprint you own: substation transformer pads with oil containment berms, switchgear rooms with long anchored lineups (seismic anchorage per Ch. 13), transformer vaults with fire separations, floor-standing PDUs at 5,000–10,000 lb, and busway hung from your roof steel with seismic bracing. A one-line is secretly a structural loading map — learn to read it as one.</p>
+ ${E}
+ `,
+ terms:[
+  ["One-line (single-line) diagram","The schematic showing an electrical system's sources, transformations, protection, and paths — one line per circuit."],
+  ["Medium voltage (MV)","Campus distribution voltage class, typically 11–33 kV in data centers."],
+  ["Unit substation / unit transformer","The MV→LV transformer block (~2.5–3 MVA) serving a lineup of low-voltage gear."],
+  ["Bus tie","A breaker connecting two switchboard buses so either source can feed both — a maintainability workhorse."],
+  ["Working clearance","Code-required clear space around electrical gear (NEC 110.26) that shapes room layout."],
+  ["±400 VDC / Mt Diablo","OCP effort standardizing DC side-car power for 100 kW→1 MW racks."]
+ ],
+ quiz:[
+  {q:"A one-line diagram shows:",
+   o:["Only lighting circuits","Sources, transformations, protection, and paths — one line per circuit","The floor plan","Network cabling"],a:1,
+   e:"It's the master schematic of the electrical system; walking it block-by-block is a standard interview literacy test."},
+  {q:"Typical data center utilization voltage after the unit transformers is:",
+   o:["12 V","120 V only","415/480 V three-phase","33 kV"],a:2,
+   e:"MV (11–33 kV) distributes across campus; unit transformers (~2.5–3 MVA) step down to 415/480 V for use."},
+  {q:"On a one-line, a 'bus tie' exists so that:",
+   o:["Buses look tidy","Either source/board can feed both buses during maintenance or failure","Voltage increases","It's decorative"],a:1,
+   e:"Bus ties are the drawing's concurrent-maintainability workhorse — one side can carry the other's load."},
+  {q:"Why are hyperscalers exploring ±400 VDC distribution?",
+   o:["Nostalgia","At ~1 MW racks, conventional LV AC distribution runs out of practical copper/space","DC is older","Code requires it"],a:1,
+   e:"OCP 'Mt Diablo' standardizes DC side-car power as rack power heads from 100 kW toward 1 MW."}
+ ]
+},
+{unit:"Unit B · Electrical Systems", id:"b2", n:"B2",
+ title:"UPS and energy storage",
+ sub:"The seconds that decide everything — and the #1 cause of outages, up close.",
+ min:15,
+ objectives:[
+  "Explain double-conversion vs line-interactive vs rotary UPS topologies",
+  "Compare VRLA vs lithium-ion batteries and their code/structural consequences (NFPA 855)",
+  "Understand ride-through time, kW vs kWh, and why UPS fleets fail"
+ ],
+ body:`
+ <p>Between a utility failure and stable generator power lie 10–60 undefended seconds. The <strong>UPS</strong> exists for exactly that window — and, as Lesson A3 showed, it is also the single most common cause of major outages. Respect both facts.</p>
+
+ <h3>Static UPS topologies</h3>
+ <ul>
+  <li><strong>Double-conversion (VFI)</strong> — the mission-critical standard. Incoming AC is rectified to DC (charging the batteries), then inverted back to clean AC. The load <em>always</em> runs on the inverter, so utility disturbances never touch it; transfer time is zero. Cost: ~2–4% efficiency loss and heat. Modern "eco-mode" variants bypass conversion when the utility is clean, at a small risk trade.</li>
+  <li><strong>Line-interactive / standby</strong> — cheaper topologies that switch to battery on failure (milliseconds of transfer). Fine for closets; rare for critical halls.</li>
+  <li><strong>Modular static UPS</strong> — hyperscale standard: 200–400 kVA power modules paralleled into multi-MW systems, hot-swappable, N+1 within the frame itself.</li>
+ </ul>
+
+ <h3>Rotary and DRUPS</h3>
+ <p><strong>Rotary UPS</strong> stores energy kinetically in a spinning mass (flywheel) — seconds of ride-through, no battery room, high power density. A <strong>DRUPS</strong> (Diesel Rotary UPS) couples flywheel + diesel engine in one machine: the flywheel rides through the gap while the engine clutches in. Popular in parts of Europe and some hyperscale designs; eliminates batteries entirely but concentrates rotating mass and vibration — and demands disciplined maintenance.</p>
+
+ <h3>Batteries: the chemistry decision with structural consequences</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Attribute</th><th>VRLA (lead-acid)</th><th>Lithium-ion (typ. LFP)</th></tr>
+  <tr><td>Weight / footprint</td><td>Very heavy — battery rooms at ~250–450 psf</td><td class="n">~60–80% lighter, ~50–80% less floor area</td></tr>
+  <tr><td>Life / temperament</td><td>~4–6 yr, temperature-sensitive, needs cool rooms</td><td>~10–15 yr, tolerant, per-cell monitoring built in</td></tr>
+  <tr><td>Code/safety</td><td>Hydrogen off-gassing → ventilation, spill containment</td><td><b>NFPA 855</b> siting/segregation, thermal-runaway protection, off-gas detection</td></tr>
+  <tr><td>Trend</td><td>Legacy installed base</td><td>Default for new AI-era builds</td></tr>
+ </table></div>
+
+ ${A("kW vs kWh — a 10-second literacy check","pw")}
+ <p><strong>kW is how hard you can push; kWh is how long you can push it.</strong> A UPS is rated in kW/kVA (power it can deliver) and its battery in minutes of <strong>ride-through at load</strong> — commonly 5–10 minutes in modern designs, just enough for generators to start, retry, and stabilize, with margin. Nobody sizes batteries to ride out a storm; that's the generator plant's job (B3).</p>
+ ${E}
+
+ ${A("Why UPS fleets actually fail","al")}
+ <p>Patterns behind the #1-cause statistic: <strong>battery degradation</strong> (a string is only as good as its weakest cell — hence continuous battery monitoring), <strong>maintenance windows</strong> (the OVH fire started at a freshly serviced unit; bypass operations are the riskiest minutes of the year), <strong>control/firmware faults</strong> propagating across paralleled modules (a common-mode failure the 2N math doesn't see), and <strong>capacity creep</strong> — IT load grows until the ride-through you commissioned quietly isn't there anymore. An owner's engineer asks for battery-monitoring data and load-trend curves, not just nameplates.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>The battery decision rewrites your floor plan: VRLA rooms are among the heaviest floors in the building; lithium cuts the mass dramatically but brings <strong>NFPA 855</strong> — separation distances, fire-rated rooms, sometimes dedicated buildings for big energy-storage blocks, deflagration venting to coordinate. DRUPS swaps floor load for a large rotating machine on inertia bases with serious vibration isolation. Whichever way the electrical engineer goes, you inherit the consequences — ask early.</p>
+ ${E}
+ `,
+ terms:[
+  ["Double-conversion UPS","Rectify AC→DC→invert to AC continuously; the load always rides the inverter — zero transfer time."],
+  ["Rotary UPS / DRUPS","Flywheel energy storage; DRUPS adds a coupled diesel engine, eliminating batteries."],
+  ["Ride-through","The minutes a UPS carries load between utility loss and stable generator power (typically 5–10 min)."],
+  ["VRLA","Valve-regulated lead-acid battery — heavy, shorter-lived, hydrogen off-gassing."],
+  ["NFPA 855","The energy-storage-system standard governing lithium battery siting, separation, and protection."],
+  ["Battery monitoring system","Per-cell/string health monitoring — the defense against the weakest-cell failure mode."],
+  ["Eco-mode","UPS mode bypassing double conversion when utility is clean, trading a sliver of risk for efficiency."]
+ ],
+ quiz:[
+  {q:"In a double-conversion UPS, the critical load normally runs on:",
+   o:["Raw utility","The inverter output, always","The generator","The bypass"],a:1,
+   e:"AC→DC→AC continuously; disturbances never touch the load and transfer time is zero — the mission-critical standard."},
+  {q:"A DRUPS eliminates:",
+   o:["Generators","The battery room (flywheel + coupled diesel instead)","Cooling","Switchgear"],a:1,
+   e:"Kinetic ride-through plus an integral engine — no batteries, but concentrated rotating mass and vibration."},
+  {q:"UPS batteries are sized for:",
+   o:["Riding out a full storm","~5–10 minutes — the generator start window with margin","24 hours","One year"],a:1,
+   e:"kWh buys minutes for the gensets to start and stabilize; long-duration backup is the generator plant's job."},
+  {q:"Lithium-ion vs VRLA for the structural engineer means:",
+   o:["No difference","~60–80% less weight but NFPA 855 separation/fire provisions to coordinate","Lithium is heavier","VRLA needs no ventilation"],a:1,
+   e:"Chemistry choice can swing battery-room floor loads several-fold and changes the fire-protection architecture."},
+  {q:"A firmware fault propagating across paralleled UPS modules is an example of:",
+   o:["Independent failure","Common-mode failure defeating redundancy math","Utility failure","Operator error"],a:1,
+   e:"Shared controls are shared fate — exactly the kind of dependency the parallel-availability equation doesn't model."}
+ ]
+},
+{unit:"Unit B · Electrical Systems", id:"b3", n:"B3",
+ title:"Generators and fuel systems",
+ sub:"The long-duration backbone: engines, yards, day tanks, and 48 hours of diesel.",
+ min:14,
+ objectives:[
+  "Size and count generators for a campus, including redundancy",
+  "Explain the fuel chain: bulk tanks → day tanks → engines, and its regulations",
+  "Understand start sequences, load acceptance, paralleling, and testing"
+ ],
+ body:`
+ <p>When the grid goes away for hours or days, the facility becomes a power plant. Standby <strong>engine-generators</strong> — overwhelmingly diesel, with natural gas growing — are the long-duration layer beneath the UPS's minutes.</p>
+
+ <h3>The fleet</h3>
+ <p>Individual units cluster at <strong>2.0–2.5 MW</strong> (lineups run ~1.5–4 MW: Caterpillar C175-16 at 3,000 ekW, Cummins 2,500 kW, and peers). A hyperscale campus deploys them in ranks: <strong>Amazon's Manassas, VA site runs 93 × 2.5 MW units</strong>; Virginia alone had 10,500+ permitted data center generators (~27 GW) by end-2025. Redundancy applies here too — N+1 or N+2 fleets, or catcher-block schemes (E1).</p>
+
+ <h3>The 10-second drama, step by step</h3>
+ <ol>
+  <li><strong>t = 0:</strong> utility fails. UPS inverters carry the critical load without a flicker; mechanical plant (not on UPS) coasts.</li>
+  <li><strong>t ≈ 2 s:</strong> controls confirm the outage is real (not a blink) and signal engine start.</li>
+  <li><strong>t ≈ 10–15 s:</strong> engines crank, fire, and reach speed/voltage. (NFPA 110 Level 1 systems — hospitals — mandate 10 seconds to load.)</li>
+  <li><strong>t ≈ 15–60 s:</strong> <strong>paralleling switchgear</strong> synchronizes multiple units to one bus (matching voltage, frequency, phase), then <strong>ATS</strong>/breakers transfer load in blocks — big motor loads staged so the engines aren't slammed ("block loading" / load acceptance limits).</li>
+  <li><strong>Return:</strong> when utility stabilizes, transfer back (open- or closed-transition) — the BA case's lesson: this direction is engineered and drilled too.</li>
+ </ol>
+
+ <h3>Fuel: the two-tier chain</h3>
+ <p>Each engine has a <strong>day tank</strong> (hours of fuel, at or under the unit) automatically replenished from <strong>bulk storage</strong> — large tanks holding a campus target of <strong>24–48 hours at full load</strong> (some owners spec ~96). The chain includes transfer pumps (redundant), filtration and <strong>fuel polishing</strong> (diesel degrades — microbial growth and water are real outage causes), and level/leak monitoring. Regulations: EPA <strong>SPCC</strong> containment rules trigger at 1,320 gallons aggregate; air-quality permits cap run-hours and drive Tier 4 emissions packages or gas engines in strict jurisdictions.</p>
+
+ ${CASE("Case file · fuel is a system, not a tank","Superstorm Sandy, NYC 2012 — hospitals and data centers")}
+ <p>Multiple facilities had generators running — then failed anyway: <strong>fuel pumps and day-tank systems in flooded basements</strong> starved engines that sat safely above water; NYU Langone hospital evacuated patients down stairwells. One Manhattan data center famously survived on a bucket brigade carrying diesel up 17 flights.</p>
+ <p class="lesson"><b>Lesson:</b> trace the <em>entire</em> dependency chain — engine, day tank, transfer pumps, controls, vents — against flood elevation. Any link below the waterline is the system's real elevation. This is simultaneously a reliability review and a structural/siting review.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Your scope: engine pads (mass ≈ 2× machine weight is the classic vibration rule), 20–35-ton skids, exhaust stacks and radiators with wind loads, acoustic/screening enclosures, bulk-tank foundations (a 50,000-gal tank is ~350,000 lb of fuel alone) with containment berms, underground-tank buoyancy checks, and RC IV anchorage of every component — because backup power must survive the event it exists for. Fuel-chain elevation review after Sandy is now standard practice: know it, cite it.</p>
+ ${E}
+ `,
+ terms:[
+  ["Standby generator","Engine-generator providing long-duration backup power; data center units typically 2–3 MW."],
+  ["Paralleling switchgear","Gear that synchronizes multiple generators onto one bus and manages load sharing."],
+  ["Block loading / load acceptance","Staged application of load so engines can accept it without stalling or voltage dips."],
+  ["Day tank / bulk storage","Local hours-of-fuel tank at each engine, auto-refilled from large site tanks (24–48 hr targets)."],
+  ["Fuel polishing","Filtration/recirculation keeping stored diesel usable — degraded fuel is a real outage cause."],
+  ["SPCC","EPA spill-prevention rules (≥1,320 gal aggregate) driving containment/berm design."],
+  ["NFPA 110","Standard for emergency/standby power systems; Level 1 (life safety) requires 10-second pickup."]
+ ],
+ quiz:[
+  {q:"The typical data center generator unit size clusters around:",
+   o:["50 kW","2.0–2.5 MW","50 MW","1 kW"],a:1,
+   e:"Fleets of ~2–3 MW units (Manassas: 93 × 2.5 MW) — with N+1/N+2 or catcher-block redundancy across the fleet."},
+  {q:"Paralleling switchgear exists to:",
+   o:["Park generators","Synchronize multiple engines to one bus and share load","Store fuel","Cool the engines"],a:1,
+   e:"Voltage, frequency, and phase must match before breakers close; then load transfers in staged blocks."},
+  {q:"Sandy's core fuel lesson was:",
+   o:["Buy bigger engines","The system's real flood elevation is its lowest critical link — pumps and day tanks in basements starved dry engines above","Diesel floats","Hospitals don't need power"],a:1,
+   e:"Trace the whole dependency chain against flood elevation — a joint reliability/structural review that's now standard."},
+  {q:"Bulk fuel storage at hyperscale campuses typically targets:",
+   o:["30 minutes","2–4 hours","24–48 hours at full load","A year"],a:2,
+   e:"Enough to outlast most grid events and secure resupply; some owners spec up to ~96 hours."}
+ ]
+},
+{unit:"Unit B · Electrical Systems", id:"b4", n:"B4",
+ title:"Transfer, protection, and failing over gracefully",
+ sub:"ATS vs STS, selective coordination, arc flash — the choreography of not going dark.",
+ min:13,
+ objectives:[
+  "Distinguish ATS and STS and where each lives in the architecture",
+  "Explain selective coordination — why one fault should trip one breaker",
+  "Speak intelligently about arc flash, grounding, and EPO"
+ ],
+ body:`
+ <p>Having two sources is worthless without flawless choreography for moving between them. This lesson is the choreography — and the protection engineering that keeps one fault from cascading into a facility-wide event.</p>
+
+ <h3>ATS vs STS</h3>
+ <div class="scroll"><table class="data">
+  <tr><th></th><th>ATS — Automatic Transfer Switch</th><th>STS — Static Transfer Switch</th></tr>
+  <tr><td>Mechanism</td><td>Electromechanical</td><td>Solid-state (thyristors)</td></tr>
+  <tr><td>Speed</td><td class="n">~seconds</td><td class="n">~¼ cycle (&lt;8 ms)</td></tr>
+  <tr><td>Role</td><td>Utility ↔ generator transfers, upstream, behind the UPS's ride-through</td><td>Downstream source-switching between two live UPS buses — lets even single-corded loads see 2N</td></tr>
+  <tr><td>Transition</td><td>Open (break-before-make) or closed (brief overlap)</td><td>Seamless to the load</td></tr>
+ </table></div>
+
+ <h3>Selective coordination — the protection hierarchy</h3>
+ <p>Every breaker/fuse has a time-current curve. <strong>Selective coordination</strong> means the curves are engineered so a fault trips <em>only the nearest upstream device</em> — a shorted server PSU blows its rack-level protection, not the PDU main, not the switchboard. Uncoordinated protection turns a $50 fault into a hall-wide outage. Code requires it for emergency systems (NEC 700.32); mission-critical owners demand a documented <strong>coordination study</strong> (plus short-circuit and arc-flash studies) and keep it updated as the system changes. As an owner's engineer, "show me the current coordination study" is a power question.</p>
+
+ <h3>Arc flash, grounding, EPO — the safety layer</h3>
+ <ul>
+  <li><strong>Arc flash:</strong> a fault across energized conductors creates an explosion of plasma. Studies (IEEE 1584 / NFPA 70E) set incident-energy labels, PPE levels, and boundaries at every panel. Design responses: remote racking, arc-resistant switchgear, maintenance-mode settings. It shapes room layouts and procedures — and it's why nobody works a live 480 V board casually.</li>
+  <li><strong>Grounding & bonding:</strong> the quiet foundation — fault-current return paths, lightning protection, and signal-reference grounding for sensitive electronics.</li>
+  <li><strong>EPO (Emergency Power Off):</strong> the historical big red button that kills a whole room — famous for causing more outages (accidental or misguided presses) than it prevents. Modern codes/designs have relaxed and guarded it; knowing the EPO debate marks sector experience.</li>
+ </ul>
+
+ ${A("Watch out — transfers are the riskiest routine event","al")}
+ <p>Most facility drama concentrates in transfer moments: monthly generator tests, UPS bypass for maintenance, utility return. The 2016 Delta Atlanta failure was a switchgear/transfer event; BA 2017 was botched restoration. Owner's engineers scrutinize transfer sequences, interlocks (making wrong breaker orders physically impossible), and the <em>written procedure</em> for every planned transfer. If a facility can't show you its transfer MOPs, its redundancy is theoretical.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Arc-flash boundaries and NEC working clearances size your electrical rooms and egress paths. Arc-resistant switchgear vents blast energy upward — coordinate ceiling/room design for it. STS/ATS units are more anchored heavy cabinets on your list, and closed-transition schemes can briefly parallel utility and generators — the fault-current spike sizes gear (and its mass) upward. Room-by-room, protection engineering quietly writes your architectural-structural program.</p>
+ ${E}
+ `,
+ terms:[
+  ["ATS","Automatic Transfer Switch — electromechanical, seconds-scale source transfer (utility↔generator)."],
+  ["STS","Static Transfer Switch — solid-state, sub-cycle switching between two live sources downstream."],
+  ["Selective coordination","Protection curves staged so a fault clears at the nearest device only — no cascade."],
+  ["Coordination / arc-flash study","The engineered analyses (time-current, IEEE 1584) behind breaker settings and PPE labels."],
+  ["Arc-resistant switchgear","Gear built to channel arc-blast energy away from personnel — with structural venting implications."],
+  ["EPO","Emergency Power Off — the guarded 'big red button' with a storied history of causing outages."],
+  ["Interlock","Mechanical/electrical scheme making incorrect operating sequences physically impossible."]
+ ],
+ quiz:[
+  {q:"The key difference between ATS and STS is:",
+   o:["Color","ATS = mechanical/seconds (utility↔gen); STS = solid-state/quarter-cycle between live UPS buses","STS uses diesel","ATS is faster"],a:1,
+   e:"UPS ride-through covers the ATS's seconds upstream; the STS gives seamless dual-source power downstream."},
+  {q:"Selective coordination ensures that:",
+   o:["All breakers trip together","Only the protective device nearest the fault operates","Nothing ever trips","Generators start faster"],a:1,
+   e:"Staged time-current curves keep a rack-level fault from cascading into a hall-wide outage; owners demand current studies."},
+  {q:"The EPO button is famous in the industry for:",
+   o:["Preventing every outage","Causing outages via accidental or misguided activation","Cooling servers","Starting generators"],a:1,
+   e:"The room-killing red button has a storied history of self-inflicted downtime — modern designs guard or eliminate it."},
+  {q:"Why do owner's engineers obsess over transfer sequences?",
+   o:["Habit","Most facility incidents concentrate in transfer/restoration moments (Delta 2016, BA 2017)","Transfers are rare","They don't"],a:1,
+   e:"Routine transfers are the riskiest planned events; interlocks and written MOPs are the defense."}
+ ]
+},
+/* ================= UNIT C ================= */
+{unit:"Unit C · Mechanical Systems", id:"c1", n:"C1",
+ title:"Heat and the chilled-water plant",
+ sub:"Every watt in is a watt to remove. Meet the plant that does it — and its pumping arithmetic.",
+ min:14,
+ objectives:[
+  "Explain the two water loops (chilled water, condenser water) and what a chiller actually does",
+  "Distinguish CRAC vs CRAH and the main pumping configurations",
+  "Reason about plant redundancy the same way you do electrical"
+ ],
+ body:`
+ <p>Thermodynamics runs the second half of the facility: essentially <strong>every watt delivered to IT becomes heat</strong>, continuously. A 48 MW facility is a 48 MW heater that must never warm up. The chilled-water plant is how big facilities move that river of heat.</p>
+
+ <h3>The two loops</h3>
+ <div class="diagram"><div class="flow">
+  <div class="node"><b>IT heat</b><span>racks</span></div><div class="arr">▸</div>
+  <div class="node"><b>CRAH coils</b><span>air→water</span></div><div class="arr">▸</div>
+  <div class="node"><b>CHW loop</b><span>~7–20°C supply</span></div><div class="arr">▸</div>
+  <div class="node"><b>Chiller</b><span>refrigeration cycle</span></div><div class="arr">▸</div>
+  <div class="node"><b>CW loop</b><span>condenser water</span></div><div class="arr">▸</div>
+  <div class="node"><b>Cooling tower</b><span>heat → sky</span></div>
+ </div><div class="cap">Heat cascades: room air → chilled water → refrigerant → condenser water → atmosphere.</div></div>
+ <ul>
+  <li><strong>Chilled water (CHW) loop:</strong> cold supply (historically ~7°C/45°F; modern plants run warmer — 15–20°C — for efficiency) circulates to cooling coils; returns warm.</li>
+  <li><strong>The chiller</strong> is a refrigeration machine (compressor, evaporator, condenser) pumping heat uphill from the CHW loop into the <strong>condenser-water (CW) loop</strong>. Data center banks commonly run ~500-ton units in N+1 sets; the largest reach ~20 MW of cooling each.</li>
+  <li><strong>Cooling towers</strong> (C2) reject the heat to the sky, mostly by evaporation.</li>
+ </ul>
+
+ <h3>Room units: the CRAC/CRAH distinction (know it cold)</h3>
+ <p><strong>CRA-C = Compressor onboard</strong>: a self-contained direct-expansion (DX) unit, its own little refrigeration plant. <strong>CRA-H = Hydronic</strong>: just a fan and a chilled-water coil — the "cold" is made centrally. Large facilities standardize on CRAHs + central plant for efficiency at scale; CRACs serve smaller rooms and edge sites.</p>
+
+ <h3>Pumping configurations — the plant's circulation system</h3>
+ <ul>
+  <li><strong>Primary/secondary:</strong> a constant-flow primary loop through the chillers, decoupled from a variable-flow secondary loop to the loads. Classic, forgiving, more pumps.</li>
+  <li><strong>Variable-primary:</strong> one set of variable-speed pumps does it all — more efficient, fewer machines, but demands smarter controls (minimum-flow protection for chillers). The modern default.</li>
+  <li>Either way: <strong>pumps in N+1</strong>, headered so any pump can serve, on VFDs (variable-frequency drives). Redundancy thinking is identical to electrical — draw the water "one-line" and hunt single points of failure: a single shared header, one make-up water line, one BMS controller (see the Singapore case, C3).</li>
+ </ul>
+
+ ${A("Watch the fluid arithmetic","me")}
+ <p>Rules of thumb worth owning: 1 ton of cooling = 3.517 kW of heat; a chilled-water system moves roughly <strong>2.4 gpm per ton</strong> at a standard 10°F ΔT — so a 5,000-ton plant circulates ~12,000 gpm through big pipes (18–30"+). Water weighs 62.4 lb/ft³: a 24-inch main runs about <strong>195 lb of water per foot</strong> before you count the steel. Pipe racks, anchors, and thrust blocks are real structure.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>The plant is your heaviest tenant: chillers (tens of tons each, operating weight), pump skids on inertia bases, and piping galleries whose <em>filled</em> weight, seismic bracing (yes, Ch. 13 covers distribution systems), thermal-expansion loops, and anchor/thrust forces all land on you. Design to <strong>operating weight</strong> — never shipping weight — and ask for the pump schedule early: vibration isolation on rotating equipment near sensitive halls is a coordination item you own jointly with mechanical.</p>
+ ${E}
+ `,
+ terms:[
+  ["Chilled-water (CHW) loop","The cold loop delivering cooling from chillers to coils; modern supply temps trending warmer for efficiency."],
+  ["Condenser-water (CW) loop","The loop carrying chiller-rejected heat to cooling towers."],
+  ["Chiller","Refrigeration machine pumping heat from CHW to CW; data center banks ~500-ton units, N+1."],
+  ["CRAC vs CRAH","Compressor-onboard DX unit vs hydronic coil+fan on central chilled water; big sites standardize on CRAH."],
+  ["Primary/secondary pumping","Decoupled constant-flow chiller loop + variable-flow load loop; the classic scheme."],
+  ["Variable-primary flow","Single variable-speed pumping scheme — efficient, controls-dependent; the modern default."],
+  ["Ton of cooling","3.517 kW of heat removal; chilled water flows ~2.4 gpm per ton at 10°F ΔT."]
+ ],
+ quiz:[
+  {q:"A chiller's job is to:",
+   o:["Make ice","Pump heat from the chilled-water loop into the condenser-water loop via a refrigeration cycle","Filter water","Generate power"],a:1,
+   e:"It moves heat uphill: room air → CHW → refrigerant → CW → tower → atmosphere."},
+  {q:"CRAH units differ from CRACs because they:",
+   o:["Contain compressors","Are just fan + chilled-water coil — cooling is made centrally","Are outdoors","Use diesel"],a:1,
+   e:"CRA-C = Compressor onboard (DX); CRA-H = Hydronic. Scale favors central plant + CRAHs."},
+  {q:"A 5,000-ton plant at standard ΔT circulates roughly:",
+   o:["120 gpm","1,200 gpm","12,000 gpm","1.2 million gpm"],a:2,
+   e:"~2.4 gpm/ton × 5,000 tons — big pipes whose filled weight and anchors are structural work."},
+  {q:"Redundancy thinking for the mechanical plant is:",
+   o:["Unnecessary — water is reliable","The same SPOF-hunting as electrical: headered N+1 pumps, no single shared choke point","Only about chillers","Automatic"],a:1,
+   e:"Draw the water one-line and hunt single points of failure — shared headers, one make-up line, one controller."}
+ ]
+},
+{unit:"Unit C · Mechanical Systems", id:"c2", n:"C2",
+ title:"Heat rejection: towers, dry coolers, and the water problem",
+ sub:"Where the heat finally leaves — and the water-vs-energy trade the public now watches.",
+ min:13,
+ objectives:[
+  "Compare evaporative towers, dry coolers, and hybrid/adiabatic rejection",
+  "Explain economizers/free cooling and why climate picks sites",
+  "Command the PUE and WUE numbers and their tension"
+ ],
+ body:`
+ <p>All that cascaded heat must finally leave the property. How you throw it away sets your efficiency (PUE), your water bill (WUE), your community relations, and a large share of your structural roof/yard loads.</p>
+
+ <h3>The rejection menu</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Technology</th><th>How</th><th>Trade</th></tr>
+  <tr><td><b>Evaporative cooling tower</b></td><td>Sprays condenser water over fill; evaporation does the work</td><td>Best efficiency (approaches wet-bulb) but consumes water by design — the WUE driver</td></tr>
+  <tr><td><b>Dry cooler / air-cooled chiller</b></td><td>Finned coils + big fans; no evaporation</td><td>Near-zero water, but worse efficiency in heat (limited by dry-bulb) and much larger airflow footprints</td></tr>
+  <tr><td><b>Adiabatic / hybrid</b></td><td>Dry most of the year; wets pads only on peak days</td><td>The compromise increasingly chosen</td></tr>
+ </table></div>
+
+ <h3>Economizers — free cooling</h3>
+ <p>When outdoor conditions allow, skip refrigeration entirely: <strong>air-side economizers</strong> bring filtered outside air straight in; <strong>water-side economizers</strong> use towers + heat exchangers to make cold water with chillers off. Thousands of free-cooling hours per year are why Nordic, Pacific-Northwest, and high-plains sites are prized, and why ASHRAE's allowable envelopes widened — running halls warmer (up to the A1–A2 limits) multiplies economizer hours.</p>
+
+ <h3>The scoreboard: PUE and WUE</h3>
+ <ul>
+  <li><strong>PUE</strong> = total facility power ÷ IT power. Industry average <strong>~1.54 and flat for six years</strong> (Uptime 2025); Google and Meta fleets ~<strong>1.09</strong>; new hyperscale targets ~1.1–1.2. The 1.09-vs-1.54 gap is cooling strategy, climate, and containment.</li>
+  <li><strong>WUE</strong> = liters of water per kWh of IT energy. Credible central figures: US average ~0.375–0.48 L/kWh, Microsoft fleet ~0.30; evaporative-heavy sites run far higher. A large campus can evaporate on the order of <strong>hundreds of thousands of gallons a day</strong> — which is now front-page news in drought regions.</li>
+  <li><strong>The tension:</strong> evaporation lowers PUE but raises WUE; dry rejection reverses it. You cannot minimize both — every siting fight and sustainability pledge lives inside that trade. The 2025-26 direction: <strong>closed-loop, zero-evaporation designs</strong> (Microsoft's next-gen standard) that fill the loop once and reject heat dry, accepting the energy penalty.</li>
+ </ul>
+
+ ${A("Watch out — 'waterless' does not mean lighter","al")}
+ <p>Engineering the water out means <em>bigger air-side hardware</em>: banks of dry coolers and air-cooled chillers with enormous fan decks and coil area. For you that's more roof/yard footprint, more concentrated and vibrating equipment, more screening walls catching wind. A sustainability pledge upstream becomes structural steel downstream.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Rejection hardware is classic mission-critical structural scope: tower basins full of water (design at operating weight, check sloshing in seismic zones), fan-deck vibration, plume and wind on tall screens, snow drift behind them, and — for roof-mounted plant — thousands of tons of load your framing must love for 20 years. The technology choice (wet/dry/hybrid) changes your loads dramatically: be in that conversation early.</p>
+ ${E}
+ `,
+ terms:[
+  ["Cooling tower (evaporative)","Rejects heat by evaporating condenser water; efficient but water-consuming."],
+  ["Dry cooler","Closed-coil, fan-driven rejection with no evaporation — near-zero water, larger footprint."],
+  ["Adiabatic/hybrid cooling","Dry operation with evaporative assist only on peak days."],
+  ["Air-side / water-side economizer","Free cooling using outside air directly, or towers+HX with chillers off."],
+  ["PUE","Total ÷ IT power. Industry ~1.54 flat; best hyperscale fleets ~1.09."],
+  ["WUE","Liters of water per kWh IT. ~0.3–0.48 credible averages; evaporative sites much higher."],
+  ["Closed-loop / zero-evaporation design","Fill-once liquid loops with dry rejection — the 2025-26 answer to the water backlash."]
+ ],
+ quiz:[
+  {q:"The fundamental water-vs-energy trade is:",
+   o:["Nonexistent","Evaporative rejection lowers PUE but raises WUE; dry rejection reverses it","Water lowers both","Energy lowers both"],a:1,
+   e:"You cannot minimize both simultaneously — this tension drives siting fights and the shift to closed-loop dry designs."},
+  {q:"Industry-average PUE per Uptime's 2025 survey is about:",
+   o:["1.05","1.2","1.54 — flat for six years","2.5"],a:2,
+   e:"~1.54 average vs ~1.09 for the best hyperscale fleets; the gap is cooling strategy, climate, containment."},
+  {q:"Free cooling (economization) is why:",
+   o:["Sites cluster in hot deserts only","Cool/dry climates and warmer hall setpoints are prized — thousands of chiller-off hours","Chillers are obsolete","PUE doesn't matter"],a:1,
+   e:"Air- and water-side economizers skip refrigeration when ambient allows; wider ASHRAE envelopes multiply those hours."},
+  {q:"Going 'waterless' typically means, structurally:",
+   o:["Lighter roofs","Bigger, heavier air-side rejection hardware — more footprint, fans, screens, and steel","No change","Fewer screens"],a:1,
+   e:"Dry rejection needs far more coil/fan area; the sustainability decision lands as structural load."}
+ ]
+},
+{unit:"Unit C · Mechanical Systems", id:"c3", n:"C3",
+ title:"Continuous cooling and thermal ride-through",
+ sub:"At AI density, cooling is critical load: the thermal battery problem.",
+ min:12,
+ objectives:[
+  "Explain why high-density halls have only seconds-to-minutes of thermal inertia",
+  "Describe the continuous-cooling toolkit: UPS-backed pumps/fans, thermal storage tanks",
+  "Connect Tier IV's continuous-cooling requirement to real design"
+ ],
+ body:`
+ <p>Here is the mechanical mirror of the UPS story. When utility power fails, the electrical side rides through on batteries. But what rides the <em>cooling</em> through? Chillers drop offline and take minutes to restart and re-stabilize after generators pick up ("chiller restart time," often 5–15 minutes with staging). Meanwhile the servers — still perfectly powered by UPS — keep converting every watt to heat.</p>
+
+ ${A("The brutal arithmetic of thermal inertia","me")}
+ <p>A legacy 5 kW/rack hall might coast many minutes on room air mass. A <strong>100+ kW/rack AI hall can push inlet temperatures past allowable limits in tens of seconds</strong> once airflow/waterflow stops. At high density, a cooling interruption <em>is</em> an outage — servers throttle, then emergency-shutdown, even though power never blinked. This is why the modern mantra: <strong>cooling is critical load</strong>.</p>
+ ${E}
+
+ <h3>The continuous-cooling toolkit</h3>
+ <ul>
+  <li><strong>UPS-backed mechanical:</strong> put CHW pumps, CRAH/fan-wall fans, and CDU pumps on UPS (or dedicated mechanical UPS) so circulation never stops. Fans and pumps are the cheap part; the cold is the hard part —</li>
+  <li><strong>Chilled-water thermal storage:</strong> big insulated tanks of cold water plumbed so that on power loss, stored cold water keeps absorbing heat while chillers restart. Sized for the restart window (commonly several minutes to ~15 at design load). This is the "thermal battery."</li>
+  <li><strong>Staged restart & quick-start chillers:</strong> plant sequenced to bring cooling back fastest; some modern chillers offer rapid-restart packages precisely for this market.</li>
+  <li><strong>Tier IV's rule:</strong> the Uptime Tier IV standard explicitly requires <strong>continuous cooling</strong> consistent with fault tolerance — because at Tier IV, "the load never notices" applies to thermal, not just electrical.</li>
+ </ul>
+
+ ${CASE("Case file · when the water stopped","Equinix SG3, Singapore, October 2023 — 2.5M bank transactions frozen")}
+ <p>During a planned system upgrade, a contractor <strong>erroneously signaled valves closed on the chilled-water buffer tanks</strong>. Temperatures in parts of the facility climbed past limits; DBS Bank and Citibank suffered roughly <strong>two days</strong> of degraded banking services, ~2.5 million transactions failed, ATMs and apps down — and Singapore's regulator ordered formal investigations.</p>
+ <p class="lesson"><b>Lesson:</b> a cooling-controls error produced a national banking incident with power fully available. Note every theme converging: change management during maintenance (A3), controls as common-mode failure (D2), thermal ride-through margins (this lesson), and third-party/contractor procedure discipline (E3). One valve signal — two days of consequence.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Thermal storage tanks are enormous water weights — hundreds of thousands of gallons in steel tanks, at grade or (worse for you) elevated; seismic sloshing, foundations, and containment are yours. UPS-backing mechanical gear grows the battery/electrical rooms you already carry. And "cooling is critical load" upgrades mechanical equipment anchorage to the same RC IV / Ip=1.5 seriousness as generators: the chilled-water system must survive the earthquake as surely as the power system.</p>
+ ${E}
+ `,
+ terms:[
+  ["Continuous cooling","Design ensuring heat removal never pauses through a power event — required for Uptime Tier IV."],
+  ["Thermal ride-through","The window stored cooling covers while chillers restart after transfer to generators."],
+  ["Chilled-water storage tank","The 'thermal battery': insulated tank of cold water sized for the chiller-restart window."],
+  ["Chiller restart time","Minutes for the refrigeration plant to return after a power transfer — the gap storage must cover."],
+  ["Buffer tank","Storage vessel smoothing chilled-water supply; the valves at the heart of the Singapore 2023 outage."],
+  ["Cooling as critical load","The AI-era doctrine: at 100 kW/rack, losing cooling for seconds equals losing power."]
+ ],
+ quiz:[
+  {q:"Why is 'cooling is critical load' the AI-era doctrine?",
+   o:["Marketing","At 100+ kW/rack, inlet temps can exceed limits in tens of seconds without circulation","Chillers are cheap","It isn't"],a:1,
+   e:"High density erased thermal inertia: a cooling pause is now an outage even with perfect UPS power."},
+  {q:"The 'thermal battery' of a mission-critical plant is:",
+   o:["Lithium cells","Chilled-water storage tanks sized for the chiller-restart window","The diesel tank","Room air"],a:1,
+   e:"Stored cold water absorbs heat for the 5–15 minute restart gap while pumps/fans ride UPS."},
+  {q:"Uptime Tier IV explicitly requires:",
+   o:["Free cooling","Continuous cooling consistent with fault tolerance","Two lobbies","Diesel only"],a:1,
+   e:"At Tier IV the load never notices a failure — thermally as well as electrically."},
+  {q:"The Equinix Singapore 2023 outage began with:",
+   o:["An earthquake","A contractor's erroneous signal closing chilled-water buffer-tank valves during an upgrade","A cyber attack","Grid collapse"],a:1,
+   e:"One controls/change-management error → 2.5M failed transactions and ~2 days of banking disruption, with power available throughout."}
+ ]
+},
+{unit:"Unit C · Mechanical Systems", id:"c4", n:"C4",
+ title:"Liquid cooling systems engineering",
+ sub:"TCS and FWS loops, CDUs, and ASHRAE's W-classes — the plumbing of the AI era.",
+ min:14,
+ objectives:[
+  "Draw the two-loop architecture: facility water system vs technology cooling system",
+  "Explain what a CDU does and its deployment forms",
+  "Use ASHRAE W-classes and know why warm water is strategic"
+ ],
+ body:`
+ <p>Lesson C1 ended at air. But GB200/GB300-class racks at 120–140 kW <strong>cannot be air-cooled</strong> (air's practical ceiling: ~40–50 kW/rack), so liquid now comes to the chip — and a new plumbing architecture comes with it.</p>
+
+ <h3>The two-loop architecture</h3>
+ <div class="diagram"><div class="flow">
+  <div class="node"><b>Chip</b><span>cold plate</span></div><div class="arr">▸</div>
+  <div class="node"><b>TCS loop</b><span>technology cooling system — clean, controlled coolant</span></div><div class="arr">▸</div>
+  <div class="node"><b>CDU</b><span>heat exchanger + pumps</span></div><div class="arr">▸</div>
+  <div class="node"><b>FWS loop</b><span>facility water system</span></div><div class="arr">▸</div>
+  <div class="node"><b>Plant</b><span>chillers / dry coolers</span></div>
+ </div><div class="cap">Two loops, one heat exchanger. The CDU is the customs checkpoint between IT-grade coolant and facility water.</div></div>
+ <ul>
+  <li><strong>TCS (technology cooling system):</strong> the inner loop touching the hardware — treated coolant, tight temperature/flow/pressure control, immaculate cleanliness (a clogged microchannel cold plate is a dead GPU).</li>
+  <li><strong>FWS (facility water system):</strong> the outer loop — ordinary plant water headed for chillers or dry coolers.</li>
+  <li><strong>CDU (coolant distribution unit):</strong> heat exchanger + variable-speed pumps + filtration + controls isolating the loops. Forms: in-rack sidecars, in-row units, or big floor-mounted plant CDUs (~20–150 gpm class and up). It is the new critical component — and its pumps join the "cooling is critical load" UPS conversation.</li>
+ </ul>
+
+ <h3>The technology ladder (recap + engineering view)</h3>
+ <ul>
+  <li><strong>Direct-to-chip cold plates (dominant):</strong> captures ~70–90% of rack heat in liquid (GB300-class ~90% liquid / ~10% residual air). You still design airflow for the remainder.</li>
+  <li><strong>Rear-door heat exchangers:</strong> liquid coil as the rack's back door — a retrofit/bridge for 40–80 kW.</li>
+  <li><strong>Immersion (single/two-phase):</strong> servers submerged in dielectric fluid. Highest heat flux, but tanks are extremely heavy, and two-phase faces PFAS-regulation headwinds on fluids. Niche in 2025-26 while cold plates win the mainstream.</li>
+ </ul>
+
+ <h3>ASHRAE W-classes — why "warm water" is strategic</h3>
+ <p>ASHRAE classifies liquid-cooling facility supply temperature: <strong>W17, W27, W32, W40, W45, W+</strong> (the number = max supply °C). The strategic insight: chips don't need <em>cold</em> water, just <em>enough flow of warm-ish</em> water. If your hardware accepts <strong>W32–W45</strong>, you can reject heat with dry coolers alone in most climates — <strong>no chillers, no evaporation</strong> — and even reuse the heat (district heating). Warm-water DLC is how liquid cooling, paradoxically, can simplify the plant.</p>
+
+ ${A("Watch out — liquid's new failure modes","al")}
+ <p>New plumbing, new outage vectors: <strong>leaks over live electronics</strong> (leak-detection rope, drip trays, automatic isolation valves), <strong>coolant chemistry drift</strong> (corrosion/biological fouling killing cold plates fleet-wide — a slow common-mode failure), <strong>CDU pump failure</strong> (seconds of thermal ride-through at chip level — hence N+1 pumps and UPS), and <strong>quick-disconnect discipline</strong> during rack service. The reliability culture of Unit B now applies to plumbing.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Liquid cooling redistributes weight: manifolds and filled piping down every row (hung or floor-routed — bracing per Ch. 13), CDU skids as new concentrated loads, slab trenches or overhead racks for distribution, containment curbs and drainage in halls that never had floor drains, and immersion tanks (if used) as extreme point loads demanding slab-on-grade. The floor that carried a 5 kW air-cooled world was never asked these questions — yours will be.</p>
+ ${E}
+ `,
+ terms:[
+  ["TCS (technology cooling system)","The clean, controlled inner coolant loop touching IT hardware."],
+  ["FWS (facility water system)","The outer plant loop carrying heat from CDUs to chillers/dry coolers."],
+  ["CDU","Coolant Distribution Unit — heat exchanger, pumps, filtration, controls isolating TCS from FWS."],
+  ["Direct-to-chip / cold plate","Liquid channels on the silicon package; captures ~70–90% of rack heat."],
+  ["Rear-door heat exchanger","Liquid coil replacing a rack's rear door; bridge solution for 40–80 kW racks."],
+  ["ASHRAE W-classes","Liquid-cooling supply-temperature classes W17→W45/W+; higher classes enable chiller-less dry rejection."],
+  ["Quick disconnect","Drip-free coupling letting a liquid-cooled server be serviced without draining the loop."]
+ ],
+ quiz:[
+  {q:"The CDU's role is to:",
+   o:["Chill refrigerant","Isolate and exchange heat between the clean TCS loop and the facility FWS loop, with pumping and filtration","Store coolant","Replace the UPS"],a:1,
+   e:"It's the customs checkpoint between IT-grade coolant and plant water — and a new critical component."},
+  {q:"Air cooling's practical per-rack ceiling is about:",
+   o:["5 kW","40–50 kW","500 kW","There is none"],a:1,
+   e:"Which is exactly why 120–140 kW AI racks mandate liquid to the chip."},
+  {q:"A facility designed to ASHRAE W40/W45 supply can often:",
+   o:["Skip cooling entirely","Reject heat with dry coolers alone — no chillers, no evaporation — and even reuse heat","Only run in winter","Not exist"],a:1,
+   e:"Warm-water DLC is strategic: chips need flow, not cold — enabling chiller-less plants and heat reuse."},
+  {q:"A slow coolant-chemistry drift that fouls cold plates fleet-wide is an example of:",
+   o:["Independent failure","A common-mode failure through the shared liquid system","Utility failure","Acceptable risk"],a:1,
+   e:"One shared fluid touching every GPU is a new common-mode vector — chemistry monitoring is reliability work now."}
+ ]
+},
+/* ================= UNIT D ================= */
+{unit:"Unit D · Supporting Systems", id:"d1", n:"D1",
+ title:"Fire protection and life safety",
+ sub:"Protecting people and uptime at once — detection in seconds, suppression without collateral damage.",
+ min:12,
+ objectives:[
+  "Explain very-early-warning detection (VESDA) and why it matters more than suppression",
+  "Compare pre-action sprinklers, clean agents, and water mist",
+  "Know the code map: NFPA 75/76, 855, and the OVH-shaped hole in it"
+ ],
+ body:`
+ <p>Fire in a mission-critical facility is a double catastrophe: the fire itself, and a suppression response that can destroy the mission (water on megawatts of electronics). The discipline's answer is layered: detect absurdly early, verify, then suppress with the least collateral means.</p>
+
+ <h3>Detection: buy minutes</h3>
+ <ul>
+  <li><strong>ASD / VESDA</strong> (air-sampling smoke detection): a pipe network continuously sniffs air through laser particle counters, detecting combustion products at concentrations <em>far</em> below visible smoke — often many minutes of warning while a fault is still a warm component. In a facility whose whole logic is intervening before consequence, ASD is the fire-side UPS.</li>
+  <li>Spot detectors, heat detection in generator/battery areas, and — post-lithium — <strong>off-gas detection</strong> in ESS rooms that senses cell venting before thermal runaway.</li>
+ </ul>
+
+ <h3>Suppression: the menu</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>System</th><th>How</th><th>Where / trade</th></tr>
+  <tr><td><b>Pre-action sprinklers</b></td><td>Pipes stay dry; water enters only after detection event AND head fusing (double interlock)</td><td>The data hall standard — sprinkler code protection without accidental-discharge water risk</td></tr>
+  <tr><td><b>Clean agents (NFPA 2001)</b></td><td>Gases (e.g., FM-200/Novec-class, inert blends) flood the room, suppressing chemically or by oxygen reduction — no residue</td><td>Electrical/UPS rooms, tape/archives; room must be sealed; agent cost & fluorinated-agent regulatory pressure</td></tr>
+  <tr><td><b>Water mist</b></td><td>Ultra-fine droplets cool and displace oxygen locally with a fraction of sprinkler water</td><td>Generator rooms, turbines; growing niche</td></tr>
+  <tr><td><b>Hypoxic (oxygen-reduction) systems</b></td><td>Keep the room's O₂ permanently too low for open flame</td><td>Emerging in some European DCs</td></tr>
+ </table></div>
+
+ <h3>The code map</h3>
+ <p><strong>NFPA 75</strong> (IT equipment protection) and <strong>NFPA 76</strong> (telecom) govern the halls; <strong>NFPA 855</strong> governs lithium energy storage (separation distances, protection, off-gassing); NFPA 110 covers emergency power; and the OVH fire (A3) is the standing reminder of what happens when a UPS room has <em>no automatic suppression at all</em> — post-2021, owners tightened electrical-room protection industry-wide.</p>
+
+ ${A("Uptime is a life-safety argument too","al")}
+ <p>Fire protection in these buildings serves three masters: life safety (always first), asset protection, and <em>mission continuity</em> — including compartmentation so Side A's fire cannot take Side B (the structural expression of Tier IV fault tolerance). A suppression discharge that ends the fire but floods both power paths failed the third master. Design reviews ask: "after the discharge, what still runs?"</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Yours: fire-rated separations between redundant system rooms (walls you draw, penetrations you seal), clean-agent room integrity (the enclosure must hold gas concentration — door fans test <em>your</em> construction), water-mist/pre-action pipe loads and bracing, ESS deflagration vent panels per NFPA 855 (blast-relief construction is structural), and generator-room separation. Fire protection is the discipline where structural, mechanical, and reliability engineering literally share a wall.</p>
+ ${E}
+ `,
+ terms:[
+  ["ASD / VESDA","Air-sampling smoke detection — laser particle counting giving minutes of pre-smoke warning."],
+  ["Pre-action sprinkler","Dry-pipe system requiring detection + head fusing before water flows; the data hall standard."],
+  ["Clean agent (NFPA 2001)","Gaseous suppression leaving no residue — for electrical rooms and sealed spaces."],
+  ["Water mist","Fine-droplet suppression using a fraction of sprinkler water; generator-room favorite."],
+  ["NFPA 75 / 76","Standards for protecting IT equipment / telecom facilities."],
+  ["Off-gas detection","Sensors catching lithium cell venting before thermal runaway — the ESS early warning."],
+  ["Room integrity test","Door-fan pressurization proving an enclosure can hold clean-agent concentration."]
+ ],
+ quiz:[
+  {q:"VESDA/ASD systems matter because they:",
+   o:["Spray water faster","Detect combustion at invisible concentrations, buying minutes of intervention time","Are cheaper than detectors","Replace sprinklers"],a:1,
+   e:"Air-sampling detection is the fire-side analog of the UPS: intervene before consequence."},
+  {q:"A double-interlock pre-action system releases water only when:",
+   o:["Anyone pulls an alarm","Detection confirms fire AND a sprinkler head fuses","The BMS reboots","Power fails"],a:1,
+   e:"Two independent confirmations — sprinkler protection without accidental-discharge risk over electronics."},
+  {q:"Clean-agent systems require the room to be:",
+   o:["Open-air","Sealed well enough to hold gas concentration — verified by door-fan integrity tests","Underground","Refrigerated"],a:1,
+   e:"The enclosure is part of the suppression system — and it's your construction being tested."},
+  {q:"The mission-continuity test after any suppression event is:",
+   o:["Was the fire out?","After the discharge, what still runs? (Compartmentation should protect the redundant path)","Was it loud?","Insurance paperwork"],a:1,
+   e:"Life safety first, but design reviews also demand that one side's fire + suppression cannot take both power paths."}
+ ]
+},
+{unit:"Unit D · Supporting Systems", id:"d2", n:"D2",
+ title:"Controls, monitoring, and security",
+ sub:"BMS, EPMS, DCIM — the nervous system that runs everything, and fails like software.",
+ min:12,
+ objectives:[
+  "Distinguish BMS, EPMS, and DCIM and what each watches",
+  "Understand sequences of operations and controls as a common-mode failure source",
+  "Outline layered physical security"
+ ],
+ body:`
+ <p>Thousands of devices — chillers, valves, breakers, CRAHs, CDUs — act in concert because a control layer conducts them. That layer is also, increasingly, where outages are born: the Singapore 2023 incident was a <em>signal</em>, not a broken machine.</p>
+
+ <h3>The three-letter systems</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>System</th><th>Domain</th><th>Watches / does</th></tr>
+  <tr><td><b>BMS/BAS</b> (building management)</td><td>Mechanical & environment</td><td>Runs sequences: chiller staging, valve positions, fan speeds, setpoints, alarms</td></tr>
+  <tr><td><b>EPMS</b> (electrical power monitoring)</td><td>Electrical</td><td>Meters every bus/breaker, captures waveform events, feeds post-incident forensics</td></tr>
+  <tr><td><b>DCIM</b> (data center infrastructure management)</td><td>IT ↔ facility bridge</td><td>Rack-level power/thermal/capacity: where would the next 100 racks fit?</td></tr>
+ </table></div>
+
+ <h3>Sequences of operations — the facility's choreography, in prose</h3>
+ <p>Every automated behavior is specified in a <strong>sequence of operations (SOO)</strong>: "On loss of utility, confirm outage 2 s → start engines → …". Commissioning (E2) exists largely to prove the sequences; incident reviews usually find reality diverged from the written sequence — or the sequence was wrong. Owner's engineers <em>read the SOOs</em>, and ask what happens in the corner cases: simultaneous failures, mid-transfer failures, sensor lies.</p>
+
+ ${A("Controls are the ultimate common-mode failure","al")}
+ <p>Redundant chillers obeying one BMS controller are not redundant against the BMS. Patterns to demand: <strong>redundant/segmented controllers</strong> (A-side and B-side controls as separate as the power paths), <strong>fail-safe positions</strong> (what does every valve do on loss of signal? The Singapore valves closed — the wrong answer), <strong>manual override</strong> at the equipment, <strong>hardwired safeties</strong> independent of networks, and <strong>OT cybersecurity</strong> (the control network is an attack surface; segmentation from IT networks is now table stakes).</p>
+ ${E}
+
+ <h3>Physical security in layers</h3>
+ <p>Site perimeter (berms, fencing, vehicle standoff — often doubling as your screening walls) → building shell (limited openings, ballistic/forced-entry ratings at sensitive rooms) → lobby/mantrap (anti-tailgating vestibules) → hall access (badge+biometric) → rack/cage locks. Layered so each breach buys attackers another wall and defenders more time. Hyperscale sites treat security architecture with the same redundancy logic as power.</p>
+
+ ${A("Structural Angle","se")}
+ <p>Control rooms want uninterrupted sightlines and their own hardening; mantraps and ballistic assemblies carry real weight into your framing; vehicle-standoff design (bollards, reinforced perimeter elements) is structural anti-ram engineering; and every "hardwired safety" is another cable path to route and protect. Also: your equipment anchorage philosophy should assume the controls <em>will</em> someday command the wrong thing — physical fail-safes (gravity drains, spring-return valves) beat clever software.</p>
+ ${E}
+ `,
+ terms:[
+  ["BMS/BAS","Building management system executing mechanical sequences and alarms."],
+  ["EPMS","Electrical power monitoring system — metering, event capture, forensics."],
+  ["DCIM","Data center infrastructure management — rack-level power/thermal/capacity bridge between IT and facilities."],
+  ["Sequence of operations (SOO)","The written specification of automated system behavior; commissioning proves it."],
+  ["Fail-safe position","What a device does on loss of signal/power — the first question after Singapore 2023."],
+  ["OT security","Protecting operational-technology (controls) networks; segmented from IT by design."],
+  ["Mantrap","Interlocked double-door vestibule preventing tailgating into secure areas."]
+ ],
+ quiz:[
+  {q:"The BMS / EPMS / DCIM division is:",
+   o:["Random","Mechanical sequences / electrical monitoring / IT-facility capacity bridge","Three names for one tool","Marketing"],a:1,
+   e:"Three overlapping nervous systems; knowing which watches what is basic fluency."},
+  {q:"'What does this valve do on loss of signal?' is asking about:",
+   o:["Paint spec","Its fail-safe position — the exact question the Singapore 2023 incident makes urgent","Warranty","Flow rate"],a:1,
+   e:"Fail-safe positions, manual overrides, and hardwired safeties are the defenses against controls-driven outages."},
+  {q:"Redundant chillers on a single BMS controller are:",
+   o:["Fully redundant","Not redundant against the controller — a classic common-mode failure","Tier IV","Safer than manual"],a:1,
+   e:"Segment controls as strictly as power paths; software is the modern shared dependency."},
+  {q:"Layered physical security means:",
+   o:["One strong door","Perimeter → shell → mantrap → hall → rack, each layer buying time","Guards only","Cameras only"],a:1,
+   e:"Defense in depth, mirroring the redundancy philosophy of every other system."}
+ ]
+},
+/* ================= UNIT E ================= */
+{unit:"Unit E · Reliability & Operations", id:"e1", n:"E1",
+ title:"Redundancy topologies masterclass",
+ sub:"Beyond N+1 and 2N: distributed, block-redundant, catcher — how hyperscalers buy nines for less.",
+ min:15,
+ objectives:[
+  "Command the full topology vocabulary: N, N+1, N+2, 2N, 2N+1, 3M2, block/catcher, isolated parallel",
+  "Run the SPOF hunt and a basic FMEA",
+  "Map topologies to Uptime Tiers and to cost/footprint"
+ ],
+ body:`
+ <p>Unit A gave you the math; Units B–C gave you the machines. This lesson is the architecture layer where the two meet — and where hyperscalers have innovated hardest, because at 100+ MW, the difference between 2N and a smarter scheme is measured in hundreds of millions of dollars of gear (and, for you, in acres of equipment rooms).</p>
+
+ <h3>The full vocabulary</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Scheme</th><th>Definition</th><th>Example (need 4 MW)</th><th>Character</th></tr>
+  <tr><td class="n"><b>N</b></td><td>Exact capacity, zero margin</td><td>4 × 1 MW, all required</td><td>Any failure or maintenance drops load</td></tr>
+  <tr><td class="n"><b>N+1</b></td><td>One spare component</td><td>5 × 1 MW</td><td>Cheapest real redundancy; shared path remains a SPOF</td></tr>
+  <tr><td class="n"><b>N+2</b></td><td>Two spares</td><td>6 × 1 MW</td><td>Covers failure <em>during</em> maintenance</td></tr>
+  <tr><td class="n"><b>2N</b></td><td>Two complete independent systems</td><td>2 × (4 MW)</td><td>Full A/B duality; doubles the gear</td></tr>
+  <tr><td class="n"><b>2N+1</b></td><td>2N plus a spare</td><td>2 × (4 MW) + 1 MW</td><td>N+1 even after losing a whole side</td></tr>
+  <tr><td class="n"><b>Distributed (3M2 / "3-to-make-2")</b></td><td>3+ systems share load at ≤2/3 each; any one can die</td><td>3 × 2 MW systems</td><td>~2N-like resilience at ~N+1-like cost — each system loafs until needed</td></tr>
+  <tr><td class="n"><b>Block-redundant / "catcher" (e.g., 4M3)</b></td><td>Load blocks plus a reserve block; an STS swings any failed block's load to the catcher</td><td>3 active blocks + 1 catcher</td><td>Capital-efficient at campus scale; the catcher is shared insurance</td></tr>
+  <tr><td class="n"><b>Isolated parallel</b></td><td>Ring of paralleled sources with reactors isolating faults</td><td>—</td><td>European hyperscale lineage; single bus, engineered fault isolation</td></tr>
+ </table></div>
+ <p>Real hyperscale practice mixes levels by system: commonly <strong>N+1 generators/transformers, 2N UPS/PDU</strong>, distributed or catcher schemes across blocks — reliability where it counts, capital saved where the math allows.</p>
+
+ <h3>The SPOF hunt</h3>
+ <p>A topology is a claim; the <strong>single-point-of-failure hunt</strong> is the audit. Method: walk every energy/fluid/signal path from source to rack and ask "if this one thing dies, who notices?" Classic finds: one make-up water line feeding all towers; A and B feeders sharing one duct bank (one backhoe = 2N defeated); both control networks through one switch; one fuel-polishing skid for every tank; a single fire panel authorized to trip both sides' EPO. Physical routing is where paper redundancy goes to die — <strong>diverse routing</strong> is the counter.</p>
+
+ <h3>FMEA — the formal version</h3>
+ <p><strong>Failure Modes & Effects Analysis</strong>: for each component, list its failure modes → effect on the system → detection → mitigation. Mission-critical FMEAs go a step further with the <em>"and then what?"</em> chain: UPS module fails → parallel modules absorb → do they alarm? → who responds, how fast, with what procedure? An owner's engineer who can chair an FMEA session is operating at exactly the altitude hyperscalers hire for.</p>
+
+ ${A("Structural Angle","se")}
+ <p>Topology is a floor-plan generator: 2N means two of every room, catcher schemes add reserve-block rooms and STS galleries, distributed schemes multiply medium rooms instead of duplicating giant ones, and every one implies different separation walls, duct-bank routes, and yard areas. And the SPOF hunt is partly structural: <em>diverse routing</em> means physically separated risers, trenches, and pathways — separation distances you draw. When the reliability architect changes the topology, your building changes; be in the room.</p>
+ ${E}
+ `,
+ terms:[
+  ["3M2 / distributed redundancy","Three-plus systems sharing load at partial capacity so any one can fail — ~2N resilience near N+1 cost."],
+  ["Block-redundant / catcher","Active load blocks plus a shared reserve block that 'catches' any failed block via STS."],
+  ["Isolated parallel","Paralleled-source ring with fault-isolating reactors; single-bus scheme with engineered isolation."],
+  ["SPOF hunt","Systematic walk of every path asking 'if this dies, who notices?' — the audit behind topology claims."],
+  ["Diverse routing","Physically separated redundant pathways so one event can't cut both — the backhoe defense."],
+  ["FMEA","Failure Modes & Effects Analysis — component-by-component failure, effect, detection, mitigation."]
+ ],
+ quiz:[
+  {q:"'3-to-make-2' (3M2) distributed redundancy delivers:",
+   o:["Less than N","~2N-like resilience at ~N+1-like cost by running three systems at ≤2/3 load","Exactly 2N cost","No benefit"],a:1,
+   e:"Any one system can fail and the survivors carry everything — the hyperscaler's favorite economics."},
+  {q:"In a catcher/block-redundant scheme, the reserve block:",
+   o:["Runs at full load always","Stands by to receive any failed block's load via static transfer switches","Is decorative","Replaces generators"],a:1,
+   e:"Shared insurance across blocks — capital-efficient at campus scale (4M3 and similar)."},
+  {q:"Two 'independent' feeders in one duct bank are:",
+   o:["Fine","A classic SPOF — one excavation defeats the redundancy; diverse routing is the fix","Tier IV","More reliable"],a:1,
+   e:"Physical routing is where paper redundancy dies; the SPOF hunt walks the actual paths."},
+  {q:"Typical real hyperscale practice is:",
+   o:["2N everything","Mixed: e.g., N+1 generators/transformers, 2N UPS/PDU, distributed/catcher across blocks","N everything","Random"],a:1,
+   e:"Reliability where the math demands it, capital saved where it doesn't — topology per system, not one slogan."}
+ ]
+},
+{unit:"Unit E · Reliability & Operations", id:"e2", n:"E2",
+ title:"Commissioning: proving it works",
+ sub:"Levels 1–5, the pull-the-plug test, and why owners spend millions to attack their own building.",
+ min:12,
+ objectives:[
+  "Walk the five commissioning levels and what happens at each",
+  "Explain integrated systems testing (IST) and load banks",
+  "See commissioning as the owner's-engineer power tool"
+ ],
+ body:`
+ <p>No mission-critical facility is trusted because it was designed well. It is trusted because it was <strong>attacked, on purpose, by its own commissioning team — and survived</strong>. Commissioning (Cx) is that structured assault, and it is one of the sector's most distinctive cultures (and career paths — commissioning leads are among the named shortage roles).</p>
+
+ <h3>The five levels</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Level</th><th>Name</th><th>What actually happens</th></tr>
+  <tr><td class="n">L1</td><td>Factory acceptance (FAT)</td><td>Witness the UPS/chiller/genset perform at the factory before shipping ("factory witness testing")</td></tr>
+  <tr><td class="n">L2</td><td>Installation verification</td><td>On site, de-energized: is it installed right — torque, alignment, clearances, anchorage?</td></tr>
+  <tr><td class="n">L3</td><td>Startup / energization</td><td>Each system powered and run individually per manufacturer procedure</td></tr>
+  <tr><td class="n">L4</td><td>Functional performance</td><td>Each <em>system</em> proven against its sequence of operations — normal AND failure modes, alarms, failovers</td></tr>
+  <tr><td class="n">L5</td><td>Integrated systems test (IST)</td><td>The whole facility together, at design load, through orchestrated disasters — including pulling utility power for real</td></tr>
+ </table></div>
+
+ <h3>L5, the main event</h3>
+ <p>Since there are no servers yet, <strong>load banks</strong> — trailer- or rack-mounted resistor arrays — simulate megawatts of IT heat and draw. Then the scripts run: kill utility (watch UPS carry, engines start, transfer land), fail a chiller mid-test, fail a UPS module, drop a whole side of a 2N system, simulate a controls failure — while instrumented data streams to the Cx agent. Passing L5 ("white tag") is the moment the building becomes a mission-critical facility rather than an expensive shell. Owners rerun mini-ISTs after major changes; the Singapore case is what skipping that discipline during upgrades looks like.</p>
+
+ ${A("Commissioning as career leverage","pw")}
+ <p>For your interviews: commissioning is where owner's engineers earn their keep — witnessing tests, challenging pencil-whipped checklists, refusing to accept "it'll be fine" on a failed step. Your Falcon construction-administration and inspection background maps directly: you have professionally told contractors "show me, don't tell me." Say exactly that sentence; it is the commissioning ethos in seven words.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Cx touches you more than most expect: L2 verifies <em>your anchorage</em> (torque on anchor bolts, isolator installation); load banks impose temporary floor/electrical loads and heat you may be asked to accommodate; IST failure scenarios validate the compartmentation you drew; and vibration baselining during L3–L4 (signatures of every rotating machine, new) becomes the reference for the facility's whole life. Ask for commissioning involvement in your first owner-side role — it is the fastest deep education in how the machine actually behaves.</p>
+ ${E}
+ `,
+ terms:[
+  ["Commissioning (Cx)","The staged, adversarial proving of a facility from factory tests through integrated systems testing."],
+  ["FAT (factory acceptance test)","L1 witnessed performance testing at the manufacturer before shipment."],
+  ["Functional performance test","L4 proof of each system against its sequence of operations, including failure modes."],
+  ["IST (integrated systems test)","L5 whole-facility test at design load through scripted failures — the pull-the-plug event."],
+  ["Load bank","Resistor arrays simulating megawatts of IT load and heat for testing before servers exist."],
+  ["White tag","Informal term for equipment/systems having passed final integrated testing."],
+  ["Cx agent","The independent commissioning authority scripting and witnessing the tests."]
+ ],
+ quiz:[
+  {q:"The correct order of commissioning is:",
+   o:["IST first to save time","Factory test → installation verification → startup → functional performance → integrated systems test","Random","Skip to occupancy"],a:1,
+   e:"L1–L5: prove components, then installation, then systems, then everything together under attack."},
+  {q:"Load banks exist because:",
+   o:["Servers arrive early","You must simulate megawatts of IT load/heat to test a facility that has no IT yet","They cool the building","Code requires banks"],a:1,
+   e:"Resistor arrays stand in for the mission during L4–L5 testing at design load."},
+  {q:"The defining L5 moment is:",
+   o:["Ribbon cutting","Pulling real utility power at load and watching the entire failover choreography perform","Painting","First invoice"],a:1,
+   e:"Orchestrated disasters at design load — the facility earns trust by surviving its own team."},
+  {q:"For structural engineers, L2 notably verifies:",
+   o:["Nothing","Anchorage and isolator installation — your Ch. 13 work, physically checked","Only paint","Software"],a:1,
+   e:"Installation verification includes anchor torque and vibration-isolator correctness — your details, audited."}
+ ]
+},
+{unit:"Unit E · Reliability & Operations", id:"e3", n:"E3",
+ title:"Operating the critical facility",
+ sub:"MOPs, SOPs, EOPs; maintenance without downtime; and the human system that outlasts the design.",
+ min:13,
+ objectives:[
+  "Distinguish SOPs, MOPs, and EOPs and why the paperwork is the safety system",
+  "Explain maintenance strategy in a facility that can never stop",
+  "Understand capacity management and Uptime's Operational Sustainability layer"
+ ],
+ body:`
+ <p>Design gets a facility to day one. The next 7,300 days belong to operations — and the outage data (A3) says operations is where availability is actually won or lost: ~40% of organizations had a human-error major outage in three years, ~85% of those procedure-related.</p>
+
+ <h3>The procedure trinity</h3>
+ <ul>
+  <li><strong>SOP — Standard Operating Procedure:</strong> how routine things are always done (shift rounds, valve lineups, escalation trees).</li>
+  <li><strong>MOP — Method of Procedure:</strong> a step-by-step script for one specific planned activity — "UPS-2A annual service" — with prerequisites, back-out points, verification steps, and sign-offs. Critical facilities do <em>nothing</em> planned without an approved MOP; writing and challenging MOPs is a real job skill.</li>
+  <li><strong>EOP — Emergency Operating Procedure:</strong> pre-decided responses to failures ("loss of CHW pressure, Hall 3"), drilled until they're reflex, because 3 a.m. is not when you want creativity.</li>
+ </ul>
+ <p>Add <strong>change management</strong> (formal review before anything touches a live system — the exact control that failed in Singapore) and <strong>drills</strong> (rehearsing EOPs like fire departments), and you have the human redundancy layer.</p>
+
+ <h3>Maintenance without downtime</h3>
+ <p>Concurrent maintainability (Tier III) exists so maintenance can happen at all. The strategy stack: <strong>preventive</strong> (calendar/runtime-based service — monthly generator runs under load, quarterly battery checks, annual IR thermography of every connection), <strong>predictive</strong> (condition monitoring: vibration signatures, oil analysis, battery impedance trending, thermal imaging — fix it because data says it's drifting), and <strong>reliability-centered</strong> (rank assets by consequence; spend attention accordingly). The maintenance-risk-window lesson from OVH applies: every open-panel hour is elevated risk, so MOPs, timing, and staging matter as much as the wrench work.</p>
+
+ <h3>Capacity management — the slow-motion failure mode</h3>
+ <p>Facilities fail slowly by <em>succeeding</em>: IT load creeps up; suddenly the N+1 chiller plant is N at peak, UPS ride-through is shorter than the generator start window, and nobody decided any of it. DCIM-driven capacity management — tracking actual vs design load per hall, per bus, per CRAH zone — is the defense. Owner's engineers ask for the capacity trend charts, not the nameplate.</p>
+
+ ${A("Uptime's second standard","pw")}
+ <p>The Tier Standard has a twin: <strong>Operational Sustainability</strong> — staffing/shift coverage, training, procedure quality, maintenance rigor, MOP discipline. Uptime rates it (Gold/Silver/Bronze) precisely because a Tier IV building run badly performs like a Tier II. In interviews, mentioning that operations certification exists — and that design should <em>enable</em> good operations (labeling, access, sightlines, working room) — signals maturity.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Design-for-operations is partly yours: equipment access and removal paths (MTTR is physical), platforms and davits for safe rooftop maintenance, working clearances that make MOPs performable, labeling sightlines, and laydown space for the replacement chiller. A building that makes correct operation easy and wrong operation awkward is a reliability system — arguably the cheapest one on the project.</p>
+ ${E}
+ `,
+ terms:[
+  ["SOP / MOP / EOP","Routine procedures / scripted plans for specific planned work / drilled emergency responses."],
+  ["Change management","Formal review-and-approval gate before touching live systems."],
+  ["Preventive vs predictive maintenance","Calendar/runtime service vs condition-monitoring-driven intervention."],
+  ["IR thermography","Infrared scanning of connections under load — loose lugs glow before they fail."],
+  ["Capacity management","Tracking real load vs design margins so growth doesn't silently erase redundancy."],
+  ["Operational Sustainability","Uptime's operations-quality standard (staffing, training, procedures) — the Tier standard's twin."]
+ ],
+ quiz:[
+  {q:"A MOP is:",
+   o:["A cleaning tool","A step-by-step approved script for one specific planned activity, with back-out points","An emergency drill","A design drawing"],a:1,
+   e:"Nothing planned happens in a critical facility without one; ~85% of human-error outages are procedure failures."},
+  {q:"'The facility failed slowly by succeeding' refers to:",
+   o:["Bankruptcy","Load growth silently consuming redundancy margins until N+1 becomes N","Overstaffing","Paint fading"],a:1,
+   e:"Capacity management — trending real load against design — is the defense against margin creep."},
+  {q:"Predictive maintenance means:",
+   o:["Guessing","Intervening because condition data (vibration, impedance, thermography) shows drift","Waiting for failure","Monthly repainting"],a:1,
+   e:"Condition monitoring catches degradation before it becomes the 3 a.m. EOP."},
+  {q:"Uptime's Operational Sustainability standard exists because:",
+   o:["Buildings are perfect","A Tier IV facility operated badly performs like a Tier II — operations quality is ratable and decisive","Tiers were too cheap","It doesn't exist"],a:1,
+   e:"Staffing, training, and procedure discipline are certified precisely because they dominate real outcomes."}
+ ]
+},
+/* ================= UNIT F ================= */
+{unit:"Unit F · Applied", id:"f1", n:"F1",
+ title:"Case files: anatomy of real failures",
+ sub:"Six incidents, six permanent lessons — the sector's shared scar tissue.",
+ min:14,
+ objectives:[
+  "Analyze major real incidents using the full course vocabulary",
+  "Extract the design and operations lesson each one wrote into practice",
+  "Build your interview story bank"
+ ],
+ body:`
+ <p>Mission-critical engineering is unusually shaped by named disasters — cite them fluently and you sound like you've been in the sector for years. You met OVHcloud, BA, Sandy, and Singapore earlier; here is the fuller dossier, organized by the lesson each teaches. (Details as publicly reported; use "reportedly" in interviews too — it signals discipline.)</p>
+
+ ${CASE("Dossier 1 · transfer gear is the crux","Delta Air Lines, Atlanta, August 2016")}
+ <p>A failure in aging power-control/switchgear equipment at Delta's data center — reportedly a fire in an ATS-associated lineup — cascaded: a portion of servers had no redundant power path, and the airline's global operation collapsed for days. ~2,000 flights cancelled; Delta publicly cited <strong>~$150M</strong> in costs.</p>
+ <p class="lesson"><b>Lesson:</b> the 2N diagram is only as real as its worst-audited corner — post-incident review found single-corded equipment behind the redundancy. SPOF hunts (E1) exist because paper and reality drift apart over years of changes.</p>
+ ${E}
+
+ ${CASE("Dossier 2 · the recovery is a procedure too","British Airways, May 2017")}
+ <p>Power interrupted at a Heathrow-area data center and then — reportedly — restored incorrectly, with a surge damaging systems. 75,000 passengers stranded; costs in the tens of millions of pounds.</p>
+ <p class="lesson"><b>Lesson:</b> energization sequences are engineered, written, authorized, and drilled (E3). "Who may reconnect power, per what document?" is a design-review question.</p>
+ ${E}
+
+ ${CASE("Dossier 3 · the protection became the hazard","OVHcloud SBG2, March 2021")}
+ <p>Fire seated in a UPS room (one unit serviced that morning) destroyed a five-story data center: no automatic suppression there, delayed cutoff, free-cooling airflow feeding spread. ~3.6M websites down; some customer data unrecoverable.</p>
+ <p class="lesson"><b>Lesson:</b> maintenance windows are risk windows; the highest-energy rooms need detection + suppression + compartmentation (D1); and airflow paths are fire paths — a structural/mechanical joint problem.</p>
+ ${E}
+
+ ${CASE("Dossier 4 · dependency chains and elevation","Superstorm Sandy, NYC, 2012")}
+ <p>Generators above flood level starved by fuel pumps and day tanks below it; NYU Langone evacuated patients; one data center ran on a stair-climbing diesel bucket brigade.</p>
+ <p class="lesson"><b>Lesson:</b> a system's real flood rating is its lowest critical component (B3). Trace whole chains — power, fuel, controls, cooling make-up water — against hazard elevations. Now a standard siting/structural review.</p>
+ ${E}
+
+ ${CASE("Dossier 5 · cooling controls, national consequence","Equinix SG3, Singapore, October 2023")}
+ <p>During a planned upgrade, a contractor's erroneous signal closed chilled-water buffer-tank valves; temperatures rose; DBS and Citibank lost ~2 days of normal service, ~2.5M transactions failed; the regulator intervened.</p>
+ <p class="lesson"><b>Lesson:</b> controls are common-mode (D2); fail-safe positions matter; change management applies to <em>third parties</em>; and at modern density, thermal ride-through margins are measured in minutes (C3).</p>
+ ${E}
+
+ ${CASE("Dossier 6 · the grid itself fails regionally","Texas winter storm Uri, February 2021")}
+ <p>A state-wide grid emergency took generation offline for days in single-digit temperatures. Facilities with fuel on site, winterized equipment, and disciplined load management rode through; others learned that "utility redundancy" within one grid is one dependency.</p>
+ <p class="lesson"><b>Lesson:</b> regional common-mode events are real: fuel autonomy targets (24–48h+), winterization of gensets/fuel/water systems, and — for the biggest operators — geographic redundancy across grids. Resilience thinking extends past the fence line.</p>
+ ${E}
+
+ ${A("Structural Angle","se")}
+ <p>Each dossier has a structural chapter: compartmentation and airflow (OVH), equipment elevation and flood-hardening (Sandy), anchorage and winterization of yard equipment (Uri), separation of redundant gear (Delta). In interviews, pairing a named incident with the design response you'd own is a signature move: "After Sandy, I'd review every fuel-chain elevation — that's a structural siting question as much as a mechanical one."</p>
+ ${E}
+ `,
+ terms:[
+  ["Common-mode regional event","A hazard (grid collapse, storm, quake) hitting all local redundancy simultaneously — answered by autonomy and geographic diversity."],
+  ["Winterization","Hardening outdoor equipment, fuel, and water systems for sustained freeze events."],
+  ["Geographic redundancy","Distributing capacity across regions/grids so one regional event can't take the service."],
+  ["Fuel autonomy","On-site fuel duration target (24–48h+) sized against regional-event resupply risk."]
+ ],
+ quiz:[
+  {q:"Delta 2016's post-incident finding — single-corded equipment behind a '2N' design — proves:",
+   o:["2N is a myth","Topology claims decay over years of changes; periodic SPOF audits are essential","Airlines are unlucky","Nothing"],a:1,
+   e:"Paper redundancy and physical reality drift apart; the SPOF hunt is a recurring audit, not a one-time design step."},
+  {q:"The common thread of Singapore 2023 and BA 2017 is:",
+   o:["Weather","Human/procedural failure during planned work or recovery — not broken machines","Cheap equipment","Cyber attack"],a:1,
+   e:"Both were procedure/controls failures — matching Uptime's finding that ~85% of human-error outages are procedural."},
+  {q:"Texas Uri's lesson for facility engineers is:",
+   o:["Texas-only problem","Regional common-mode events demand fuel autonomy, winterization, and geographic diversity","Grids never fail","Generators are optional"],a:1,
+   e:"When the whole grid is the failed component, resilience means autonomy on site and diversity across regions."},
+  {q:"The strongest interview use of these cases is:",
+   o:["Reciting dates","Pairing a named incident with the specific design/ops response you would own","Blaming operators","Avoiding them"],a:1,
+   e:"'After Sandy, I'd audit fuel-chain elevations' — incident plus owned response is the fluency signal."}
+ ]
+},
+{unit:"Unit F · Applied", id:"f2", n:"F2",
+ title:"The design review: a simulation",
+ sub:"You're the owner's engineer. Here's the package. Find what's wrong.",
+ min:15,
+ objectives:[
+  "Apply the whole program to a realistic design-review scenario",
+  "Practice the owner's-engineer question set, discipline by discipline",
+  "Rehearse flagging issues constructively"
+ ],
+ body:`
+ <p><strong>Scenario:</strong> You've joined the owner's engineering team for <em>Project Sable</em> — a 48 MW, two-hall AI data center: tilt-up shell, steel roof, slab-on-grade halls at 300 psf, GB300-class racks at ~135 kW on direct-to-chip cooling, N+1 generators (20 × 3 MW), 2N UPS with lithium batteries, 3M2 chilled-water plant with thermal storage, W32 facility water. The design-build team has issued 60% documents. Work each exhibit before opening the reveal.</p>
+
+ <h3>Exhibit A — Electrical one-line</h3>
+ <p>The one-line shows A and B UPS systems in separate rooms… whose feeders leave the substation in <strong>a single shared duct bank</strong> for 300 ft before splitting. The lithium battery rooms sit <strong>back-to-back sharing a wall</strong>, each opening onto the same corridor.</p>
+ <details class="reveal"><summary>Reveal: what do you flag?</summary><div class="body">
+ <p>1) Shared duct bank = classic physical SPOF defeating 2N (one excavation, one fault, one flood). Require diverse routing with separation distance. 2) Back-to-back ESS rooms undermine compartmentation — an NFPA 855 review question and a fire-spread path between redundant systems; ask for rated separation, independent egress/ventilation, and deflagration vent paths that don't cross-contaminate. 3) Ask for the selective-coordination study at this milestone, not at the end.</p>
+ </div></details>
+
+ <h3>Exhibit B — Mechanical schematic</h3>
+ <p>The 3M2 plant is elegant. But all three chilled-water systems draw make-up water from <strong>one municipal tap with one backflow preventer</strong>, and the thermal-storage tank's discharge valve is a <strong>single motorized valve, fail-closed on loss of signal</strong>.</p>
+ <details class="reveal"><summary>Reveal: what do you flag?</summary><div class="body">
+ <p>1) One make-up connection = the water-side SPOF hiding behind a redundant plant (towers/adiabatic assist die together in ~hours). Require dual connections or on-site storage. 2) A fail-<em>closed</em> valve between stored cooling and the load recreates Singapore 2023 by design — require fail-open (or fail-in-place with local manual override), plus hardwired opening on loss-of-cooling, plus a MOP for any work near it. 3) Ask: what rides UPS — CHW pumps, CDU pumps, hall fans? Show the thermal ride-through calc at 135 kW/rack.</p>
+ </div></details>
+
+ <h3>Exhibit C — Structural/equipment coordination</h3>
+ <p>The roof plan shows 14 air-cooled chillers over Hall 2 with a continuous 14-ft screen wall; generator pads use the vendor's "standard" anchorage detail; the battery-room slab is designed for 150 psf "per code."</p>
+ <details class="reveal"><summary>Reveal: what do you flag?</summary><div class="body">
+ <p>1) Chillers over an operating hall: demand operating (filled) weights, vibration isolation selection coordinated with roof stiffness, and maintenance/removal paths (davits? crane zones?) — concurrent maintainability is physical. Screen wall = major wind element with drift/snow shadow: whose calc covers it? 2) "Vendor standard" anchorage ≠ site-specific ASCE 7-22 Ch. 13 design at RC IV / Ip 1.5 — require stamped, site-seismic anchorage calcs for every component over the threshold. 3) 150 psf battery room is likely wrong by 2–3×: lithium chosen, but demand the vendor rack point loads and design to actual — and confirm NFPA 855 provisions made it into the architecture. 4) Where do load banks sit during L5, and did anyone check that path/loading?</p>
+ </div></details>
+
+ <h3>Exhibit D — The schedule</h3>
+ <p>The design-builder proposes compressing commissioning from 10 weeks to 5 by "overlapping L4 with early server installation in Hall 1."</p>
+ <details class="reveal"><summary>Reveal: what do you flag?</summary><div class="body">
+ <p>Functional failure testing over live customer IT is how test scripts become real outages (and how Singapore happened during an <em>upgrade</em>). Options an owner's engineer offers instead: phase-commission Hall 1 fully (through IST) before energizing Hall 2 work; add Cx staff/shifts; protect the L5 pull-the-plug test absolutely. Schedule pressure is normal; trading away commissioning integrity is not — say it with alternatives, not just a "no."</p>
+ </div></details>
+
+ ${A("The owner's-engineer question set — keep this card","pw")}
+ <p><strong>Basis:</strong> What Risk Category, redundancy target, ride-through minutes, fuel autonomy, and Tier objective — in writing? <strong>Paths:</strong> Walk every A/B pair physically — where do they share a room, route, controller, or human? <strong>Failure:</strong> For each system: fail-safe positions, and-then-what chains, restoration procedure? <strong>Physical:</strong> Operating weights, anchorage calcs, removal paths, flood/hazard elevations? <strong>Proof:</strong> Coordination study current? Cx levels protected? Capacity trend plan? Ten questions, any package, any vendor.</p>
+ ${E}
+ `,
+ terms:[
+  ["Basis of design (BOD)","The written criteria (Risk Category, redundancy, ride-through, autonomy) every review anchors to."],
+  ["60% documents","A mid-design milestone submission — the right moment to catch topology and coordination flaws."],
+  ["Fail-open / fail-closed","A valve's loss-of-signal position; choosing wrong recreates Singapore 2023 by design."],
+  ["Owner's-engineer question set","The reusable audit: basis, paths, failure behavior, physical reality, proof."]
+ ],
+ quiz:[
+  {q:"Two redundant feeders sharing 300 ft of duct bank is:",
+   o:["Efficient design","A physical SPOF defeating 2N — require diverse routing","Tier IV","Unimportant"],a:1,
+   e:"One excavation or fault takes both; diverse physical routing is the fix."},
+  {q:"A single fail-closed valve between thermal storage and the load:",
+   o:["Is safe","Recreates the Singapore 2023 failure mode by design — require fail-open/fail-in-place with manual override","Saves money harmlessly","Is required"],a:1,
+   e:"Loss of signal should never lock away your stored cooling — fail-safe positions are a first-order review item."},
+  {q:"'Vendor standard anchorage detail' at a RC IV site:",
+   o:["Is sufficient","Must be replaced by site-specific, stamped ASCE 7-22 Ch. 13 calcs at Ip = 1.5","Only matters in California","Applies to paint"],a:1,
+   e:"Generic details don't know your seismic parameters or importance factor — a core structural review catch."},
+  {q:"When the builder proposes overlapping failure testing with live IT:",
+   o:["Approve to save schedule","Protect commissioning integrity and offer alternatives: phased Cx, more shifts, guard the IST","Cancel the project","Test on customers"],a:1,
+   e:"Failure tests over live load are how scripts become outages; the OE's job is a constructive 'no' with options."}
+ ]
+},
+{unit:"Unit F · Applied", id:"f3", n:"F3",
+ title:"Capstone: fluency, credentials, and the map forward",
+ sub:"Compress the program into interview-ready fluency and a 90-day continuation plan.",
+ min:10,
+ objectives:[
+  "Consolidate the program into a mental model you can narrate in 90 seconds",
+  "Choose credentials and deeper resources deliberately",
+  "Leave with a concrete continuation plan"
+ ],
+ body:`
+ <p>You now hold the full discipline: consequence economics and availability math (A), the electrical machine (B), the thermal machine (C), the systems protecting both (D), and the topology-commissioning-operations layer that makes it all real (E) — stress-tested against real failures and a simulated design review (F).</p>
+
+ <h3>The 90-second narration (rehearse until effortless)</h3>
+ <p>"A mission-critical facility is a machine for turning electricity into service without interruption. Reliability comes from topology, not components — parallel paths, no common modes. Electrically: utility to substation, MV to unit transformers at 480 V, UPS bridging the ten seconds to generator power, A-and-B all the way to the rack. Thermally: every watt becomes heat; chilled water or direct liquid carries it out through CDUs and plant to towers or dry coolers — and at AI density, cooling is critical load with its own ride-through. Fire, controls, and security wrap both. Then the part most people miss: commissioning proves it — five levels ending in pull-the-plug — and operations keeps it, because half of major outages are human and procedural. My structural work — anchorage, compartmentation, equipment support, elevations — is one of the load-bearing walls of that whole promise."</p>
+
+ <h3>Credentials, chosen deliberately</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Credential</th><th>What / cost</th><th>Verdict for you</th></tr>
+  <tr><td><b>Uptime ATD</b> (Accredited Tier Designer)</td><td>~16-hr course + exam, ~$5k, the sector's premier design credential</td><td>High signal for owner-side roles; ideal once an employer pays</td></tr>
+  <tr><td><b>DCD Academy FMCI</b></td><td>Self-paced module library, paid</td><td>Good structured breadth; ops-flavored; optional after this program</td></tr>
+  <tr><td><b>Uptime AOS / Ops courses</b></td><td>Operations-side accreditations</td><td>Later, if you drift toward Cx/ops leadership</td></tr>
+  <tr><td><b>SE license</b></td><td>Your existing track</td><td>Still the core structural differentiator — keep the plan from the Command Center</td></tr>
+ </table></div>
+
+ <h3>Your 90-day continuation plan</h3>
+ <ol>
+  <li><strong>Weeks 1–2:</strong> Finish this program's final exam at 80%+. Read the free STRUCTURE Mag data center design-parameters article and the Palisade Ch. 13 guide (Resources) — they arm the structural specifics.</li>
+  <li><strong>Weeks 3–6:</strong> Read Uptime's Tier Topology explainers and the current <em>Annual Outage Analysis</em>; skim OCP's Open Rack v3 and Mt Diablo announcements. Post two LinkedIn pieces from this program (the availability math; the Singapore case as a structural engineer reads it) — visibility flywheel.</li>
+  <li><strong>Weeks 7–12:</strong> Join 7x24 Exchange's local chapter (meetings = hiring managers) and iMasons. Do one deep artifact: a one-page "owner's engineer review checklist" you author and publish — it's a portfolio piece interviewers remember. Then start the anchorage (Ch. 13) deep-dive course when ready.</li>
+ </ol>
+
+ ${A("Final Structural Angle — your positioning sentence","se")}
+ <p>"I'm a licensed structural engineer who speaks the whole mission-critical machine — I can walk a one-line, challenge a fail-safe position, and audit a thermal-ride-through claim — and my own scope, from Ch. 13 anchorage to compartmentation to equipment elevations, is where half of those reliability promises physically live." That sentence, delivered with the fluency this program built, is the difference between a structural candidate and <em>the</em> structural candidate.</p>
+ ${E}
+ `,
+ terms:[
+  ["Uptime ATD","Accredited Tier Designer — the sector's flagship design credential (~16 hr course + exam)."],
+  ["7x24 Exchange / iMasons","The two professional communities where mission-critical hiring networks actually live."]
+ ],
+ quiz:[
+  {q:"The one-sentence heart of the whole program is:",
+   o:["Buy better components","Reliability comes from topology and operations — parallel independent paths, proven by commissioning, kept by procedure","Cooling is optional","Tiers are marketing"],a:1,
+   e:"Components fail; architecture and operations decide whether anyone notices."},
+  {q:"The highest-signal design credential for owner-side roles is:",
+   o:["A forklift license","Uptime's Accredited Tier Designer (ATD)","CPR","None exist"],a:1,
+   e:"ATD is the sector's premier design credential — ideally employer-funded once you're in."},
+  {q:"Your structural work relates to facility reliability as:",
+   o:["Unrelated trades","The physical substrate of the promises — anchorage, compartmentation, elevations, equipment support","Pure cost","Decoration"],a:1,
+   e:"Half the reliability architecture is enforced in physical design you own. That's the positioning."}
+ ]
+}
+];
+
+const EXTRA_TERMS=[
+ ["Concurrent maintainability","Any single component or path can be serviced without dropping load — Uptime Tier III's hallmark.","Reliability"],
+ ["Fault tolerance","Surviving any single unplanned failure with no load impact — Tier IV's hallmark.","Reliability"],
+ ["Compartmentalization","Physical isolation of redundant systems so one event can't touch both.","Reliability"],
+ ["Critical load","The IT and must-never-drop loads behind UPS and generators.","Electrical"],
+ ["PDU / RPP","Power distribution unit / remote power panel — feeder-to-branch distribution near the rows.","Electrical"],
+ ["Busway","Overhead prefabricated power distribution with tap-off boxes; a hung, braced structural load.","Electrical"],
+ ["kW vs kWh","Power (how hard) vs energy (how long) — the UPS-battery literacy check.","Electrical"],
+ ["Hot/cold aisle containment","Physical separation of intake and exhaust airstreams — the basic air-side efficiency win.","Mechanical"],
+ ["ASHRAE A1–A4 envelopes","Allowable air temperature/humidity classes; wider envelopes buy free-cooling hours.","Mechanical"],
+ ["Make-up water","Replacement water for evaporative cooling — a classic hidden single point of failure.","Mechanical"],
+ ["Heat reuse","Exporting warm return water (district heating) — enabled by W40+ warm-water designs.","Mechanical"],
+ ["Raised access floor","Pedestal floor with plenum; limited point-load rating vs AI-rack weights.","Structural"],
+ ["Operating weight","Filled, in-service equipment weight — the design number, never shipping weight.","Structural"],
+ ["Inertia base","Massive base under rotating equipment tuning vibration response.","Structural"],
+ ["Deflagration venting","Blast-relief construction for battery/ESS rooms per NFPA 855.","Structural"],
+ ["Ip (component importance factor)","ASCE 7 multiplier (1.5 at RC IV) raising anchorage demands on operation-critical components.","Structural"],
+ ["White space / grey space","IT hall vs supporting MEP space; the grey fraction grows with density.","Layout"],
+ ["Speed to power","Site-selection metric: how fast utility capacity can be energized — often the project's critical path.","Business"],
+ ["Availability SLA","The contractual uptime promise the whole design ultimately serves.","Business"]
+];
+
+const EXAM=[
+ {q:"A facility needs 6 MW. It installs three 3 MW chilled-water systems, each loafing at ~67%. This topology is:",o:["N","N+1","2N","Distributed redundancy (3M2)"],a:3,e:"Three-to-make-two: any one system can fail and the survivors carry the full load — ~2N resilience at ~N+1 cost."},
+ {q:"Utility fails. Which sequence is correct?",o:["Generators carry instantly; UPS starts later","UPS inverters carry immediately; engines start ~10–15 s; paralleling gear syncs; load transfers in blocks","ATS transfers in microseconds; UPS is backup to it","Batteries carry for 24 hours"],a:1,e:"UPS bridges the seconds-to-minutes; engines start, sync via paralleling switchgear, and accept load in stages."},
+ {q:"Five series components at 99.99% each yield approximately:",o:["99.99%","99.95%","99.999%","100%"],a:1,e:"0.9999⁵ ≈ 99.95% — chains multiply down; the case for parallel paths."},
+ {q:"Which is a common-mode failure the 2N math ignores?",o:["A failed fan bearing","One BMS controller commanding both 'independent' cooling paths","A blown fuse in one PDU","A single bad battery cell"],a:1,e:"Shared controls, rooms, routes, and humans break the independence assumption behind parallel availability."},
+ {q:"The #1 cause family of impactful outages (Uptime 2025) is:",o:["Cooling","Cyber attack","Power — most often UPS","Fire"],a:2,e:"Power ≈ 45%, most often the UPS itself; human/procedural factors run through the majority of incidents."},
+ {q:"Double-conversion UPS means:",o:["Two UPS units","Load always rides the rectifier→inverter chain; disturbances never touch it","It converts diesel twice","Eco-mode"],a:1,e:"AC→DC→AC continuously with zero transfer time — the mission-critical standard topology."},
+ {q:"Lithium batteries vs VRLA, for the building:",o:["Heavier floors, no code changes","~60–80% lighter with NFPA 855 separation, protection, and off-gas provisions","Identical","Forbidden indoors"],a:1,e:"The chemistry swap slashes floor load but imports an energy-storage code regime you must coordinate."},
+ {q:"Selective coordination guarantees:",o:["All breakers trip simultaneously","Only the device nearest the fault operates","No faults occur","Generators sync faster"],a:1,e:"Staged time-current curves stop a rack-level fault cascading into a facility event."},
+ {q:"An STS differs from an ATS because it:",o:["Is slower","Switches between two live sources in under a quarter-cycle, downstream","Uses diesel","Is outdoors"],a:1,e:"Solid-state, ~8 ms, giving even single-corded loads effective 2N; the ATS handles utility↔generator in seconds."},
+ {q:"CRAH vs CRAC:",o:["Identical","CRAH = chilled-water coil + fan (central plant); CRAC = onboard compressor DX unit","CRAH is outdoor","CRAC uses ammonia"],a:1,e:"CRA-H = hydronic, CRA-C = compressor — big sites standardize on CRAH + central plant."},
+ {q:"A 5,000-ton plant at standard ΔT circulates roughly:",o:["500 gpm","1,200 gpm","12,000 gpm","No water"],a:2,e:"~2.4 gpm per ton — and a 24\" main carries ~195 lb of water per foot, which is structural load."},
+ {q:"'Cooling is critical load' because at 100+ kW/rack:",o:["Chillers are cheap","Inlet temps can exceed limits in tens of seconds without circulation — a cooling pause is an outage","Water is scarce","Fans are loud"],a:1,e:"High density erased thermal inertia; pumps/fans ride UPS and storage tanks bridge chiller restart."},
+ {q:"The thermal battery of a critical plant is:",o:["Lithium cells","Chilled-water storage sized for the chiller-restart window","The fuel tank","Ice cubes"],a:1,e:"Stored cold water absorbs heat for the 5–15 minute restart gap."},
+ {q:"ASHRAE W40/W45 supply water matters because:",o:["It's colder","Warm-water DLC can reject heat via dry coolers alone — chiller-less, evaporation-free, heat-reusable","It boils","It's regulation"],a:1,e:"Chips need flow, not cold — the strategic insight simplifying AI-era plants."},
+ {q:"Pre-action sprinklers in data halls:",o:["Keep pipes wet","Hold pipes dry until detection AND head fusing both occur","Spray on any alarm","Are banned"],a:1,e:"Double interlock: sprinkler protection without accidental-water risk over electronics."},
+ {q:"The Singapore 2023 outage teaches all EXCEPT:",o:["Fail-safe valve positions matter","Third-party change management matters","Thermal margins are minutes at density","Power redundancy prevents cooling incidents"],a:3,e:"Power was available throughout — cooling controls alone froze 2.5M transactions."},
+ {q:"Commissioning L5 (IST) is:",o:["Factory witness testing","Whole-facility scripted-disaster testing at design load via load banks — pull the plug","Paint inspection","Optional"],a:1,e:"The building earns trust by surviving orchestrated failure at full simulated load."},
+ {q:"~85% of human-error outages trace to:",o:["Sabotage","Procedures not followed or procedures being wrong","Weather","Bad luck"],a:1,e:"Hence MOPs, drills, change management — the human redundancy layer of Unit E."},
+ {q:"A 'catcher' block in 4M3 topology:",o:["Runs at full load","Stands ready to receive any failed block's load via STS","Stores fuel","Is the lobby"],a:1,e:"Shared reserve capacity — hyperscale capital efficiency with engineered failover."},
+ {q:"The owner's-engineer review starts with:",o:["The title block","The basis of design: Risk Category, redundancy target, ride-through, autonomy — in writing","The paint schedule","The invoice"],a:1,e:"Anchor every review to written criteria; then walk paths, failure behavior, physical reality, and proof."}
+];
+
+const RESOURCES=[
+ ["Standards & institutes",[
+  ["Uptime Institute — Tier Standard & ATD","https://uptimeinstitute.com/tiers","The canonical topology standard; ATD is the flagship design credential. Free explainers + Journal."],
+  ["Uptime Annual Outage Analysis","https://uptimeinstitute.com/resources/research-and-reports/annual-outage-analysis-2025","The yearly evidence base for everything in Unit A3 — read each edition."],
+  ["ASHRAE TC 9.9 Datacom series","https://www.ashrae.org/technical-resources/bookstore/datacom-series","Thermal guidelines, liquid cooling, and Book 5 (Structural & Vibration) — the datacom canon."],
+  ["NFPA 75 / 855 / 110","https://www.nfpa.org","IT-equipment protection, energy storage systems, and emergency power — the fire/life-safety triad."],
+  ["Open Compute Project","https://www.opencompute.org/wiki/Specs_and_Designs_Page","Hyperscaler open specs: Open Rack v3, Mt Diablo ±400VDC, liquid cooling."]
+ ]],
+ ["Deep technical reading",[
+  ["SemiAnalysis — Datacenter Anatomy","https://newsletter.semianalysis.com/p/datacenter-anatomy-part-1-electrical","The best modern electrical/cooling deep dives (Part 1 Electrical, Part 2 Cooling)."],
+  ["Data Center Frontier","https://www.datacenterfrontier.com","Daily industry coverage of the buildout, cooling, and power."],
+  ["DCD Academy","https://learn.dcdacademy.com/catalog","Structured paid courses incl. FMCI; free design master-class taster."],
+  ["STRUCTURE Mag — Data Center Design Parameters","https://www.structuremag.org/article/design-parameters-for-data-center-facilities/","The free structural primer — loads, vibration, racks. Read alongside this program."],
+  ["Palisade — ASCE 7-22 Ch. 13 anchorage guide","https://www.pe-se.com/blog/data-center-seismic-anchorage-requirements","Practical seismic-anchorage walkthrough at RC IV / Ip 1.5."]
+ ]],
+ ["Community (the hiring network)",[
+  ["7x24 Exchange","https://www.7x24exchange.org","Mission-critical professionals org — local chapters are where hiring managers are."],
+  ["Infrastructure Masons","https://imasons.org","The digital-infrastructure builders' community."],
+  ["AFCOM","https://afcom.com","Data Center World conference and education."]
+ ]]
+];
+
+/* ============================ APP ============================ */
+(function(){
+ const main=document.getElementById('main');
+ const tocEl=document.getElementById('toc');
+ const KEY='mcfe-program-v1';
+ let store={};try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+ store.done=store.done||{};store.quiz=store.quiz||{};store.fc=store.fc||{};store.exam=store.exam||null;
+ const save=()=>localStorage.setItem(KEY,JSON.stringify(store));
+
+ const PAGES=COURSE.map(m=>({type:'lesson',m})).concat([{type:'exam'},{type:'flash'},{type:'gloss'},{type:'res'}]);
+ let idx=(store.last!=null&&store.last<PAGES.length)?store.last:0;
+
+ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ const label2=pg=>pg.type==='exam'?'Final exam':pg.type==='flash'?'Flashcards':pg.type==='gloss'?'Glossary':'Resources';
+
+ function buildTOC(){
+  tocEl.innerHTML='';let last=null;
+  COURSE.forEach((m,i)=>{
+   if(m.unit!==last){last=m.unit;const g=document.createElement('div');g.className='grp';g.textContent=m.unit;tocEl.appendChild(g)}
+   const b=document.createElement('button');
+   b.innerHTML='<span class="n">'+m.n+'</span><span>'+m.title+'</span><span class="dot"></span>';
+   if(store.done[m.id])b.classList.add('done');
+   if(PAGES[idx].type==='lesson'&&PAGES[idx].m.id===m.id)b.setAttribute('aria-current','true');
+   b.onclick=()=>go(i);tocEl.appendChild(b);
+  });
+  const g=document.createElement('div');g.className='grp';g.textContent='Assessment & Reference';tocEl.appendChild(g);
+  [['Final exam (20 Q)',COURSE.length],['Flashcards',COURSE.length+1],['Glossary',COURSE.length+2],['Resources',COURSE.length+3]].forEach(([lab,pi])=>{
+   const b=document.createElement('button');b.innerHTML='<span class="n">·</span><span>'+lab+'</span>';
+   if(idx===pi)b.setAttribute('aria-current','true');b.onclick=()=>go(pi);tocEl.appendChild(b);
+  });
+  const done=COURSE.filter(m=>store.done[m.id]).length;
+  document.getElementById('ovtext').textContent=done+' of '+COURSE.length+' complete'+(store.exam?(' · exam '+store.exam.correct+'/'+store.exam.total):'');
+  document.getElementById('ovbar').style.width=(done/COURSE.length*100)+'%';
+ }
+
+ function quizHTML(qs){
+  return qs.map((q,qi)=>{
+   const opts=q.o.map((o,oi)=>'<label class="opt"><input type="radio" name="q'+qi+'" value="'+oi+'">'+esc(o)+'</label>').join('');
+   return '<div class="q" data-qi="'+qi+'"><div class="stem">'+(qi+1)+'. '+esc(q.q)+'</div>'+opts+'<div class="exp">'+esc(q.e)+'</div></div>';
+  }).join('');
+ }
+ function gradeQuiz(container,qs){
+  let correct=0;
+  qs.forEach((q,qi)=>{
+   const qEl=container.querySelector('.q[data-qi="'+qi+'"]');
+   const sel=qEl.querySelector('input:checked');
+   qEl.querySelectorAll('.opt').forEach(o=>o.classList.remove('correct','wrong'));
+   qEl.querySelectorAll('.opt')[q.a].classList.add('correct');
+   if(sel){if(+sel.value===q.a)correct++;else qEl.querySelectorAll('.opt')[+sel.value].classList.add('wrong')}
+   qEl.classList.add('answered');
+  });
+  return correct;
+ }
+
+ function renderLesson(m){
+  const objs=m.objectives.map(o=>'<li>'+o+'</li>').join('');
+  const terms=m.terms.length?'<h3>Key terms</h3><dl>'+m.terms.map(t=>'<div class="term"><dt>'+t[0]+'</dt><dd>'+t[1]+'</dd></div>').join('')+'</dl>':'';
+  const quiz=m.quiz.length?
+   '<div class="quiz"><p class="qh">Self-check · '+m.quiz.length+' questions</p><form>'+quizHTML(m.quiz)+'</form>'+
+   '<div class="btnrow"><button class="act" id="check">Check answers</button><button class="act ghost" id="markdone">Mark complete</button><span class="score" id="qscore"></span></div></div>'
+   :'<div class="btnrow"><button class="act ghost" id="markdone">Mark complete</button></div>';
+  main.innerHTML='<p class="lead">'+m.n+' · '+m.unit+'</p><h2>'+m.title+'</h2><p class="sub">'+m.sub+'</p>'+
+   '<div class="meta"><span>~'+m.min+' min</span><span>'+m.quiz.length+' questions</span><span>'+(store.done[m.id]?'✓ complete':'in progress')+'</span></div>'+
+   '<div class="obj"><p class="h">Objectives</p><ul>'+objs+'</ul></div>'+m.body+terms+quiz+'<div class="pager"></div>';
+  const cb=main.querySelector('#check');
+  if(cb)cb.onclick=e=>{e.preventDefault();
+   const c=gradeQuiz(main,m.quiz);
+   store.quiz[m.id]={correct:c,total:m.quiz.length};save();
+   main.querySelector('#qscore').textContent='Score: '+c+'/'+m.quiz.length;
+   if(c===m.quiz.length)markDone(m);
+  };
+  const md=main.querySelector('#markdone');
+  if(md)md.onclick=e=>{e.preventDefault();markDone(m);md.textContent='✓ Complete'};
+  pager();
+ }
+ function markDone(m){store.done[m.id]=true;save();buildTOC();
+  const meta=main.querySelector('.meta');if(meta)meta.lastElementChild.textContent='✓ complete'}
+
+ function renderExam(){
+  main.innerHTML='<p class="lead">Assessment</p><h2>Final exam</h2>'+
+   '<p class="sub">20 questions across the whole program. 80% (16/20) is the fluency bar.'+(store.exam?' Last attempt: '+store.exam.correct+'/'+store.exam.total+'.':'')+'</p>'+
+   '<div class="quiz"><form>'+quizHTML(EXAM)+'</form>'+
+   '<div class="btnrow"><button class="act" id="grade">Grade exam</button><span class="score" id="xscore"></span></div></div><div class="pager"></div>';
+  main.querySelector('#grade').onclick=e=>{e.preventDefault();
+   const c=gradeQuiz(main,EXAM);
+   store.exam={correct:c,total:EXAM.length};save();buildTOC();
+   main.querySelector('#xscore').textContent='Score: '+c+'/'+EXAM.length+(c>=16?' — fluency bar cleared. Say it in interviews.':' — review the flagged lessons and retake.');
+  };
+  pager();
+ }
+
+ function allCards(){
+  const cards=[];
+  COURSE.forEach(m=>m.terms.forEach(t=>cards.push({f:t[0],b:t[1]})));
+  EXTRA_TERMS.forEach(t=>cards.push({f:t[0],b:t[1]}));
+  return cards;
+ }
+ function renderFlash(){
+  const cards=allCards();
+  let order=store.fc.order;
+  if(!order||order.length!==cards.length){order=cards.map((_,i)=>i);store.fc={order:order,pos:0,known:{}};save()}
+  let pos=store.fc.pos||0;
+  function draw(){
+   if(pos>=order.length)pos=0;
+   const c=cards[order[pos]];
+   const knownCount=Object.keys(store.fc.known).length;
+   main.innerHTML='<p class="lead">Drill</p><h2>Flashcards</h2><p class="sub">'+cards.length+' cards from every lesson. Tap to flip; mark what you own.</p>'+
+    '<div class="fc"><div class="fcCard" id="card" tabindex="0" role="button" aria-label="flashcard"><div class="front">'+esc(c.f)+'</div><div class="back">'+esc(c.b)+'</div></div>'+
+    '<div class="fcnav"><button class="act ghost" id="again">↺ Again later</button><button class="act" id="got">✓ Got it</button></div>'+
+    '<div class="fcmeta">Card '+(pos+1)+' / '+order.length+' · '+knownCount+' marked known</div></div><div class="pager"></div>';
+   const card=main.querySelector('#card');
+   card.onclick=()=>card.classList.toggle('flipped');
+   card.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();card.classList.toggle('flipped')}};
+   main.querySelector('#got').onclick=()=>{store.fc.known[order[pos]]=1;pos++;store.fc.pos=pos;save();draw()};
+   main.querySelector('#again').onclick=()=>{const cur=order.splice(pos,1)[0];order.push(cur);store.fc.order=order;save();draw()};
+   pager();
+  }
+  draw();
+ }
+
+ function renderGloss(){
+  const all=[];
+  COURSE.forEach(m=>m.terms.forEach(t=>all.push([t[0],t[1],m.n])));
+  EXTRA_TERMS.forEach(t=>all.push(t));
+  const seen=new Set();
+  const uniq=all.filter(t=>{const k=t[0].toLowerCase();if(seen.has(k))return false;seen.add(k);return true}).sort((a,b)=>a[0].localeCompare(b[0]));
+  main.innerHTML='<p class="lead">Reference</p><h2>Glossary</h2><p class="sub">'+uniq.length+' terms of mission-critical fluency.</p>'+
+   '<input class="search" id="gs" placeholder="Filter… (e.g. 2N, CDU, MOP, arc flash)">'+
+   '<dl id="glist">'+uniq.map(t=>'<div class="term" data-t="'+esc((t[0]+' '+t[1]).toLowerCase())+'"><dt>'+esc(t[0])+'<span class="cat">'+esc(t[2])+'</span></dt><dd>'+esc(t[1])+'</dd></div>').join('')+'</dl><div class="pager"></div>';
+  const gs=main.querySelector('#gs');
+  gs.oninput=()=>{const v=gs.value.toLowerCase();main.querySelectorAll('#glist .term').forEach(el=>{el.style.display=el.dataset.t.includes(v)?'':'none'})};
+  pager();
+ }
+
+ function renderRes(){
+  main.innerHTML='<p class="lead">Reference</p><h2>Resources & sources</h2><p class="sub">The authorities behind this program, and the roads beyond it.</p>'+
+   RESOURCES.map(g=>'<h3>'+g[0]+'</h3><div class="reslist">'+g[1].map(it=>'<div class="res"><a href="'+it[1]+'" target="_blank" rel="noopener">'+it[0]+' ↗</a><p>'+it[2]+'</p></div>').join('')+'</div>').join('')+
+   '<div class="call pw" style="margin-top:20px"><span class="tag">Accuracy note</span><p>Figures herein (outage statistics, PUE/WUE, equipment sizes, case details) reflect the cited 2025–2026 sources and public reporting; case-study details are "as publicly reported." For design work or citations, confirm against the current primary source and code edition.</p></div><div class="pager"></div>';
+  pager();
+ }
+
+ function pager(){
+  const p=main.querySelector('.pager');if(!p)return;
+  const prev=idx>0?PAGES[idx-1]:null,next=idx<PAGES.length-1?PAGES[idx+1]:null;
+  const lab=pg=>pg.type==='lesson'?pg.m.title:label2(pg);
+  p.innerHTML='<button '+(prev?'':'disabled')+' id="pv"><span class="lbl">◂ Previous</span>'+(prev?lab(prev):'—')+'</button>'+
+   '<button class="next" '+(next?'':'disabled')+' id="nx"><span class="lbl">Next ▸</span>'+(next?lab(next):'—')+'</button>';
+  if(prev)p.querySelector('#pv').onclick=()=>go(idx-1);
+  if(next)p.querySelector('#nx').onclick=()=>go(idx+1);
+ }
+
+ function render(){
+  const pg=PAGES[idx];
+  if(pg.type==='lesson')renderLesson(pg.m);
+  else if(pg.type==='exam')renderExam();
+  else if(pg.type==='flash')renderFlash();
+  else if(pg.type==='gloss')renderGloss();
+  else renderRes();
+  document.getElementById('mobcrumb').textContent=pg.type==='lesson'?(pg.m.n+' · '+pg.m.title):label2(pg);
+  buildTOC();
+  window.scrollTo({top:0,behavior:'auto'});
+  if(window.innerWidth<960)document.getElementById('side').classList.add('hide');
+ }
+ function go(i){idx=i;store.last=i;save();render()}
+
+ document.getElementById('menu').onclick=()=>document.getElementById('side').classList.toggle('hide');
+ document.getElementById('theme').onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme');
+  const dark=cur?cur==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.setAttribute('data-theme',dark?'light':'dark');
+ };
+ document.getElementById('lessonpill').textContent=COURSE.length+' lessons';
+ render();
+})();
+</script>

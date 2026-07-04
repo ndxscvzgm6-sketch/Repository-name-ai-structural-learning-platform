@@ -5,6 +5,14 @@
   research-backed strategy (`career/strategy.md`), LinkedIn rewrite package
   (`career/linkedin-profile.md`), and ATS resume template
   (`career/resume-uzair-ahmed-mohammed.md`).
+- **`career/mission-critical-course/`** — Mission-Critical Facility
+  Engineering: a 19-lesson professional program (open
+  `career/mission-critical-course/index.html` in any browser) covering the
+  full discipline — availability mathematics, electrical and mechanical
+  deep dives, fire protection, controls, redundancy topologies,
+  commissioning, operations, six real failure case studies, an
+  owner's-engineer design-review simulation, a 20-question final exam,
+  130+ flashcards, and a 130-term glossary.
 - **`career/datacenter-course/`** — Data Center Literacy: a full 11-lesson
   self-paced course (open `career/datacenter-course/index.html` in any
   browser) teaching data center power, cooling, reliability, the AI density
