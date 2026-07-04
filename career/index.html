@@ -90,7 +90,9 @@
   tr:last-child td{border-bottom:none}
 
   ul.check{list-style:none;padding:0;margin:8px 0}
-  ul.check li{display:flex;gap:10px;align-items:flex-start;padding:7px 8px;border-bottom:1px solid var(--line)}
+  ul.check li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:flex-start;padding:7px 8px;border-bottom:1px solid var(--line)}
+  ul.check li label{flex:1;min-width:200px}
+  ul.check li details.how{flex-basis:100%;margin-left:27px}
   ul.check li:last-child{border-bottom:none}
   ul.check input{width:17px;height:17px;margin-top:3px;accent-color:var(--accent);flex:none;cursor:pointer}
   ul.check label{cursor:pointer}
@@ -100,6 +102,15 @@
   .bar>i{display:block;height:100%;background:var(--accent);transition:width .3s}
   @media (prefers-reduced-motion: reduce){.bar>i{transition:none}}
 
+  details.how{margin:6px 0 2px;font-size:14px;color:var(--ink-2)}
+  details.how summary{cursor:pointer;font-family:ui-monospace,monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+  details.how summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  details.how .steps{border-left:3px solid var(--line-strong);margin:8px 0 4px;padding:2px 0 2px 14px}
+  details.how .steps p{margin:6px 0;max-width:75ch}
+  details.how ol,details.how ul{margin:6px 0;padding-left:20px}
+  details.how li{margin:4px 0}
+  a{color:var(--accent);text-underline-offset:2px}
+  .subphase{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);border-top:1.5px solid var(--line-strong);padding-top:14px;margin:22px 0 4px}
   .note{border:1.5px dashed var(--line-strong);padding:12px 16px;margin:12px 0;font-size:14.5px;background:var(--sheet)}
   .note.warn{border-color:var(--warn);color:var(--ink)}
   code{font-family:ui-monospace,monospace;font-size:.92em;background:var(--accent-soft);padding:1px 5px}
@@ -170,45 +181,188 @@
 
   <!-- ROADMAP -->
   <section class="panel" id="road">
+    <div class="note">Every task below has a <strong>HOW</strong> toggle — open it for exact click-paths, links, and what "done" looks like. Nothing here assumes prior knowledge of LinkedIn settings, exam portals, or career sites.</div>
+
     <div class="card">
-      <p class="eyebrow">Phase 1 · Months 1–2</p>
-      <h2>Foundation</h2>
+      <p class="eyebrow">Phase 1 · Weeks 1–8</p>
+      <h2>Foundation — profile, pipeline, first proof</h2>
       <div class="progressline" id="p-ph1"></div>
+
+      <p class="subphase">1A · LinkedIn overhaul — Days 1–2, ~90 minutes</p>
       <ul class="check" data-group="ph1">
-        <li><input type="checkbox" id="a1"><label for="a1">Rewrite LinkedIn per <code>linkedin-profile.md</code> — headline, About, skills (pin Structural Engineering · Data Center Design · Python)</label></li>
-        <li><input type="checkbox" id="a2"><label for="a2">Open-to-Work ON, recruiters-only · titles incl. Data Center Engineer · locations: Seattle, Austin, NoVa, Columbus, Atlanta, Phoenix, Sunnyvale + Remote</label></li>
-        <li><input type="checkbox" id="a3"><label for="a3">Set Industry field = Civil Engineering; add P.E./F.E./OSHA-30 under Licenses; Featured = PE post + this repo</label></li>
-        <li><input type="checkbox" id="a4"><label for="a4">Finalize resume from <code>resume-uzair-ahmed-mohammed.md</code> — fill every [bracket] with real numbers, XYZ bullets, 1 page, PDF</label></li>
-        <li><input type="checkbox" id="a5"><label for="a5">Job alerts at Google/Meta/Microsoft/AWS/Oracle/NVIDIA careers + Vantage, QTS, Equinix, Aligned, CyrusOne, Crusoe, CoreWeave</label></li>
-        <li><input type="checkbox" id="a6"><label for="a6">Ship bridge project #1: Python automation of a real structural check, public on GitHub with README + screenshots</label></li>
-        <li><input type="checkbox" id="a7"><label for="a7">First 8 posts drafted (facade war stories, automation before/afters, "why data centers are a structural engineer's dream problem")</label></li>
-        <li><input type="checkbox" id="a8"><label for="a8">Consult an immigration attorney: NIW filing plan + EB-1A evidence checklist</label></li>
+        <li><input type="checkbox" id="a1"><label for="a1">Replace headline & About section
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <ol>
+              <li>Open <a href="https://www.linkedin.com/in/uzair-ahmed-mohammed" target="_blank" rel="noopener">your profile</a> → click the <strong>pencil icon</strong> on the top card (next to your photo).</li>
+              <li>In the <strong>Headline</strong> box, paste the headline from the Playbook tab (220-char limit).</li>
+              <li>Scroll your profile to the <strong>About</strong> section → pencil icon → paste the About text from <code>linkedin-profile.md</code>. If there's no About section: click <strong>Add profile section → Core → Add About</strong>.</li>
+            </ol>
+            <p><em>Done =</em> headline shows "Data Center Design · Modular/Prefab" and "Python + AI"; first 3 lines of About state the intersection thesis (that's all that shows before "…see more").</p>
+          </div></details></li>
+        <li><input type="checkbox" id="a2"><label for="a2">Turn on Open to Work (recruiters-only) with the right titles & metros
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <ol>
+              <li>On your profile, under your photo, click the <strong>"Open to"</strong> button → <strong>"Finding a new job"</strong>.</li>
+              <li><strong>Job titles</strong> (add all): Structural Engineer · Senior Structural Engineer · Data Center Engineer · Civil Structural Engineer · Owner's Engineer · Computational Design Engineer.</li>
+              <li><strong>Locations</strong>: Seattle WA · Austin TX · Sunnyvale CA · Ashburn VA · Columbus OH · Atlanta GA · Phoenix AZ · add "United States (Remote)".</li>
+              <li><strong>Start date</strong>: "Flexible". <strong>Visibility</strong>: choose <strong>"Recruiters only"</strong> (not "All LinkedIn members" — skip the green ring).</li>
+            </ol>
+            <p><em>Why:</em> this puts you in the Open-to-Work spotlight recruiters filter on first, and the location list is the only way to appear in searches for metros you don't live in.</p>
+          </div></details></li>
+        <li><input type="checkbox" id="a3"><label for="a3">Set Industry, add Licenses, load Skills, pin Featured
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <ol>
+              <li><strong>Industry:</strong> top card pencil icon → scroll to the <strong>Industry</strong> dropdown → select <strong>"Civil Engineering"</strong>. (Recruiters filter by this field; a blank/wrong value silently excludes you.)</li>
+              <li><strong>Licenses:</strong> click <strong>Add profile section → Recommended → Add licenses & certifications</strong>. Add three entries: P.E. (issuing state board + license #), F.E. (issuer: NCEES, Nov 2022), OSHA 30 (issuer: OSHA).</li>
+              <li><strong>Skills:</strong> <strong>Add profile section → Core → Add skills</strong>. Add: Structural Engineering, Data Center Design (if unavailable, "Data Centers"), Python, Steel Design, Concrete Design, Seismic Design, Modular Construction, ETABS, SAP2000, RISA, STAAD.Pro, Revit, Facade Engineering, Forensic Engineering, Structural Analysis, Machine Learning, Construction Administration, Project Management. Then open the Skills section → pencil → reorder so the top 3 are <strong>Structural Engineering · Data Center Design · Python</strong>. When adding each skill, tick the boxes tying it to your LeMessurier/Falcon positions.</li>
+              <li><strong>Featured:</strong> <strong>Add profile section → Recommended → Add featured</strong> → add (a) your PE-exam announcement post, (b) a <strong>Link</strong> to this GitHub repo with a screenshot.</li>
+            </ol>
+          </div></details></li>
+      </ul>
+
+      <p class="subphase">1B · Resume — Days 3–5</p>
+      <ul class="check" data-group="ph1">
+        <li><input type="checkbox" id="a4"><label for="a4">Finalize the resume: real numbers in every [bracket], XYZ bullets, 1-page PDF
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <ol>
+              <li>Open <code>resume-uzair-ahmed-mohammed.md</code>. Every [bracket] needs a real number: building heights/SF at LeMessurier, # of buildings assessed at Falcon, $ construction value administered, hours saved by any script you wrote.</li>
+              <li>Rewrite each bullet with Google's XYZ formula — "Accomplished [X] as measured by [Y], by doing [Z]" (<a href="https://www.tealhq.com/post/xyz-resume" target="_blank" rel="noopener">guide</a>).</li>
+              <li>Keep it single-column, standard headers, export to PDF. Make two variants: <strong>A</strong> (data center — experience first, vocabulary: modular, prefabricated, DfMA, mission-critical, tilt-up, owner's engineer) and <strong>B</strong> (AEC-tech/AI — projects first).</li>
+            </ol>
+            <p><em>Done =</em> zero brackets remain; a stranger could quote three numbers about your career after a 10-second skim.</p>
+          </div></details></li>
+      </ul>
+
+      <p class="subphase">1C · Job pipeline — Week 2, one evening</p>
+      <ul class="check" data-group="ph1">
+        <li><input type="checkbox" id="a5"><label for="a5">Create job alerts at every target employer + LinkedIn
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>Bookmark these searches and set email alerts where offered (search terms: <em>"structural" / "civil structural" / "CSA" + data center</em>):</p>
+            <ul>
+              <li><a href="https://www.google.com/about/careers/applications/jobs/results/?q=%22structural%20engineer%22%20data%20center" target="_blank" rel="noopener">Google Careers</a> · <a href="https://www.metacareers.com/jobs?q=structural%20engineer" target="_blank" rel="noopener">Meta Careers</a> · <a href="https://jobs.careers.microsoft.com/global/en/search?q=datacenter%20civil%20structural" target="_blank" rel="noopener">Microsoft Careers</a> (their title is "CSA Engineer" — see the <a href="https://careers.microsoft.com/v2/global/en/datacenters.html" target="_blank" rel="noopener">Datacenters hub</a>) · <a href="https://www.amazon.jobs/en/search?base_query=data+center+structural+engineer" target="_blank" rel="noopener">Amazon.jobs</a> · <a href="https://careers.oracle.com/jobs" target="_blank" rel="noopener">Oracle</a> · <a href="https://www.nvidia.com/en-us/about-nvidia/careers/" target="_blank" rel="noopener">NVIDIA</a></li>
+              <li>Colos/neoclouds: <a href="https://vantage-dc.com/careers/" target="_blank" rel="noopener">Vantage</a> · <a href="https://www.qtsdatacenters.com/company/careers" target="_blank" rel="noopener">QTS</a> · <a href="https://careers.equinix.com/" target="_blank" rel="noopener">Equinix</a> · <a href="https://www.aligneddc.com/careers/" target="_blank" rel="noopener">Aligned</a> · <a href="https://cyrusone.com/careers/" target="_blank" rel="noopener">CyrusOne</a> · <a href="https://crusoe.ai/careers" target="_blank" rel="noopener">Crusoe</a> · <a href="https://www.coreweave.com/careers" target="_blank" rel="noopener">CoreWeave</a> · <a href="https://www.switch.com/careers/" target="_blank" rel="noopener">Switch</a> · <a href="https://www.stackinfra.com/careers/" target="_blank" rel="noopener">STACK</a></li>
+              <li>LinkedIn: search <em>"data center structural engineer"</em> under Jobs → toggle the <strong>Alert</strong> switch (top-left of results).</li>
+              <li>Before applying anywhere, sanity-check comp at <a href="https://www.levels.fyi" target="_blank" rel="noopener">levels.fyi</a> and H-1B history at <a href="https://h1bdata.info" target="_blank" rel="noopener">h1bdata.info</a> (search the employer name — if they've never filed for "structural engineer" or similar, ask about sponsorship in the first call, not the last).</li>
+            </ul>
+          </div></details></li>
+      </ul>
+
+      <p class="subphase">1D · Learning sprint — Weeks 2–8 · speak mission-critical fluently</p>
+      <ul class="check" data-group="ph1">
+        <li><input type="checkbox" id="a9"><label for="a9">Data center literacy: DCD Academy foundations course
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>Take <a href="https://learn.dcdacademy.com/catalog" target="_blank" rel="noopener">DCD Academy</a>'s <a href="https://www.datacenterdynamics.com/en/dcdacademy/all-courses-certifications/fmci/" target="_blank" rel="noopener">Foundations of Mission Critical Infrastructure</a> (self-paced; you don't need all 19 modules — prioritize facility engineering, construction, and safety ones like <a href="https://learn.dcdacademy.com/courses/f202-mission-critical-facilities-engineering" target="_blank" rel="noopener">F202 Mission Critical Facilities Engineering</a>). Supplement free: <a href="https://newsletter.semianalysis.com" target="_blank" rel="noopener">SemiAnalysis</a> data center articles + <a href="https://www.datacenterfrontier.com" target="_blank" rel="noopener">Data Center Frontier</a> weekly.</p>
+          </div></details></li>
+        <li><input type="checkbox" id="a10"><label for="a10">Structural systems the postings name: tilt-up, precast, vibration, DfMA
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <ul>
+              <li><strong>Tilt-up:</strong> ACI's on-demand <a href="https://www.concrete.org/store/productdetail.aspx?ItemID=CEU551&Format=ONLINE_LEARNING&Language=English&Units=US_Units" target="_blank" rel="noopener">Tilt-Up Concrete Construction course</a> (you're an ACI member) + <a href="https://tilt-up.org/academy/" target="_blank" rel="noopener">TCA Tilt-Up Academy</a> seminars; read ACI 551.2R.</li>
+              <li><strong>Equipment vibration:</strong> AISC Design Guide 11 (Vibrations of Steel-Framed Structures — free with <a href="https://www.aisc.org/education/continuingeducation/" target="_blank" rel="noopener">AISC membership/education</a>).</li>
+              <li><strong>Modular/DfMA:</strong> <a href="https://www.modular.org" target="_blank" rel="noopener">Modular Building Institute</a> resources + the WBDG page on <a href="https://www.wbdg.org" target="_blank" rel="noopener">wbdg.org</a>; study how MEP skids/enclosures are specified.</li>
+              <li><strong>Refresher:</strong> ASCE 7-22 wind & seismic via <a href="https://www.asce.org/education-and-events" target="_blank" rel="noopener">ASCE education</a> (also PDH credits).</li>
+            </ul>
+            <p><em>Done =</em> you can explain in an interview why a hyperscaler prefers tilt-up + prefab MEP skids, and what vibration criteria mean for an equipment slab.</p>
+          </div></details></li>
+      </ul>
+
+      <p class="subphase">1E · Bridge project #1 — Weeks 3–8 · public proof you code</p>
+      <ul class="check" data-group="ph1">
+        <li><input type="checkbox" id="a6"><label for="a6">Ship a Python tool that automates a real structural check, public on GitHub
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <ol>
+              <li>Pick one check you do at work repeatedly: ASCE 7 wind load takedown, facade anchor design (your Falcon specialty — rare content!), or steel beam sizing per AISC 360.</li>
+              <li>Stack: Python + <a href="https://streamlit.io" target="_blank" rel="noopener">Streamlit</a> for a web UI. If Python is rusty: Harvard's free <a href="https://cs50.harvard.edu/python/" target="_blank" rel="noopener">CS50P</a> (2–3 weeks of evenings). Study how others do it: <a href="https://flocode.substack.com" target="_blank" rel="noopener">Flocode</a> (Python for structural engineers), <a href="https://www.engineeringskills.com" target="_blank" rel="noopener">EngineeringSkills.com</a> courses, the open-source <a href="https://github.com/fib-international/structuralcodes" target="_blank" rel="noopener">structuralcodes</a> library, and <a href="https://openseespydoc.readthedocs.io" target="_blank" rel="noopener">OpenSeesPy</a>.</li>
+              <li>Publish on GitHub: README with a GIF, worked example vs hand calc, limitations section (that's what makes engineers trust it). Mirror the app as a free <a href="https://huggingface.co/spaces" target="_blank" rel="noopener">Hugging Face Space</a> (you're already UzairEng there).</li>
+            </ol>
+            <p><em>Done =</em> a stranger can run your tool in a browser and see the before/after time saved. This single artifact feeds the resume, LinkedIn Featured, and Track B.</p>
+          </div></details></li>
+      </ul>
+
+      <p class="subphase">1F · Content engine — Week 2 onward</p>
+      <ul class="check" data-group="ph1">
+        <li><input type="checkbox" id="a7"><label for="a7">Draft the first 8 posts; publish 2/week
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>Eight starters (rotate the four formats in the Playbook tab): 1) "I passed the PE Structural — here's the 5-things study system" · 2) a Falcon war story: what a failing facade taught you about load paths · 3) before/after screenshot of your first automation script · 4) "Why hyperscale data centers are a structural engineer's dream problem" · 5) ETABS vs SAP2000 honest teardown for one task · 6) the k-slider/complex-roots idea from your Math Quest app as "how I'd teach dynamics" · 7) "3.5 years, 2 firms: restoration vs new design — what each teaches" · 8) your bridge-project launch post.</p>
+            <p>Carousels: make a 5–10 slide PDF in PowerPoint/Canva → LinkedIn post → <strong>Add a document</strong>. Post Tue/Thu mornings; reply to every comment in the first hour; 5 thoughtful comments (15+ words) daily on posts by AEC-tech founders and #StructuralEngineering voices.</p>
+          </div></details></li>
+      </ul>
+
+      <p class="subphase">1G · Immigration groundwork — Weeks 1–4</p>
+      <ul class="check" data-group="ph1">
+        <li><input type="checkbox" id="a8"><label for="a8">Book 2–3 NIW consults; start the EB-1A evidence folder
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <ol>
+              <li>Book free/paid evals with 2–3 firms that publish structural-engineer NIW approvals — e.g. <a href="https://www.wegreened.com" target="_blank" rel="noopener">WeGreened (Chen Immigration)</a>, <a href="https://manifestlaw.com" target="_blank" rel="noopener">Manifest Law</a>, or an AILA member via <a href="https://www.ailalawyer.com" target="_blank" rel="noopener">ailalawyer.com</a>. Frame: "structural safety of critical infrastructure + open-source AI tooling" — that's the national-interest story.</li>
+              <li>Start a cloud folder: degree evaluations, PE/FE certificates, every article, talk, repo star count, media mention, letter-writer candidates (professors, senior PEs, clients). Update monthly — future-you filing EB-1A will thank you.</li>
+              <li>Ask each attorney: NIW timeline+cost, premium processing, whether to file I-140 now to lock the priority date, and what evidence would make EB-1A viable in 3 years.</li>
+            </ol>
+          </div></details></li>
       </ul>
     </div>
+
     <div class="card">
       <p class="eyebrow">Phase 2 · Months 3–6</p>
-      <h2>Pipeline</h2>
+      <h2>Pipeline — referrals, credentials, second proof</h2>
       <div class="progressline" id="p-ph2"></div>
       <ul class="check" data-group="ph2">
-        <li><input type="checkbox" id="b1"><label for="b1">2 coffee chats/week with DC engineering folks at hyperscalers (search "Data Center Engineering" + company on LinkedIn)</label></li>
-        <li><input type="checkbox" id="b2"><label for="b2">Interview prep: modular/prefab & DfMA, tilt-up/precast, vibration criteria, owner's-engineer scenarios, calc-audit stories</label></li>
-        <li><input type="checkbox" id="b3"><label for="b3">Ship bridge project #2: ML surrogate for an FEA workflow or AI plan-review prototype</label></li>
-        <li><input type="checkbox" id="b4"><label for="b4">Build & publish a VIKTOR app automating a structural workflow</label></li>
-        <li><input type="checkbox" id="b5"><label for="b5">Submit one article to STRUCTURE magazine / ASCE (EB-1A evidence + authority)</label></li>
-        <li><input type="checkbox" id="b6"><label for="b6">File EB-2 NIW; lock priority date</label></li>
-        <li><input type="checkbox" id="b7"><label for="b7">Register for SE exam (first section) + register for AECtech hackathon (NYC, fall)</label></li>
+        <li><input type="checkbox" id="b1"><label for="b1">2 coffee chats/week with data center engineering people
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <ol>
+              <li>LinkedIn search: <em>"Data Center Engineering"</em> + filter Company = Google/Microsoft/Meta/Amazon; also titles "CSA Engineer", "Data Center Structural". Connect with a note: <em>"Fellow structural PE — I'm studying how [company] approaches modular DC structures. Would you have 15 min for two specific questions?"</em></li>
+              <li>Join the free communities where these people already are: <a href="https://www.7x24exchange.org" target="_blank" rel="noopener">7x24 Exchange</a> (local chapter events) and <a href="https://imasons.org" target="_blank" rel="noopener">Infrastructure Masons</a>. Comp intel: <a href="https://www.teamblind.com" target="_blank" rel="noopener">Blind</a>.</li>
+              <li>End every chat with: "Is there anyone else you'd suggest I talk to?" — referral chains are how big-tech interviews actually start.</li>
+            </ol>
+          </div></details></li>
+        <li><input type="checkbox" id="b2"><label for="b2">Interview prep: owner's-engineer scenarios
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>Drill these until fluent: audit a vendor calc package and explain your QA process; defend a modular vs stick-built decision on cost+schedule; walk through tilt-up panel design assumptions; explain vibration limits for a generator slab; tell two Falcon stories (finding a hidden defect; managing a contractor through a fix) and two LeMessurier stories (multi-discipline coordination; a calc you caught). Behavioral format: STAR. Google/Meta loops = 4–5 rounds incl. a technical deep-dive on YOUR projects — know your own numbers cold.</p>
+          </div></details></li>
+        <li><input type="checkbox" id="b3"><label for="b3">Ship bridge project #2: ML applied to a structural workflow
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>Options (pick by energy): ML surrogate that predicts FEA results for a parametric frame (train on your own generated data — learn via <a href="https://course.fast.ai" target="_blank" rel="noopener">fast.ai</a> or <a href="https://huggingface.co/learn" target="_blank" rel="noopener">Hugging Face Learn</a>); or an LLM-based drawing/spec checker prototype (the GreenLite/Structured-AI problem — instant relevance for Track B interviews). Publish with honest benchmarks.</p>
+          </div></details></li>
+        <li><input type="checkbox" id="b4"><label for="b4">Build & publish a VIKTOR app
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p><a href="https://www.viktor.ai" target="_blank" rel="noopener">VIKTOR</a> is a Python platform built for engineers; free tier available. Follow <a href="https://docs.viktor.ai" target="_blank" rel="noopener">docs.viktor.ai</a>'s tutorial, port bridge project #1 into it, publish to their community. VIKTOR showcases get shared across the whole AEC-tech ecosystem — it's a networking artifact as much as a technical one.</p>
+          </div></details></li>
+        <li><input type="checkbox" id="b5"><label for="b5">Submit one STRUCTURE magazine article
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>Read the <a href="https://www.structuremag.org/for-authors/author-guidelines/" target="_blank" rel="noopener">author guidelines</a> and submit via the form on <a href="https://www.structuremag.org/for-authors/" target="_blank" rel="noopener">For Authors</a>. Strong pitches from your life: "Python automation for the everyday structural engineer," "What facade forensics taught me about designing new buildings," or "A structural engineer's field guide to data center construction." Practical > academic — that's their stated preference. A published trade article = authority + EB-1A/NIW evidence.</p>
+          </div></details></li>
+        <li><input type="checkbox" id="b6"><label for="b6">File the EB-2 NIW petition
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>With the attorney chosen in 1G. You'll need: recommendation letters (5–7; mix of independent experts and people who know your work), evidence of the AI-for-infrastructure work (repos, article, posts count!), and the three-prong Dhanasar argument. Premium processing gives an answer in 45 business days. Filing locks your priority date even while you keep working on H-1B.</p>
+          </div></details></li>
+        <li><input type="checkbox" id="b7"><label for="b7">Register for the SE exam + AECtech hackathon
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <ul>
+              <li><strong>SE exam:</strong> register through your <a href="https://account.ncees.org" target="_blank" rel="noopener">MyNCEES account</a>; format details at <a href="https://ncees.org/exams/pe-exam/cbt-structural/" target="_blank" rel="noopener">ncees.org</a> (computer-based, 4 separately-passed sections; note the spec update coming April 2027 — sitting sections in 2026 keeps you on the current spec). Prep: <a href="https://ppi2pass.com/pe-exam/structural" target="_blank" rel="noopener">PPI</a> (has a passing guarantee) or <a href="https://www.schoolofpe.com/pe-structural" target="_blank" rel="noopener">School of PE</a>; the EET/AEI course is widely recommended for the lateral sections.</li>
+              <li><strong>AECtech:</strong> events + registration at <a href="https://www.aectech.us" target="_blank" rel="noopener">aectech.us</a> — Boston hackathon Aug 20–23 2026 (<a href="https://www.eventbrite.com/e/aectech-boston-2026-tickets-1992075034052" target="_blank" rel="noopener">Eventbrite</a>), NYC conference in the fall, plus LA/London editions. 26-hour team hackathon; go to the workshops day too — TT CORE studio, Speckle, and Autodesk people run them.</li>
+            </ul>
+          </div></details></li>
       </ul>
     </div>
+
     <div class="card">
       <p class="eyebrow">Phase 3 · Months 6–12</p>
-      <h2>Convert</h2>
+      <h2>Convert — interviews, leverage, offer</h2>
       <div class="progressline" id="p-ph3"></div>
       <ul class="check" data-group="ph3">
-        <li><input type="checkbox" id="c1"><label for="c1">On-site/virtual interview loops at ≥2 hyperscaler/colo owner-side roles</label></li>
-        <li><input type="checkbox" id="c2"><label for="c2">Negotiate on total comp citing posted bands (Google $121–175k + 15% + equity; Meta $167–230k+)</label></li>
-        <li><input type="checkbox" id="c3"><label for="c3">Compete at AECtech; meet TT CORE, Speckle, Autodesk, GreenLite-type people</label></li>
-        <li><input type="checkbox" id="c4"><label for="c4">Sit SE vertical + lateral sections</label></li>
-        <li><input type="checkbox" id="c5"><label for="c5">1,000–3,000 followers; open FDE/vertical-AI conversations (Palantir FDSE, Scale, GreenLite, Trunk Tools, Motif, Procore, Autodesk)</label></li>
+        <li><input type="checkbox" id="c1"><label for="c1">Interview loops at ≥2 hyperscaler/colo owner-side roles
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>By now: profile findable, resume quantified, 2 referral chains warm, vocabulary fluent. Apply within days of posting (recruiters review first-come and pause at ~500–1,000 apps). Track every application in a sheet: company, req link, date, referral, recruiter name, stage, comp band.</p>
+          </div></details></li>
+        <li><input type="checkbox" id="c2"><label for="c2">Negotiate on total comp with data
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>Anchor with posted bands (Google $121–175k base + 15% bonus + equity; Meta $167–230k; Microsoft CSA roles up to ~$229k) and <a href="https://www.levels.fyi" target="_blank" rel="noopener">levels.fyi</a> for the specific level. Ask for: higher base within band + equity refresh + sign-on. Say the magic sentence early: <em>"I'm an H-1B transfer — no lottery, and transfers are exempt from the $100k new-petition fee."</em> Competing timelines are the only real leverage: batch your applications so offers land together.</p>
+          </div></details></li>
+        <li><input type="checkbox" id="c3"><label for="c3">Compete at AECtech; meet the Track-B ecosystem in person</label></li>
+        <li><input type="checkbox" id="c4"><label for="c4">Sit SE vertical + lateral sections
+          </label><details class="how"><summary>How</summary><div class="steps"><p>One section per exam window via <a href="https://account.ncees.org" target="_blank" rel="noopener">MyNCEES</a>; 250–300 study hours total is the norm — the weekly loop's 30 min/day compounds to that inside a year.</p></div></details></li>
+        <li><input type="checkbox" id="c5"><label for="c5">Open Track-B conversations from a position of proof
+          </label><details class="how"><summary>How</summary><div class="steps">
+            <p>With 2 shipped projects + a VIKTOR app + an article + 1–3k followers, cold-DM founders/eng leads at <a href="https://greenlite.com" target="_blank" rel="noopener">GreenLite</a>, <a href="https://trunktools.com/careers/" target="_blank" rel="noopener">Trunk Tools</a>, <a href="https://jobs.ashbyhq.com/permitflow" target="_blank" rel="noopener">PermitFlow</a>, <a href="https://genia.design/careers" target="_blank" rel="noopener">Genia</a>, <a href="https://jobs.lever.co/motifsystems" target="_blank" rel="noopener">Motif</a>, and apply to <a href="https://jobs.lever.co/palantir" target="_blank" rel="noopener">Palantir FDSE</a> / <a href="https://scale.com/careers" target="_blank" rel="noopener">Scale FDE</a>. Your pitch: "licensed structural PE who ships production Python — I'm the domain expert your AI needs."</p>
+          </div></details></li>
         <li><input type="checkbox" id="c6"><label for="c6">Accept an offer ≥$180k TC — or diagnose and rerun the loop with what you learned</label></li>
       </ul>
     </div>
@@ -327,12 +481,13 @@
   }
   function save(){localStorage.setItem(KEY,JSON.stringify(store))}
   function refresh(group){
-    var list=document.querySelector('ul.check[data-group="'+group+'"]');if(!list)return;
-    var boxes=list.querySelectorAll('input');var done=0;
-    boxes.forEach(function(b){if(b.checked)done++;b.closest('li').classList.toggle('done',b.checked)});
-    var p=document.getElementById('p-'+(group==='weekly'?'weekly':group));
-    if(p){var pct=boxes.length?Math.round(done/boxes.length*100):0;
-      p.innerHTML=done+' / '+boxes.length+' complete <span class="bar"><i style="width:'+pct+'%"></i></span>'}
+    var lists=document.querySelectorAll('ul.check[data-group="'+group+'"]');if(!lists.length)return;
+    var done=0,total=0;
+    lists.forEach(function(list){list.querySelectorAll('input').forEach(function(b){
+      total++;if(b.checked)done++;b.closest('li').classList.toggle('done',b.checked)})});
+    var p=document.getElementById('p-'+group);
+    if(p){var pct=total?Math.round(done/total*100):0;
+      p.innerHTML=done+' / '+total+' complete <span class="bar"><i style="width:'+pct+'%"></i></span>'}
   }
   document.querySelectorAll('ul.check').forEach(function(list){
     var group=list.dataset.group;
