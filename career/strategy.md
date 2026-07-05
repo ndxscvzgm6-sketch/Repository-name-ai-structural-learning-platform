@@ -92,3 +92,18 @@ This is where your ceiling is highest, because the intersection is nearly empty 
 ---
 
 *Deliverables in this folder: `index.html` (interactive platform), `resume-uzair-ahmed-mohammed.md`, `linkedin-profile.md`.*
+
+---
+
+# REV 2 ADDENDUM (July 2026) — recalibrated against hired profiles
+
+Research into actual hires (AWS: NIST→Bechtel→Jacobs ~8yrs PE; OLMM anchorage→Thornton Tomasetti, CA SE; Microsoft: 30-yr consulting principal; Meta: one fresh Stanford MS outlier) and 15+ verbatim job reqs changed the plan:
+
+- **Hyperscaler $180k+ structural seats require 4–7+ yrs mission-critical/industrial specifically** (Google 5yr band $144–211k base; Meta 7yr; AWS 4+ yrs as BASIC qual, often citizenship-gated). Direct entry today: ~0%.
+- **H-1B quantified:** Microsoft/Amazon/Google structural DC orgs show ~zero structural LCAs ever. Realistic owner-side sponsors: Microsoft, Google, Oracle, Vantage (24 LCAs, $150k median). GCs and QTS/Aligned/Equinix: no record. 
+- **The dominant verified path:** 12–24 months at a DC design firm (AECOM $150–200k remote — needs only 5–6 yrs buildings; Jacobs $132.9–182.7k, 143 LCAs/2025; WSP/kW = #1 structural sponsor 2025; Burns & McDonnell/HDR/Stantec/Kiewit/Fluor) → owner-side at yr 8–9.
+- **Interviews (documented):** ~45% behavioral (LPs/STAR — the #1 rejection cause), 25% portfolio deep-dives, 15% owner-side judgment, 10% MEP literacy (3/10 depth), 5% research. Nobody reports calc exams at hyperscalers.
+- **Ranked skill gaps to close (Phase 0 curriculum, ~120 hrs):** mission-critical portfolio (only via projects) · tilt-up/precast (ACI 551/PCI) · Ch.13 equipment anchorage + ACI 318 Ch.17 · owner's-engineer fluency (BOD/specs/submittals) · commissioning exposure · PEMB · multi-region code agility · BIM at scale · P6/cost literacy · (travel posture — already covered by forensics background; sell it).
+- **Genuine existing assets per the evidence:** LeMessurier steel/concrete depth (DC analysis bar is LOWER than high-rise); Falcon forensics/CA — AWS senior reqs literally list "forensic analysis of building design and construction defects."
+
+Full citations: AWS job 2956265/3183155/10423034; Google careers 97534817616175814 & 92899975062528710; Meta LinkedIn 3811305373; Microsoft via jobzmall/LinkedIn; h1bdata.info employer queries; profile mirrors (ZoomInfo/RocketReach); Blind AWS L5 offer thread.
