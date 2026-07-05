@@ -1,0 +1,19 @@
+Lesson eleven. Casting, quality control, and erection day. Design credibility in tilt-up comes from construction literacy. When you can talk about bond breaker and closure strips as comfortably as moment magnifiers, people assume, correctly, that you can be trusted on a site. Let's walk the cycle.
+
+It starts with the casting surface. The floor slab is the mold, and its surface becomes the panel's face. Whatever texture, whatever flaws the slab has, the panel inherits, in mirror image. So the slab gets protected, and its joints get taped off.
+
+Then the bond breaker, and I want you to remember this as quality obsession number one. It's a chemical release agent, sprayed in two coats, that keeps the panel from bonding to the slab. Inspectors literally check the sheen of the surface to verify coverage. Miss a patch, and that panel welds itself to the floor. Every experienced tilt-up person has a bad bond breaker story.
+
+Next, the carpentry: edge forms defining the panel outline, reveal strips for the architectural grooves, blockouts for doors and louvers. Then the steel and hardware: the rebar curtain on chairs, extra trim bars around openings, hairpins at inserts, the lifting and brace inserts, and the structural embeds, those weld plates for joist seats, surveyed into position precisely. A mislocated embed becomes a request for information and a field-welded fix, so pre-pour survey verification is standard.
+
+Pour, trowel the up face, cure, and when slab space is short, they stack panels one on top of another with bond breaker between layers, which creates a sequencing puzzle: the bottom panel of the stack lifts last.
+
+For quality control, an owner's engineer witnesses four hold points. Before the pour: steel, cover, inserts against the lifting drawings, embed survey, reveal depths, bond breaker. Before the pick: verified concrete strength, cylinders or maturity sensors, no strength, no pick. During erection: rigging matches the lifting drawings, braces installed per the bracing drawings, knee bracing included, panels landed on shims and grouted. And after: plumbness and joint tolerances, connection welds, closure strips, and that signed brace removal checklist from last lesson.
+
+Erection day itself is choreography. Rig the panel. Break suction slowly, this is the moment of maximum insert load. Rotate with tag lines controlling the swing. Fly it to the footing. Land it on shim stacks. Plumb it with the braces, and release the crane. A tuned crew stands up eight to fifteen panels a day, and a data hall's walls appear in a week or two.
+
+And because reality always intervenes, know the classic field problems and their fixes. Panel cast a quarter inch short: shims and joint sealant judgment. Embed in the wrong spot: survey it, write the R F I, design a welded plate fix, often the same day. A hairline crack from lifting: the engineer disposes it, accept, epoxy inject, or in a bad case reject the panel, documented either way. Brace anchor conflicts with a plumbing trench: relocate it with an engineer's redesign, never a field guess.
+
+One more thing, and it's personal to your career. If you've done forensic and restoration work, crack disposition, repair details, tolerance adjudication, you already have the exact mental toolkit erection day demands, just on a faster clock. Say that in interviews: I've dispositioned cracks and specified repairs on existing buildings; tilt-up field engineering is the same discipline at construction speed.
+
+Takeaways. The slab is the mold. Bond breaker is obsession number one. Four witness points: pre-pour, strength, erection, closeout. And field-fix fluency, delivered with engineering discipline, is what makes you valuable on a Tuesday morning when panel nineteen is a quarter inch short. Next: what makes data center tilt-up special, and how to convert all of this into interview performance.
