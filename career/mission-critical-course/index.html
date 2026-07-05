@@ -172,6 +172,23 @@
     aside.hide{display:none}
   }
   .themebtn{margin-top:18px;font-family:ui-monospace,monospace;font-size:11px;border:1.5px solid var(--lineS);background:var(--bg);color:var(--ink2);padding:6px 10px;border-radius:7px;cursor:pointer}
+
+  /* Listen mode */
+  #ttsFab{position:fixed;right:18px;bottom:18px;z-index:60;width:52px;height:52px;border-radius:50%;
+    border:2px solid var(--lineS);background:var(--panel,var(--sheet,#fff));color:inherit;font-size:22px;cursor:pointer;
+    box-shadow:0 4px 18px rgba(0,0,0,.18)}
+  #ttsBar{position:fixed;left:0;right:0;bottom:0;z-index:59;display:none;background:var(--panel,var(--sheet,#fff));
+    border-top:2px solid var(--lineS);padding:10px 14px;font-family:system-ui,sans-serif}
+  #ttsBar.on{display:block}
+  #ttsBar .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:900px;margin:0 auto}
+  #ttsBar button{font-size:15px;border:1.5px solid var(--lineS);background:none;color:inherit;border-radius:8px;
+    padding:8px 13px;cursor:pointer;min-width:44px}
+  #ttsBar button.primary{font-size:18px;min-width:56px}
+  #ttsBar select,#ttsBar input{font-size:13px;border:1.5px solid var(--lineS);background:none;color:inherit;border-radius:7px;padding:7px 8px;max-width:170px}
+  #ttsBar .pos{font-family:ui-monospace,monospace;font-size:12px;opacity:.75;min-width:64px}
+  #ttsBar .hint{font-size:11px;opacity:.65;width:100%;margin-top:2px}
+  .tts-now{outline:3px solid #E2A33D;outline-offset:3px;border-radius:4px}
+
 </style>
 
 <div class="topbar">
@@ -1633,5 +1650,140 @@ const RESOURCES=[
  };
  document.getElementById('lessonpill').textContent=COURSE.length+' lessons';
  render();
+})();
+</script>
+
+
+<script>
+(function(){
+  var P={}; try{P=JSON.parse(localStorage.getItem('ttsPrefs')||'{}')}catch(e){}
+  function save(){localStorage.setItem('ttsPrefs',JSON.stringify(P))}
+  var fab=document.createElement('button'); fab.id='ttsFab'; fab.title='Listen to this page'; fab.textContent='🎧';
+  document.body.appendChild(fab);
+  var bar=document.createElement('div'); bar.id='ttsBar';
+  bar.innerHTML='<div class="row">'+
+   '<button class="primary" id="tPlay" title="Play/Pause">▶</button>'+
+   '<button id="tPrev" title="Previous section">⏮</button>'+
+   '<button id="tNext" title="Next section">⏭</button>'+
+   '<span class="pos" id="tPos">–/–</span>'+
+   '<select id="tSpeed" title="Speed"><option value="0.85">0.85×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option><option value="1.5">1.5×</option></select>'+
+   '<select id="tEng" title="Voice engine"><option value="dev">Device voice (free)</option><option value="el">ElevenLabs (key)</option></select>'+
+   '<input id="tKey" type="password" placeholder="ElevenLabs API key" style="display:none">'+
+   '<select id="tVoice" style="display:none"><option value="">voice…</option></select>'+
+   '<button id="tClose" title="Close">✕</button>'+
+   '<div class="hint" id="tHint">Reads every lesson aloud, section by section. Device voice works offline; ElevenLabs needs your own key (stored only on this device — works in the downloaded file; the hosted page may block it).</div></div>';
+  document.body.appendChild(bar);
+  var $=function(id){return document.getElementById(id)};
+  var secs=[], idx=0, playing=false, curAudio=null, prefetch={}, engine=P.engine||'dev';
+  $('tEng').value=engine; if(P.key)$('tKey').value=P.key; if(P.speed)$('tSpeed').value=P.speed;
+  function showEl(){var el=engine==='el'; $('tKey').style.display=el?'':'none'; $('tVoice').style.display=el?'':'none';}
+  showEl();
+  function collect(){
+    var main=document.getElementById('main'); if(!main)return [];
+    var out=[], skip=function(n){return n.closest('.quiz,.pager,.fcnav,.search,#glist,form,nav')};
+    var nodes=main.querySelectorAll('h2,.sub,h3,p,li,dt,dd,.stem');
+    nodes.forEach(function(n){
+      if(skip(n))return;
+      if(n.querySelector('p,li,h3'))return; // container dupes
+      var t=(n.innerText||'').replace(/\s+/g,' ').trim();
+      if(t.length<3)return;
+      out.push({node:n,text:t});
+    });
+    return out;
+  }
+  function mark(i){
+    secs.forEach(function(s){s.node.classList.remove('tts-now')});
+    if(secs[i]){secs[i].node.classList.add('tts-now');
+      try{secs[i].node.scrollIntoView({block:'center',behavior:'smooth'})}catch(e){secs[i].node.scrollIntoView()}}
+    $('tPos').textContent=(i+1)+'/'+secs.length;
+  }
+  function stopAll(){
+    playing=false;$('tPlay').textContent='▶';
+    try{speechSynthesis.cancel()}catch(e){}
+    if(curAudio){curAudio.pause();curAudio=null}
+    secs.forEach(function(s){s.node.classList.remove('tts-now')});
+  }
+  /* device engine */
+  function devSpeak(text,done){
+    var parts=text.match(/[^.!?]+[.!?]*/g)||[text];
+    var chunks=[],cur='';
+    parts.forEach(function(p){if((cur+p).length>220){if(cur)chunks.push(cur);cur=p}else cur+=p});
+    if(cur)chunks.push(cur);
+    var k=0;
+    (function next(){
+      if(!playing)return;
+      if(k>=chunks.length)return done();
+      var u=new SpeechSynthesisUtterance(chunks[k++]);
+      u.rate=parseFloat($('tSpeed').value);
+      var vs=speechSynthesis.getVoices().filter(function(v){return /en[-_]/i.test(v.lang)});
+      var pref=vs.find(function(v){return /Natural|Google US|Samantha|Aria/i.test(v.name)})||vs[0];
+      if(pref)u.voice=pref;
+      u.onend=next; u.onerror=next;
+      speechSynthesis.speak(u);
+    })();
+  }
+  /* elevenlabs engine */
+  function elFetch(i){
+    var key=$('tKey').value.trim(); if(!key)return Promise.reject('no-key');
+    if(prefetch[i])return prefetch[i];
+    var vid=$('tVoice').value||'JBFqnCBsd6RMkjVDRZzb';
+    prefetch[i]=fetch('https://api.elevenlabs.io/v1/text-to-speech/'+vid+'?output_format=mp3_44100_64',{
+      method:'POST',headers:{'xi-api-key':key,'Content-Type':'application/json'},
+      body:JSON.stringify({text:secs[i].text,model_id:'eleven_flash_v2_5'})
+    }).then(function(r){if(!r.ok)throw new Error('TTS '+r.status);return r.blob()})
+      .then(function(b){return URL.createObjectURL(b)});
+    return prefetch[i];
+  }
+  function elSpeak(i,done){
+    elFetch(i).then(function(url){
+      if(!playing)return;
+      curAudio=new Audio(url); curAudio.playbackRate=parseFloat($('tSpeed').value);
+      curAudio.onended=done; curAudio.onerror=done;
+      curAudio.play();
+      if(i+1<secs.length)elFetch(i+1).catch(function(){});
+    }).catch(function(e){
+      $('tHint').textContent='ElevenLabs failed ('+e+'). Check the key/credits — or the hosted page is blocking external audio: use the downloaded file, or switch to Device voice.';
+      stopAll();
+    });
+  }
+  function playFrom(i){
+    idx=i; if(idx>=secs.length){stopAll();return}
+    mark(idx);
+    var done=function(){if(playing)playFrom(idx+1)};
+    if(engine==='el')elSpeak(idx,done); else devSpeak(secs[idx].text,done);
+  }
+  function start(){
+    secs=collect();
+    if(!secs.length){$('tHint').textContent='Nothing readable on this page — open a lesson.';return}
+    playing=true;$('tPlay').textContent='⏸';
+    if(idx>=secs.length)idx=0;
+    playFrom(idx);
+  }
+  fab.onclick=function(){bar.classList.toggle('on');
+    if(bar.classList.contains('on')&&engine==='el'&&$('tKey').value)loadVoices()};
+  $('tClose').onclick=function(){stopAll();bar.classList.remove('on')};
+  $('tPlay').onclick=function(){if(playing){stopAll()}else start()};
+  $('tNext').onclick=function(){if(!secs.length)return;stopAll();playing=true;$('tPlay').textContent='⏸';playFrom(Math.min(idx+1,secs.length-1))};
+  $('tPrev').onclick=function(){if(!secs.length)return;stopAll();playing=true;$('tPlay').textContent='⏸';playFrom(Math.max(idx-1,0))};
+  $('tEng').onchange=function(){engine=this.value;P.engine=engine;save();showEl();
+    if(engine==='el'&&$('tKey').value)loadVoices()};
+  $('tSpeed').onchange=function(){P.speed=this.value;save();if(curAudio)curAudio.playbackRate=parseFloat(this.value)};
+  $('tKey').onchange=function(){P.key=this.value.trim();save();loadVoices()};
+  $('tVoice').onchange=function(){P.voice=this.value;save();prefetch={}};
+  function loadVoices(){
+    var key=$('tKey').value.trim(); if(!key)return;
+    fetch('https://api.elevenlabs.io/v1/voices',{headers:{'xi-api-key':key}})
+     .then(function(r){return r.json()}).then(function(d){
+       var sel=$('tVoice'); sel.innerHTML='';
+       (d.voices||[]).forEach(function(v){
+         var o=document.createElement('option');o.value=v.voice_id;o.textContent=v.name.split(' - ')[0];
+         if((P.voice||'JBFqnCBsd6RMkjVDRZzb')===v.voice_id)o.selected=true;
+         sel.appendChild(o)});
+     }).catch(function(){$('tHint').textContent='Could not reach ElevenLabs (key or network/CSP). Device voice still works.'});
+  }
+  /* stop when user navigates lessons */
+  var mo=new MutationObserver(function(){if(playing){stopAll()}prefetch={};idx=0;$('tPos').textContent='–/–'});
+  var mainEl=document.getElementById('main'); if(mainEl)mo.observe(mainEl,{childList:true});
+  if('speechSynthesis' in window)speechSynthesis.getVoices();
 })();
 </script>
