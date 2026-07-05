@@ -13,6 +13,14 @@
   commissioning, operations, six real failure case studies, an
   owner's-engineer design-review simulation, a 20-question final exam,
   130+ flashcards, and a 130-term glossary.
+- **`career/tiltup-course/`** — Tilt-Up Mastery: a 15-lesson technical course
+  (open `career/tiltup-course/index.html`) on tilt-up panel design at
+  hired-engineer depth — the ACI 318 §11.8 slender-wall method with full
+  worked equations, in-plane shear walls, openings/legs, the Northridge
+  roof-anchorage provisions, lifting and TCA bracing engineering, data
+  center specifics, and a 3-part guided capstone producing a complete
+  panel design calculation as a portfolio artifact. 15-question exam,
+  ~100 flashcards, glossary.
 - **`career/datacenter-course/`** — Data Center Literacy: a full 11-lesson
   self-paced course (open `career/datacenter-course/index.html` in any
   browser) teaching data center power, cooling, reliability, the AI density

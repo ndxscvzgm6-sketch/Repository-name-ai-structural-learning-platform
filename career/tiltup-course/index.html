@@ -1,0 +1,1337 @@
+<title>Tilt-Up Mastery — Panel Design, Lifting & Bracing</title>
+<style>
+  :root{
+    --bg:#F7F5F1; --panel:#FFFFFF; --ink:#1C1E21; --ink2:#5B6168;
+    --line:#E2DED6; --lineS:#B9B2A5;
+    --amber:#8A6A00; --amberInk:#FFFFFF; --amberSoft:#F5EDCE;
+    --grid:#177245; --gridSoft:#DFF0E6;
+    --mech:#155E8A; --mechSoft:#DEEDF6;
+    --alert:#A83232; --alertSoft:#F6E2E2;
+    --shadow:0 1px 2px rgba(28,30,33,.05),0 6px 20px rgba(28,30,33,.06);
+  }
+  @media (prefers-color-scheme: dark){:root{
+    --bg:#0E1113; --panel:#15191C; --ink:#E9E7E2; --ink2:#9AA0A6;
+    --line:#262B2F; --lineS:#3C434A;
+    --amber:#E2C044; --amberInk:#181402; --amberSoft:#2E2808;
+    --grid:#5FBF8A; --gridSoft:#12291C;
+    --mech:#6FAFD6; --mechSoft:#122430;
+    --alert:#E08585; --alertSoft:#301718;
+    --shadow:none;
+  }}
+  :root[data-theme="light"]{
+    --bg:#F7F5F1; --panel:#FFFFFF; --ink:#1C1E21; --ink2:#5B6168;
+    --line:#E2DED6; --lineS:#B9B2A5;
+    --amber:#8A6A00; --amberInk:#FFFFFF; --amberSoft:#F5EDCE;
+    --grid:#177245; --gridSoft:#DFF0E6;
+    --mech:#155E8A; --mechSoft:#DEEDF6;
+    --alert:#A83232; --alertSoft:#F6E2E2;
+    --shadow:0 1px 2px rgba(28,30,33,.05),0 6px 20px rgba(28,30,33,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1113; --panel:#15191C; --ink:#E9E7E2; --ink2:#9AA0A6;
+    --line:#262B2F; --lineS:#3C434A;
+    --amber:#E2C044; --amberInk:#181402; --amberSoft:#2E2808;
+    --grid:#5FBF8A; --gridSoft:#12291C;
+    --mech:#6FAFD6; --mechSoft:#122430;
+    --alert:#E08585; --alertSoft:#301718;
+    --shadow:none;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15.5px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace}
+
+  .shell{display:grid;grid-template-columns:1fr;max-width:1200px;margin:0 auto}
+  @media(min-width:960px){.shell{grid-template-columns:300px 1fr}}
+  aside{border-right:1.5px solid var(--lineS);padding:20px 16px 60px;background:var(--panel)}
+  @media(min-width:960px){aside{position:sticky;top:0;height:100vh;overflow-y:auto}}
+  main{padding:26px 24px 110px;min-width:0;max-width:840px}
+
+  .brand .kick{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber)}
+  .brand h1{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:5px 0 3px;line-height:1.18}
+  .brand p{font-size:12px;color:var(--ink2);margin:0}
+  .statusrow{display:flex;gap:8px;margin:12px 0 4px;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+  .pill{border:1px solid var(--lineS);padding:3px 8px;border-radius:999px;color:var(--ink2)}
+  .pill.on{border-color:var(--grid);color:var(--grid)}
+  .overall{margin:10px 0 6px;font-family:ui-monospace,monospace;font-size:11px;color:var(--ink2)}
+  .obar{height:7px;border:1px solid var(--lineS);background:var(--bg);margin-top:5px;border-radius:2px;overflow:hidden}
+  .obar>i{display:block;height:100%;background:var(--amber);width:0;transition:width .35s}
+  @media (prefers-reduced-motion:reduce){.obar>i{transition:none}}
+
+  nav.toc{margin-top:10px;display:flex;flex-direction:column;gap:1px}
+  nav.toc .grp{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin:15px 6px 5px;border-top:1px solid var(--line);padding-top:11px}
+  nav.toc .grp:first-child{border-top:none;padding-top:0}
+  nav.toc button{display:flex;gap:9px;align-items:baseline;text-align:left;border:none;background:none;color:var(--ink);
+    font:inherit;font-size:13px;padding:6px 8px;border-radius:6px;cursor:pointer;width:100%;line-height:1.32}
+  nav.toc button:hover{background:var(--bg)}
+  nav.toc button[aria-current="true"]{background:var(--amberSoft);font-weight:700}
+  nav.toc button .n{font-family:ui-monospace,monospace;font-size:10.5px;color:var(--ink2);flex:none;width:24px}
+  nav.toc button[aria-current="true"] .n{color:var(--amber)}
+  nav.toc button .dot{margin-left:auto;flex:none;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--lineS);align-self:center}
+  nav.toc button.done .dot{background:var(--grid);border-color:var(--grid)}
+
+  .lead{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin:0 0 6px}
+  main h2{font-size:clamp(23px,4vw,31px);font-weight:800;letter-spacing:-.02em;line-height:1.12;margin:2px 0 6px;text-wrap:balance}
+  .sub{font-size:16px;color:var(--ink2);margin:0 0 16px}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:10.5px;color:var(--ink2);border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line);padding:8px 0;margin-bottom:20px;text-transform:uppercase;letter-spacing:.06em}
+  main h3{font-size:18px;font-weight:750;margin:26px 0 8px;letter-spacing:-.01em}
+  main p{margin:11px 0;max-width:70ch}
+  main li{margin:6px 0;max-width:68ch}
+  .obj{background:var(--bg);border:1.5px solid var(--lineS);border-radius:8px;padding:13px 17px;margin:14px 0}
+  .obj .h{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin:0 0 4px}
+  .obj ul{margin:6px 0 0;padding-left:20px}
+
+  .call{border-left:5px solid var(--lineS);border-radius:0 8px 8px 0;padding:11px 16px;margin:16px 0;background:var(--panel);box-shadow:var(--shadow)}
+  .call .tag{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:3px}
+  .call p{margin:4px 0}
+  .call.se{border-color:var(--grid);background:var(--gridSoft)} .call.se .tag{color:var(--grid)}
+  .call.pw{border-color:var(--amber);background:var(--amberSoft)} .call.pw .tag{color:var(--amber)}
+  .call.me{border-color:var(--mech);background:var(--mechSoft)} .call.me .tag{color:var(--mech)}
+  .call.al{border-color:var(--alert);background:var(--alertSoft)} .call.al .tag{color:var(--alert)}
+  .case{border:1.5px solid var(--alert);border-radius:10px;padding:14px 18px;margin:18px 0;background:var(--panel)}
+  .case .ch{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--alert);margin:0 0 4px}
+  .case b.t{font-size:15.5px}
+  .case p{margin:7px 0}
+  .case .lesson{border-top:1px dashed var(--lineS);margin-top:9px;padding-top:8px;font-size:14px}
+  .case .lesson b{color:var(--alert)}
+
+  .diagram{border:1.5px solid var(--lineS);border-radius:10px;padding:15px;margin:16px 0;background:var(--panel);overflow-x:auto}
+  .flow{display:flex;align-items:stretch;min-width:min-content}
+  .flow .node{border:1.5px solid var(--lineS);border-radius:7px;padding:7px 9px;min-width:88px;background:var(--bg);text-align:center;display:flex;flex-direction:column;justify-content:center}
+  .flow .node b{font-size:12px} .flow .node span{font-size:10px;color:var(--ink2);margin-top:2px}
+  .flow .arr{align-self:center;color:var(--amber);font-weight:700;padding:0 6px;font-family:ui-monospace,monospace}
+  .cap{font-size:12px;color:var(--ink2);margin-top:9px;text-align:center}
+
+  .scroll{overflow-x:auto}
+  table.data{border-collapse:collapse;width:100%;font-size:13.5px;margin:14px 0;min-width:540px}
+  table.data th{text-align:left;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);border-bottom:1.5px solid var(--lineS);padding:8px 10px}
+  table.data td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.data td.n{font-family:ui-monospace,monospace;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  .quiz{border:1.5px solid var(--amber);border-radius:10px;padding:17px 19px;margin:26px 0 10px;background:var(--panel)}
+  .quiz .qh{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin:0 0 10px}
+  .q{margin:14px 0}
+  .q .stem{font-weight:650;font-size:14.5px;margin-bottom:8px}
+  .q .opt{display:block;font-size:13.5px;border:1.5px solid var(--lineS);border-radius:7px;padding:8px 12px;margin:6px 0;cursor:pointer;background:var(--bg)}
+  .q .opt:hover{border-color:var(--amber)}
+  .q .opt.correct{border-color:var(--grid);background:var(--gridSoft)}
+  .q .opt.wrong{border-color:var(--alert);background:var(--alertSoft)}
+  .q .opt input{margin-right:8px}
+  .q .exp{font-size:13px;color:var(--ink2);margin-top:6px;padding:8px 12px;border-left:3px solid var(--grid);background:var(--gridSoft);border-radius:0 6px 6px 0;display:none}
+  .q.answered .exp{display:block}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px;align-items:center}
+  button.act{font-size:14px;font-weight:600;border:1.5px solid var(--amber);background:var(--amber);color:var(--amberInk);padding:9px 16px;border-radius:8px;cursor:pointer}
+  button.act.ghost{background:none;color:var(--amber)}
+  button.act:focus-visible,nav.toc button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .score{font-family:ui-monospace,monospace;font-size:13px;color:var(--ink2)}
+
+  .pager{display:flex;justify-content:space-between;gap:12px;margin-top:34px;border-top:1.5px solid var(--line);padding-top:16px}
+  .pager button{font-size:13px;border:1.5px solid var(--lineS);background:var(--panel);color:var(--ink);padding:10px 14px;border-radius:8px;cursor:pointer;max-width:48%;text-align:left}
+  .pager button:hover:not(:disabled){border-color:var(--amber)}
+  .pager button:disabled{opacity:.35;cursor:default}
+  .pager button .lbl{display:block;font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+  .pager button.next{text-align:right;margin-left:auto}
+
+  .search{width:100%;font-size:15px;padding:11px 14px;border:1.5px solid var(--lineS);border-radius:9px;background:var(--panel);color:var(--ink);margin:6px 0 14px}
+  .term{border-bottom:1px solid var(--line);padding:10px 2px}
+  .term dt{font-weight:750;font-size:14.5px}
+  .term dd{margin:3px 0 0;color:var(--ink2);font-size:14px;max-width:72ch}
+  .term .cat{font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-left:8px}
+
+  .fc{max-width:560px;margin:20px auto;perspective:1000px}
+  .fcCard{border:1.5px solid var(--lineS);border-radius:14px;background:var(--panel);box-shadow:var(--shadow);
+    min-height:240px;display:flex;align-items:center;justify-content:center;padding:28px;text-align:center;cursor:pointer}
+  .fcCard .front{font-size:21px;font-weight:750}
+  .fcCard .back{font-size:15.5px;color:var(--ink2);display:none}
+  .fcCard.flipped .front{display:none}.fcCard.flipped .back{display:block}
+  .fcnav{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+  .fcmeta{text-align:center;font-family:ui-monospace,monospace;font-size:11px;color:var(--ink2);margin-top:8px}
+
+  .ivq{border-left:4px solid var(--amber);padding:10px 16px;margin:13px 0;background:var(--panel);border-radius:0 8px 8px 0;box-shadow:var(--shadow)}
+  .ivq .q2{font-weight:700;font-size:15px}
+  .ivq .a2{font-size:13.5px;color:var(--ink2);margin-top:6px}
+  .ivq .a2 b{color:var(--ink)}
+  details.reveal{border:1.5px dashed var(--lineS);border-radius:8px;padding:10px 14px;margin:10px 0}
+  details.reveal summary{cursor:pointer;font-weight:650;font-size:14px;color:var(--amber)}
+  details.reveal .body{margin-top:8px;font-size:14px;color:var(--ink2)}
+
+  .reslist{display:grid;gap:11px}
+  .res{border:1.5px solid var(--lineS);border-radius:9px;padding:12px 15px;background:var(--panel)}
+  .res a{font-weight:700;font-size:14.5px;color:var(--amber);text-decoration:none}
+  .res a:hover{text-decoration:underline}
+  .res p{margin:3px 0 0;font-size:13px;color:var(--ink2)}
+  a.inline{color:var(--amber)}
+  code{font-family:ui-monospace,monospace;font-size:.9em;background:var(--amberSoft);padding:1px 5px;border-radius:4px}
+
+  .topbar{display:none}
+  @media(max-width:959px){
+    .topbar{display:flex;position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1.5px solid var(--lineS);
+      padding:10px 14px;gap:12px;align-items:center}
+    .topbar button{font-family:ui-monospace,monospace;font-size:12px;border:1.5px solid var(--lineS);background:var(--bg);color:var(--ink);padding:7px 11px;border-radius:7px;cursor:pointer}
+    .topbar b{font-size:13px}
+    aside.hide{display:none}
+  }
+  .themebtn{margin-top:18px;font-family:ui-monospace,monospace;font-size:11px;border:1.5px solid var(--lineS);background:var(--bg);color:var(--ink2);padding:6px 10px;border-radius:7px;cursor:pointer}
+</style>
+
+<div class="topbar">
+  <button id="menu" aria-label="Toggle contents">☰ Program</button>
+  <b id="mobcrumb">Tilt-Up Mastery</b>
+</div>
+
+<div class="shell">
+  <aside id="side">
+    <div class="brand">
+      <div class="kick">Technical Mastery Course · Rev 1</div>
+      <h1>Tilt-Up Mastery</h1>
+      <p>Slender-wall design, lifting, and bracing to hired-engineer depth. Built for Uzair Ahmed Mohammed, P.E.</p>
+    </div>
+    <div class="statusrow"><span class="pill on">● Casting bed ready</span><span class="pill" id="lessonpill">15 lessons</span></div>
+    <div class="overall">
+      <span id="ovtext">0 of 15 complete</span>
+      <div class="obar"><i id="ovbar"></i></div>
+    </div>
+    <nav class="toc" id="toc" aria-label="Program contents"></nav>
+    <button class="themebtn" id="theme">◐ Toggle theme</button>
+  </aside>
+  <main id="main" tabindex="-1"><!-- rendered --></main>
+</div>
+<script>
+const A=(t,c)=>`<div class="call ${c}"><span class="tag">${t}</span>`;
+const E=`</div>`;
+const CASE=(h,t)=>`<div class="case"><p class="ch">${h}</p><b class="t">${t}</b>`;
+const EQ=(s)=>`<p class="mono" style="font-size:15px;background:var(--amberSoft);padding:10px 14px;border-radius:8px;overflow-x:auto">${s}</p>`;
+
+const COURSE=[
+/* ============ UNIT 1 · FOUNDATIONS ============ */
+{unit:"Unit 1 · Foundations", id:"t1", n:"01",
+ title:"Why tilt-up owns the big-box world",
+ sub:"The economics, the history, and why every hyperscaler RFP assumes it.",
+ min:12,
+ objectives:[
+  "Explain tilt-up construction and why it wins on schedule and cost at scale",
+  "Know the sector's scale, history, and governing documents (ACI 551, TCA)",
+  "Frame tilt-up knowledge the way data center interviews expect it"
+ ],
+ body:`
+ <p><strong>Tilt-up</strong> is brutally simple in concept: use the building's own floor slab as a casting table, pour the walls flat on it, let them cure, then stand them up with a crane and brace them until the roof ties everything together. No formwork towers, no panel plant, no shipping width limits. That simplicity is why it dominates warehouses, distribution centers — and now data centers.</p>
+
+ <h3>The economics interviewers expect you to narrate</h3>
+ <ul>
+  <li><strong>Speed:</strong> a crew can cast dozens of panels simultaneously on the slab, then erect 8–15 panels <em>per day</em>. Shell-complete in weeks. For a hyperscaler whose data hall earns millions per week of earlier compute, this is the whole argument.</li>
+  <li><strong>Cost:</strong> the "formwork" is the floor slab you needed anyway plus edge forms. Labor is concentrated and repetitive. At 300,000+ SF, tilt-up routinely beats precast (no trucking/width limits — panels can be 30+ ft wide) and beats steel stud/masonry on enclosure speed.</li>
+  <li><strong>The panel does triple duty:</strong> structure (bearing wall), lateral system (shear wall), and enclosure (architectural finish + fire rating + thermal mass) in one 7–12" thick element.</li>
+  <li><strong>Repeatability:</strong> hyperscalers build the same prototype dozens of times — a standardized panel schedule is a fleet asset. This is why "tilt-up and precast" appears in nearly every AWS/Google/AECOM structural posting.</li>
+ </ul>
+
+ ${A("By the numbers","pw")}
+ <p>Panels commonly run <strong>6¼"–11¼" thick</strong>, 20–30 ft wide, and — this is the modern part — <strong>40–60+ ft tall</strong> for data centers (hall height + rooftop screen parapet). A 24 ft × 36 ft × 9¼" panel weighs about <strong>100 kips</strong>; big DC panels exceed 150–200 kips, driving 300–500-ton erection cranes. Height-to-thickness ratios reach <strong>50–65</strong> — far beyond old empirical wall limits — which is exactly why the slender-wall method (Lessons 04–05) exists.</p>
+ ${E}
+
+ <h3>The governing documents — your bookshelf</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Document</th><th>What it governs</th></tr>
+  <tr><td><b>ACI 318-19 §11.8</b></td><td>The "alternative method for out-of-plane slender wall analysis" — THE design method for tilt-up panels</td></tr>
+  <tr><td><b>ACI PRC-551.2</b> (Design Guide for Tilt-Up Concrete Panels)</td><td>Panel design practice: loads, slender-wall worked examples, openings, connections</td></tr>
+  <tr><td><b>ACI PRC-551.1</b> (Guide to Tilt-Up Concrete Construction)</td><td>Construction: casting, bond breakers, lifting, tolerances</td></tr>
+  <tr><td><b>TCA Guideline for Temporary Wind Bracing</b></td><td>The national standard for brace design, brace wind speeds, deadmen</td></tr>
+  <tr><td><b>ACI 117 / ACI 551 tolerances</b></td><td>Panel dimensional and erection tolerances</td></tr>
+  <tr><td><b>ASCE 7-22</b> C&C wind (Ch. 30), out-of-plane seismic (§12.11), anchorage (§12.11.2)</td><td>Panel loads and the wall–roof anchorage provisions written in Northridge's blood (Lesson 08)</td></tr>
+ </table></div>
+
+ <h3>A short history that explains the code</h3>
+ <p>Tilt-up is a century old (Robert Aiken, 1900s; Irving Gill), but two things made the modern industry: the post-war mobile crane, and California. California also supplied the failures: the <strong>1971 San Fernando</strong> and <strong>1994 Northridge</strong> earthquakes tore roofs off tilt-up boxes by the hundreds — not by breaking panels, but by ripping the <em>wall-to-roof connection</em> apart. Every strange-looking anchorage provision in ASCE 7 §12.11.2 traces to those roofs. Panel slenderness, meanwhile, outran the old ACI empirical wall equation until full-scale tests (the famous 1980–82 SCCACI/SEAOSC slender wall test program) proved thin walls could work if you honestly track <strong>P-Δ second-order behavior on a cracked section</strong> — which became ACI 318's alternative slender-wall method.</p>
+
+ ${A("Interview lens","se")}
+ <p>When a data center interviewer probes tilt-up, they're testing three things: (1) do you know the slender-wall method exists and why (P-Δ on cracked sections at h/t ≈ 50+); (2) do you respect the two construction-engineering problems design-office engineers forget (lifting and bracing — Lessons 09–10); (3) do you know the roof-anchorage story (Lesson 08). This course is built so you can go three questions deep on each.</p>
+ ${E}
+ `,
+ terms:[
+  ["Tilt-up construction","Casting wall panels flat on the floor slab, then craning them vertical and bracing until the roof diaphragm is complete."],
+  ["ACI 318 §11.8","The alternative method for out-of-plane slender wall analysis — the tilt-up design method."],
+  ["ACI PRC-551.1 / 551.2","ACI's construction guide and design guide for tilt-up panels."],
+  ["TCA","Tilt-Up Concrete Association — publisher of the temporary wind bracing guideline."],
+  ["h/t ratio","Panel unsupported-height-to-thickness ratio; modern tilt-up runs 50–65 via the slender-wall method."]
+ ],
+ quiz:[
+  {q:"Tilt-up beats precast at big-box scale primarily because:",
+   o:["It's stronger","The floor slab is the free casting bed and panels avoid trucking/width limits","It needs no crane","It uses less concrete"],a:1,
+   e:"On-site flat casting on the slab you needed anyway, with panels as wide as the crane can lift — schedule and cost win at scale."},
+  {q:"The slender-wall method exists because:",
+   o:["Old walls were too thick","Full-scale tests proved thin walls work if P-Δ second-order effects on the cracked section are tracked honestly","Concrete got stronger","Cranes got bigger"],a:1,
+   e:"The 1980–82 SCCACI/SEAOSC slender-wall tests validated h/t ≈ 50–60 panels and became ACI 318 §11.8."},
+  {q:"San Fernando 1971 and Northridge 1994 taught the industry that tilt-up boxes fail at:",
+   o:["Panel midheight","The wall-to-roof anchorage connection","The footing","The paint"],a:1,
+   e:"Roof-tearing anchorage failures — not panel flexure — wrote ASCE 7 §12.11.2's wall-anchorage provisions."},
+  {q:"A 24 ft × 36 ft × 9¼\" panel weighs roughly:",
+   o:["10 kips","40 kips","100 kips","500 kips"],a:2,
+   e:"24×36×(9.25/12)×0.150 kcf ≈ 100 kips — and DC panels run bigger, driving 300–500-ton cranes."}
+ ]
+},
+{unit:"Unit 1 · Foundations", id:"t2", n:"02",
+ title:"Anatomy of a tilt-up building",
+ sub:"Every part, named — panels, joints, embeds, braces, footings, and the diaphragm that saves them all.",
+ min:13,
+ objectives:[
+  "Name every component of a tilt-up building and its structural role",
+  "Understand the load path: out-of-plane, in-plane, and gravity",
+  "Read a panel elevation drawing like a working tilt-up engineer"
+ ],
+ body:`
+ <p>Walk the building once, part by part. Interviews (and design reviews) are anatomy tests before they are calculation tests.</p>
+
+ <h3>The panel and its neighbors</h3>
+ <ul>
+  <li><strong>Panel:</strong> a reinforced concrete plate, typically one or two curtains of vertical + horizontal bars. Spans <em>vertically</em> from footing/slab to roof for out-of-plane loads; acts as a <em>shear wall</em> in-plane.</li>
+  <li><strong>Panel joints:</strong> ~¾" gaps between panels, sealed with joint sealant. Structurally: panels are usually <strong>independent</strong> out-of-plane (no vertical joint connection except at chord/drag lines) — every panel stands on its own for wind.</li>
+  <li><strong>Reveals & finishes:</strong> architectural rustication strips cast into the face. Structural relevance: they reduce effective thickness at that line — check t at the reveal.</li>
+  <li><strong>Openings:</strong> dock doors, louver banks (data centers are louver-heavy for cooling), personnel doors. The panel becomes <strong>legs</strong> (jambs) and a <strong>header</strong>; design strips carry tributary load around the hole (Lesson 07).</li>
+  <li><strong>Parapet / screen extension:</strong> data center panels often run 6–15 ft past the roof line to screen rooftop equipment — cantilevered from the roof connection, catching wind both ways.</li>
+ </ul>
+
+ <h3>Cast-in hardware</h3>
+ <ul>
+  <li><strong>Lift inserts:</strong> proprietary coil or plate inserts (Dayton, Meadow Burke) cast into the face or edge; the crane connects here. Located by the <em>lifting engineer</em>, not the EOR (a division of responsibility you must know — Lesson 09).</li>
+  <li><strong>Brace inserts:</strong> face inserts for temporary pipe braces (Lesson 10).</li>
+  <li><strong>Structural embeds:</strong> weld plates and angles for roof joists/girders (joist seats), edge angles at the slab, panel-to-panel chord plates, canopy connections.</li>
+  <li><strong>Dowels/pockets:</strong> panel-to-slab and panel-to-footing connections — grouted dowels or welded embed pairs.</li>
+ </ul>
+
+ <h3>The rest of the box</h3>
+ <ul>
+  <li><strong>Footings:</strong> continuous strip or pad footings; panels bear on grout pads/shims and get grouted. Some regions set panels directly on the slab edge (design decision with seismic consequences).</li>
+  <li><strong>Floor slab:</strong> the casting bed (protect its flatness — you learned FF/FL matters for racks), later receives panel dowels and the closure strip (the slab pour-back left open at the perimeter until panels are set).</li>
+  <li><strong>Roof structure:</strong> classically steel joists + joist girders with metal deck (a <strong>flexible diaphragm</strong> — the source of the §12.11.2 amplified anchorage forces); modern DC roofs may be long-span steel with concrete-topped deck (rigid-ish).</li>
+  <li><strong>The diaphragm</strong> collects out-of-plane wall reactions and delivers them to in-plane shear-wall panel lines via <strong>chords and collectors</strong>. Until it exists, braces do its job — which is why brace removal timing is a life-safety decision.</li>
+ </ul>
+
+ <div class="diagram"><div class="flow">
+  <div class="node"><b>Wind on panel</b><span>out-of-plane</span></div><div class="arr">▸</div>
+  <div class="node"><b>Panel spans vertically</b><span>footing ↔ roof</span></div><div class="arr">▸</div>
+  <div class="node"><b>Roof diaphragm</b><span>collects & drags</span></div><div class="arr">▸</div>
+  <div class="node"><b>Side-wall panels</b><span>in-plane shear</span></div><div class="arr">▸</div>
+  <div class="node"><b>Footings</b><span>overturning/sliding</span></div>
+ </div><div class="cap">The complete lateral load path. Every arrow is a connection you design; the middle arrow is the one Northridge broke.</div></div>
+
+ ${A("Structural Angle — data center flavor","se")}
+ <p>DC tilt-up differs from a warehouse in ways you should name unprompted: <strong>taller panels</strong> (45–60 ft with screens), <strong>dense louver openings</strong> (cooling airflow shreds panel legs), <strong>heavier roof collateral</strong> (piping, busway, cable tray hung loads — 10–50 psf where a warehouse carries 5), <strong>rooftop equipment wind/seismic on the parapet screens</strong>, sometimes <strong>insulated sandwich panels</strong> (two concrete wythes + rigid insulation + composite ties — a related but distinct design problem), and <strong>interior hard walls</strong> (tilt-up used inside for hall separation). Say "louver legs and screen parapets" in an interview and you sound like you've done one.</p>
+ ${E}
+ `,
+ terms:[
+  ["Design strip","The vertical strip of panel (full width or leg) analyzed as a beam-column spanning footing to roof."],
+  ["Chord / collector","Diaphragm edge/drag elements that gather diaphragm shear and deliver it to shear-wall panels."],
+  ["Closure strip","Perimeter slab pour-back left open until panels are erected and connected."],
+  ["Joist seat embed","Weld plate/seat cast into the panel that receives roof joists — an eccentric gravity load on the panel."],
+  ["Sandwich (insulated) panel","Two concrete wythes over rigid insulation with composite ties; the insulated tilt-up variant common on DCs."],
+  ["Reveal","Architectural groove cast into the panel face; reduces local effective thickness."]
+ ],
+ quiz:[
+  {q:"Out-of-plane, a typical tilt-up panel spans:",
+   o:["Horizontally between neighbor panels","Vertically from footing/slab to the roof diaphragm","Diagonally","It doesn't span"],a:1,
+   e:"Panels are vertical one-way slabs; joints make neighbors independent. The roof reaction is the anchorage force of Lesson 08."},
+  {q:"Until the roof diaphragm is complete, out-of-plane stability comes from:",
+   o:["The footings","Temporary pipe braces — which is why brace removal timing is life-safety","Panel joints","Paint"],a:1,
+   e:"Braces do the diaphragm's job during construction; premature removal has killed workers."},
+  {q:"Lift insert locations are typically determined by:",
+   o:["The EOR on the contract drawings","The specialty lifting engineer for the contractor","The architect","The crane operator freehand"],a:1,
+   e:"Lifting design is delegated construction engineering — a division-of-responsibility fact interviewers test."},
+  {q:"A data-center-specific panel feature set is:",
+   o:["Short panels, no openings","Tall screen parapets, heavy louver banks, heavier hung roof collateral","No parapets","Wood ledgers"],a:1,
+   e:"45–60 ft panels with screens, louver-shredded legs, and 10–50 psf hung services distinguish DC tilt-up from warehouse tilt-up."}
+ ]
+},
+{unit:"Unit 1 · Foundations", id:"t3", n:"03",
+ title:"Loads on a panel — where beginners lose points",
+ sub:"C&C wind (not MWFRS), §12.11 seismic, eccentric roof gravity, and the combos that govern.",
+ min:14,
+ objectives:[
+  "Select the correct wind pressure for panel design (Components & Cladding)",
+  "Compute out-of-plane seismic forces per ASCE 7 §12.11 and know when anchorage forces differ",
+  "Assemble the load cases: eccentric roof gravity, self-weight at midheight, and the governing combos"
+ ],
+ body:`
+ <p>The slender-wall math (next two lessons) is mechanical once the loads are right. Most real errors happen here.</p>
+
+ <h3>1. Wind — use Components & Cladding, not MWFRS</h3>
+ <p>For <strong>out-of-plane design of the panel itself</strong>, the panel is a <em>component</em> receiving wind over its own tributary area — so you use ASCE 7 Chapter 30 <strong>C&C pressures</strong> (Zone 4 field, Zone 5 edges/corners — higher suction), at the panel's effective wind area. C&C pressures are <em>higher</em> than MWFRS; using MWFRS for panel flexure is the classic unconservative rookie error. (MWFRS pressures are for the <em>building's lateral system</em> — your in-plane shear wall design.) Don't forget: <strong>parapet/screen zones carry amplified pressures both directions</strong>, and louver openings may change internal pressure classification if they can be open — coordinate with mechanical on whether louvers count as openings.</p>
+
+ <h3>2. Seismic out-of-plane — two DIFFERENT forces (memorize this distinction)</h3>
+ <ul>
+  <li><strong>Panel body design (§12.11.1):</strong> F<sub>p</sub> = <strong>0.40 S<sub>DS</sub> I<sub>e</sub> W<sub>w</sub></strong> (min 0.10 W<sub>w</sub>) — applied over the panel for the panel's own flexure.</li>
+  <li><strong>Wall-to-diaphragm ANCHORAGE (§12.11.2):</strong> F<sub>p</sub> = <strong>0.4 S<sub>DS</sub> k<sub>a</sub> I<sub>e</sub> W<sub>p</sub></strong>, where k<sub>a</sub> = 1.0 + L<sub>f</sub>/100 ≤ 2.0 amplifies with flexible-diaphragm span. With a 200-ft joist-deck diaphragm, k<sub>a</sub> = 2.0 — the anchorage force is up to <strong>double</strong> the body force, plus minimums (≥ 0.2 k<sub>a</sub> I<sub>e</sub> W<sub>p</sub>, and the 5 psf floor). This amplification is the Northridge fix. Design the connection, sub-diaphragms, and continuous ties for it (Lesson 08).</li>
+ </ul>
+
+ <h3>3. Gravity — small forces, big eccentricities</h3>
+ <ul>
+  <li><strong>Roof reaction on a joist seat:</strong> lands at an eccentricity from panel centerline — typically e ≈ t/2 + bearing distance (7–9"). Small axial load × real eccentricity = a moment applied at the top that adds to midheight demand.</li>
+  <li><strong>Self-weight above midheight</strong> (including the full parapet) acts as axial load P at the critical section — and in the slender-wall method, P rides the deflected shape (the P-Δ term). The parapet is free moment-maker: weight high on a deflecting column.</li>
+  <li>Check the §11.8 entry condition: axial stress at midheight <strong>P<sub>u</sub>/A<sub>g</sub> ≤ 0.06 f′<sub>c</sub></strong> — tilt-up panels are flexure-dominated by definition; if you exceed this, the method doesn't apply.</li>
+ </ul>
+
+ <h3>4. The combos that actually govern</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Combo</th><th>When it governs</th></tr>
+  <tr><td class="n">1.2D + 1.0W + 0.5L<sub>r</sub></td><td>Usual out-of-plane governing case (max axial + max wind → max P-Δ)</td></tr>
+  <tr><td class="n">0.9D + 1.0W</td><td>Check — less axial can mean less A<sub>se</sub>, sometimes governs reinforcement</td></tr>
+  <tr><td class="n">1.2D + 1.0E + 0.5L<sub>r</sub> (E = 0.4S<sub>DS</sub>I<sub>e</sub>W<sub>w</sub>)</td><td>Governs over wind in moderate-high seismic; also service of anchorage</td></tr>
+  <tr><td class="n">Service: D + 0.42W (or code service wind)</td><td>The Δ<sub>s</sub> ≤ ℓ<sub>c</sub>/150 deflection check — frequently the design driver</td></tr>
+ </table></div>
+
+ ${A("Watch out — the three most common load errors","al")}
+ <p>(1) MWFRS instead of C&C for panel flexure. (2) Using the §12.11.1 body force for the roof connection instead of the amplified §12.11.2 anchorage force. (3) Forgetting the parapet: its weight (axial at midheight), its wind (both directions above the roof), and its seismic (cantilever, F<sub>p</sub> component design with a<sub>p</sub>=2.5 as a cantilevered parapet per Ch. 13). Auditing a consultant's tilt-up package? Check these three first — you'll find something surprisingly often.</p>
+ ${E}
+ `,
+ terms:[
+  ["C&C (Components & Cladding)","ASCE 7 Ch. 30 pressures for elements loaded by their own tributary wind — the correct basis for panel out-of-plane design."],
+  ["§12.11.1 vs §12.11.2","Panel-body seismic force vs the amplified wall-to-diaphragm anchorage force (ka up to 2.0 on flexible diaphragms)."],
+  ["ka factor","1 + Lf/100 ≤ 2.0 — anchorage amplification with flexible-diaphragm span; the Northridge fix."],
+  ["Eccentric roof reaction","Joist-seat gravity load applied ~t/2 + bearing from panel centerline, adding top moment."],
+  ["0.06 f'c limit","§11.8 entry condition: midheight axial stress cap ensuring flexure-dominated behavior."],
+  ["Service deflection limit","Δs ≤ ℓc/150 under service loads with P-Δ — the slender wall serviceability check."]
+ ],
+ quiz:[
+  {q:"For panel out-of-plane flexure, the correct wind pressure basis is:",
+   o:["MWFRS","Components & Cladding (Ch. 30), Zone 4/5 with edge amplification","10 psf always","Tornado maps only"],a:1,
+   e:"The panel is a component; C&C pressures are higher than MWFRS — using MWFRS is the classic unconservative error."},
+  {q:"The wall-to-roof anchorage seismic force differs from the panel body force because:",
+   o:["It's smaller","§12.11.2 amplifies it by ka = 1+Lf/100 ≤ 2.0 on flexible diaphragms","They're identical","Anchorage uses wind only"],a:1,
+   e:"Flexible diaphragms whip the wall connection; Northridge failures put the 2× amplification into the code."},
+  {q:"P_u/A_g ≤ 0.06 f'c at midheight is:",
+   o:["A strength check","The §11.8 entry condition keeping the method in its flexure-dominated lane","A deflection limit","Optional"],a:1,
+   e:"Beyond it, the slender-wall method's assumptions break and you're in ordinary column territory."},
+  {q:"The parapet/screen matters in panel design because it adds:",
+   o:["Nothing","Axial at midheight + two-direction wind above the roof + a<sub>p</sub>=2.5 cantilever seismic","Only weight at the footing","Architectural value only"],a:1,
+   e:"Weight high on a deflecting member, amplified parapet wind zones, and Ch. 13 cantilever component forces — all three."}
+ ]
+},
+/* ============ UNIT 2 · DESIGN ============ */
+{unit:"Unit 2 · Panel Design", id:"t4", n:"04",
+ title:"The slender wall method I — the physics",
+ sub:"Why a 9¼-inch wall can stand 50 feet tall: P-Δ on a cracked section, done honestly.",
+ min:14,
+ objectives:[
+  "Explain second-order (P-Δ) behavior in a slender panel in plain language",
+  "Explain why the cracked moment of inertia Icr — not Ig or Ie — is the honest stiffness",
+  "List the ACI 318 §11.8 applicability conditions and what each protects against"
+ ],
+ body:`
+ <p>Take a 1-ft vertical strip of panel: a concrete beam-column, pinned at footing and roof, 30–50 ft long, a few inches thick, carrying modest axial load and lateral wind. Classic first-order design would compute M = wℓ²/8 and be done. The slender wall method exists because at h/t ≈ 50, <strong>that answer is wrong in two compounding ways</strong>.</p>
+
+ <h3>Compounding effect #1 — P-Δ</h3>
+ <p>Wind bows the panel. Now every pound of axial load above — roof reaction, self-weight, that tall parapet — acts through the bow, adding moment <strong>P·Δ</strong>. More moment → more bow → more P·Δ. For stocky walls this converges to a rounding error; for tilt-up slenderness it can add <strong>40–80%+</strong> to the primary moment. The method captures it either by direct iteration (compute Δ, add PΔ, recompute, repeat) or by ACI's closed-form <strong>moment magnifier</strong> — which is just the converged geometric series of that iteration.</p>
+
+ <h3>Compounding effect #2 — the section is cracked</h3>
+ <p>At design moments the panel is well past cracking. Its real flexural stiffness is not the gross <strong>I<sub>g</sub></strong>, nor a softened "effective" I<sub>e</sub> — the method requires the fully <strong>cracked transformed section, I<sub>cr</sub></strong>, which for a single-curtain panel is a small fraction of I<sub>g</sub> (often 5–8%). Small I → big Δ → big P-Δ. Using any stiffness rosier than I<sub>cr</sub> silently deletes the second-order demand. The 1980–82 full-scale tests showed I<sub>cr</sub>-based P-Δ tracks reality; that's why the code hard-codes it.</p>
+
+ ${EQ("Chain of consequence:  slender panel → flexible (I<sub>cr</sub>) → deflects → axial load rides the bow (P·Δ) → moment grows ~50%+ → design must magnify M<sub>ua</sub>, not just check wℓ²/8")}
+
+ <h3>The §11.8 entry conditions — each one protects an assumption</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Condition</th><th>Protects</th></tr>
+  <tr><td>Cross-section constant over height</td><td>The single-magnifier math (watch reveals & recesses)</td></tr>
+  <tr><td>Wall is <b>tension-controlled</b> (ε<sub>t</sub> ≥ 0.0075 per 11.8.1.1(b) for out-of-plane)</td><td>Ductile flexural behavior — the tested regime; brittle compression failure excluded</td></tr>
+  <tr><td>ϕM<sub>n</sub> ≥ M<sub>cr</sub></td><td>Post-cracking capacity ≥ cracking moment — no snap-through on first crack</td></tr>
+  <tr><td>P<sub>u</sub>/A<sub>g</sub> ≤ 0.06 f′<sub>c</sub> at midheight</td><td>Flexure-dominated member — this is not a column method</td></tr>
+  <tr><td>Concentrated gravity loads distributed per bearing-width rules</td><td>Local seat loads spread realistically into the design strip</td></tr>
+  <tr><td>Δ<sub>s</sub> ≤ ℓ<sub>c</sub>/150 at service (with P-Δ)</td><td>Serviceability + a stability fuse: runaway service deflection flags an unstable design</td></tr>
+ </table></div>
+
+ ${A("The idea that makes you sound like you've done this","pw")}
+ <p>The slender wall method is a <em>legalized instability calculation</em>: the magnifier 1/(1−P<sub>u</sub>/P<sub>c,eff</sub>) blows up as axial load approaches the cracked-section buckling load. In practice you feel it as: add a foot of parapet, or thin the panel ¼", and watch the magnifier climb from 1.5 toward 2.5 and the design fall apart. Experienced tilt-up engineers manage <strong>the magnifier</strong>, not the primary moment — thickness and reinforcement are chosen to keep the denominator healthy (magnifier ≲ 1.7–2.0 as a practical comfort zone).</p>
+ ${E}
+
+ ${A("Structural Angle — reviewer's instinct","se")}
+ <p>Auditing a panel calc: (1) Is stiffness I<sub>cr</sub> — and does I<sub>cr</sub> include the axial-load contribution to A<sub>se</sub> (next lesson)? (2) Is deflection checked at <em>service</em> with P-Δ, not just strength? (3) Is ε<sub>t</sub> ≥ 0.0075 shown, not assumed? (4) Does the calc use the same strip for demand and capacity (watch louver legs)? Those four questions catch most bad tilt-up calcs in the wild.</p>
+ ${E}
+ `,
+ terms:[
+  ["P-Δ (second-order) effect","Axial load acting through the deflected shape, adding moment that further deflects the member — convergent series captured by the magnifier."],
+  ["Icr (cracked moment of inertia)","Transformed cracked-section stiffness — the mandated basis; often 5–8% of Ig for a single curtain."],
+  ["Moment magnifier","1/(1 − Pu/(0.75Pc-form)) closed-form of the converged P-Δ iteration."],
+  ["Tension-controlled (εt ≥ 0.0075)","§11.8's ductility gate for out-of-plane slender walls — stricter than the ordinary 0.005."],
+  ["ϕMn ≥ Mcr condition","Ensures post-cracking strength exceeds cracking moment — no brittle first-crack failure."]
+ ],
+ quiz:[
+  {q:"The two compounding effects the slender-wall method captures are:",
+   o:["Creep and shrinkage","P-Δ second-order moments and cracked-section (Icr) flexibility","Wind and rain","Temperature and settlement"],a:1,
+   e:"Flexible cracked section → big deflection → axial load rides the bow. Each amplifies the other."},
+  {q:"Using Ig or Ie instead of Icr in a slender panel calc:",
+   o:["Is conservative","Silently deletes second-order demand — the classic dangerous shortcut","Is required","Changes nothing"],a:1,
+   e:"Rosier stiffness → smaller Δ → smaller P·Δ → unconservative moment. The code hard-codes Icr for this reason."},
+  {q:"§11.8 requires εt ≥ 0.0075 (not just 0.005) so that:",
+   o:["Steel is minimized","The wall stays well into the ductile, tested regime for out-of-plane behavior","Deflections increase","Cracking is prevented"],a:1,
+   e:"The method's validation tests were on ductile flexural walls; the stricter strain gate keeps designs inside them."},
+  {q:"An experienced tilt-up designer primarily manages:",
+   o:["The primary wℓ²/8 moment","The magnifier — keeping 1/(1−Pu/Pc,eff) in a healthy range via thickness/reinforcement","The concrete color","The crane"],a:1,
+   e:"Designs die by denominator: parapet weight or thin sections push the magnifier toward blow-up."}
+ ]
+},
+{unit:"Unit 2 · Panel Design", id:"t5", n:"05",
+ title:"The slender wall method II — the equations",
+ sub:"Every formula you'll use in the capstone, in calculation order, with the traps marked.",
+ min:16,
+ objectives:[
+  "Execute the full §11.8 calculation sequence by hand",
+  "Compute Ase, Icr, ϕMn, the magnified Mu, and the bilinear service deflection",
+  "Know the standard traps: n ≥ 6, the h/2d term, ϕ=0.9, service P-Δ iteration"
+ ],
+ body:`
+ <p>This is the working sequence — the exact order you'll follow in the capstone. Strip basis: a 12-in-wide vertical strip (b = 12 in), single centered curtain (d = t/2) unless noted.</p>
+
+ <h3>Step 1 — Materials & section constants</h3>
+ ${EQ("E<sub>c</sub> = 57,000√f′<sub>c</sub> (psi) &nbsp;·&nbsp; n = E<sub>s</sub>/E<sub>c</sub> <b>(take n ≥ 6)</b> &nbsp;·&nbsp; f<sub>r</sub> = 7.5λ√f′<sub>c</sub> &nbsp;·&nbsp; S<sub>g</sub> = bt²/6 &nbsp;·&nbsp; M<sub>cr</sub> = f<sub>r</sub>S<sub>g</sub>")}
+
+ <h3>Step 2 — Effective steel area (the trap most people miss)</h3>
+ <p>Axial load pre-compresses the section, effectively adding tension capacity. The code folds P<sub>u</sub> into an <strong>effective</strong> steel area:</p>
+ ${EQ("A<sub>se,w</sub> = A<sub>s</sub> + P<sub>u</sub>/f<sub>y</sub> · (h/2d) &nbsp;&nbsp;&nbsp; (h = t; for a centered curtain h/2d = 1 → A<sub>se</sub> = A<sub>s</sub> + P<sub>u</sub>/f<sub>y</sub>)")}
+ <p>Use A<sub>se</sub> in <em>both</em> the flexural capacity and I<sub>cr</sub>. Note it changes per load combo (different P<sub>u</sub>) — 0.9D and 1.2D cases have different capacities.</p>
+
+ <h3>Step 3 — Capacity & cracked stiffness</h3>
+ ${EQ("a = A<sub>se</sub>f<sub>y</sub>/(0.85f′<sub>c</sub>b) &nbsp;·&nbsp; c = a/β₁ &nbsp;·&nbsp; ε<sub>t</sub> = 0.003(d−c)/c ≥ 0.0075 ✓ &nbsp;·&nbsp; M<sub>n</sub> = A<sub>se</sub>f<sub>y</sub>(d − a/2) &nbsp;·&nbsp; <b>ϕ = 0.9</b>")}
+ ${EQ("I<sub>cr</sub> = nA<sub>se</sub>(d−c)² + b·c³/3 &nbsp;&nbsp;&nbsp; (expect a startlingly small number — that's correct)")}
+
+ <h3>Step 4 — Factored demand with magnification</h3>
+ <p>Primary (first-order) midheight moment from lateral + eccentric top load:</p>
+ ${EQ("M<sub>ua</sub> = w<sub>u</sub>ℓ<sub>c</sub>²/8 + P<sub>u,roof</sub>·e/2 &nbsp;&nbsp; then &nbsp;&nbsp; M<sub>u</sub> = M<sub>ua</sub> / [1 − 5P<sub>u</sub>ℓ<sub>c</sub>²/(0.75·48E<sub>c</sub>I<sub>cr</sub>)] &nbsp; ≤ ϕM<sub>n</sub>")}
+ <p>The 5/48 constant is the midheight-deflection coefficient for the parabolic moment shape; 0.75 is the stiffness reduction. P<sub>u</sub> here is the <em>total</em> axial at midheight (roof + self-weight above midheight + full parapet). If the bracket's denominator goes small or negative — the panel is telling you it's unstable; thicken it.</p>
+
+ <h3>Step 5 — Service deflection (bilinear, iterative)</h3>
+ ${EQ("Δ<sub>cr</sub> = 5M<sub>cr</sub>ℓ<sub>c</sub>²/(48E<sub>c</sub>I<sub>g</sub>) &nbsp;·&nbsp; Δ<sub>n</sub> = 5M<sub>n</sub>ℓ<sub>c</sub>²/(48E<sub>c</sub>I<sub>cr</sub>)")}
+ ${EQ("M<sub>a</sub> ≤ (2/3)M<sub>cr</sub>: Δ<sub>s</sub> = (M<sub>a</sub>/M<sub>cr</sub>)Δ<sub>cr</sub> &nbsp;&nbsp;·&nbsp;&nbsp; M<sub>a</sub> > (2/3)M<sub>cr</sub>: Δ<sub>s</sub> = (2/3)Δ<sub>cr</sub> + [(M<sub>a</sub>−⅔M<sub>cr</sub>)/(M<sub>n</sub>−⅔M<sub>cr</sub>)]·(Δ<sub>n</sub>−⅔Δ<sub>cr</sub>)")}
+ <p><strong>M<sub>a</sub> must include service P-Δ</strong>: M<sub>a</sub> = M<sub>sa</sub> + P<sub>s</sub>Δ<sub>s</sub> — circular, so iterate (guess Δ<sub>s</sub>, compute M<sub>a</sub>, recompute Δ<sub>s</sub>, converge in 2–3 cycles). Check <strong>Δ<sub>s</sub> ≤ ℓ<sub>c</sub>/150</strong>.</p>
+
+ <h3>Minimums & details</h3>
+ <ul>
+  <li>Vertical ρ ≥ 0.0012 (deformed ≤ #5), horizontal ρ ≥ 0.0020 (ACI 11.6) — but strength usually demands more vertical steel than minimum.</li>
+  <li>Single curtain up to ~10"; two curtains for thicker panels/high seismic detailing.</li>
+  <li>Trim bars at openings; extra bars at lift/brace inserts per lifting engineer.</li>
+ </ul>
+
+ ${A("Sanity anchors for review (memorize the feel)","pw")}
+ <p>Typical healthy answers for a 30–34 ft clear, 9¼" panel, #5@12 centered, moderate wind: I<sub>cr</sub> ≈ 40–60 in⁴/ft (vs I<sub>g</sub> ≈ 790), magnifier ≈ 1.4–1.8, utilization 70–95%, Δ<sub>s</sub> a small fraction of ℓ/150. If a calc shows a magnifier of 1.05 — someone used the wrong I. If it shows 3.0 — the panel wants to be thicker. This "feel" is exactly what separates a reviewer from a calculator.</p>
+ ${E}
+ `,
+ terms:[
+  ["Ase,w","Effective steel area As + Pu/fy·(h/2d) — axial load folded into flexural capacity AND Icr."],
+  ["Magnifier denominator","1 − 5Puℓc²/(0.75·48EcIcr); small/negative denominator = the panel announcing instability."],
+  ["Bilinear deflection","§11.8 service deflection interpolation between (Mcr, Δcr) and (Mn, Δn) on the cracked branch."],
+  ["Service P-Δ iteration","Ma = Msa + PsΔs is circular; converge in 2–3 iterations."],
+  ["n ≥ 6 rule","Modular ratio floor in the method — a small but graded detail."],
+  ["ρ minimums (11.6)","Vertical 0.0012, horizontal 0.0020 for typical tilt-up curtains."]
+ ],
+ quiz:[
+  {q:"Ase exceeds As because:",
+   o:["Steel yields harder","Axial pre-compression effectively adds flexural tension capacity: Ase = As + Pu/fy·(h/2d)","It's a safety factor","Bars are doubled"],a:1,
+   e:"And it feeds both ϕMn and Icr — and changes per load combo. Forgetting it is the #1 hand-calc error."},
+  {q:"In Mu = Mua/[1 − 5Puℓc²/(0.75·48EcIcr)], Pu is:",
+   o:["Roof reaction only","Total axial at midheight: roof + self-weight above midheight + full parapet","Wind load","Brace force"],a:1,
+   e:"Everything riding the deflected shape magnifies — the parapet is the silent killer term."},
+  {q:"The service deflection check is iterative because:",
+   o:["Codes love iteration","Ma includes PsΔs, which depends on Δs — guess, compute, converge","Ec changes","It isn't"],a:1,
+   e:"Service-level P-Δ is required; 2–3 cycles converge. Skipping it understates Δs."},
+  {q:"A consultant's panel calc shows a magnifier of 1.05 at h/t = 55. Your read:",
+   o:["Excellent design","Almost certainly the wrong stiffness (Ig/Ie instead of Icr) — audit it","Panel too thick","Wind too low"],a:1,
+   e:"At real tilt-up slenderness with honest Icr, magnifiers run ~1.4–1.8+. A near-1.0 magnifier means deleted P-Δ."}
+ ]
+},
+{unit:"Unit 2 · Panel Design", id:"t6", n:"06",
+ title:"In-plane: panels as the lateral system",
+ sub:"Shear walls, seismic detailing categories, and the overturning arithmetic of a narrow leg.",
+ min:12,
+ objectives:[
+  "Design-check a panel line as the building's shear walls",
+  "Know the seismic classification: intermediate precast walls, R values, connection philosophy",
+  "Run the overturning/sliding checks and panel-to-panel force transfer"
+ ],
+ body:`
+ <p>The same panels resisting wind on their face are also the building's <strong>lateral-force-resisting system</strong> in-plane. The roof diaphragm drags wind/seismic to the panel lines; each panel (or panel group) is a squat cantilevered shear wall.</p>
+
+ <h3>Seismic classification — get the vocabulary exact</h3>
+ <ul>
+  <li>Tilt-up panels in seismic design are usually <strong>"intermediate precast structural walls"</strong> (yes, <em>precast</em> — tilt-up is site-cast precast in code taxonomy): R = 4 (bearing wall system), permitted through SDC C and — with height limits (40 ft typical) — in SDC D–F. Full "special reinforced concrete shear walls" (R = 5) require special detailing when used beyond those limits.</li>
+  <li>The intermediate-precast philosophy: <strong>yielding is directed into the connections or specified regions</strong> — connection elements must either develop 1.5× yield (Sy) or be capacity-protected. Panel-to-panel and panel-to-foundation connections aren't bolted afterthoughts; they're the fuse design.</li>
+  <li>In low-wind/low-seismic markets many tilt-up boxes are wind-governed and this is simpler; in DC-heavy markets like the Pacific Northwest or California, this is real seismic design.</li>
+ </ul>
+
+ <h3>The checks, in order</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Check</th><th>The move</th></tr>
+  <tr><td><b>In-plane shear</b></td><td>V<sub>u</sub> per panel from diaphragm reaction ÷ panels engaged; ϕV<sub>n</sub> = ϕ(2λ√f′<sub>c</sub>·t·d + steel) — rarely governs on solid panels; legs at openings are another story</td></tr>
+  <tr><td><b>Overturning</b></td><td>M<sub>OT</sub> = V·h vs resisting M<sub>R</sub> = 0.9W·(width/2). Narrow panels (or legs between big louvers) lose this fight → hold-downs to footings, or connect panels into groups so they overturn together</td></tr>
+  <tr><td><b>Sliding</b></td><td>Friction + dowels/embeds at slab; seismic uses 0.9D companions</td></tr>
+  <tr><td><b>Chord/drag transfer</b></td><td>Panel-to-panel embed plates along the roof line collect the line's shear; design welds/plates for amplified connection forces</td></tr>
+  <tr><td><b>Frame interaction</b></td><td>If a steel brace/moment frame shares the line (hybrid systems — common on DC office/electrical wings), distribute by rigidity and detail deformation compatibility</td></tr>
+ </table></div>
+
+ ${A("Watch out — the louver wall problem","al")}
+ <p>Data center side walls can be 40% openings (louver banks). What's left are narrow legs doing double duty: out-of-plane strips carrying doubled tributary wind AND in-plane piers taking shear with tiny overturning resistance. The classic fix set: thicken those panels, add hold-downs, connect legs across headers to act as coupled piers, or steal the line's shear into adjacent solid panels via drag struts. If an interviewer asks "what's tricky about tilt-up for data centers," this is a gold-standard answer.</p>
+ ${E}
+
+ ${A("Structural Angle — hybrid reality","se")}
+ <p>Big AI halls increasingly pair tilt-up enclosure with an interior steel gravity/lateral frame (long spans, heavy roofs), making panels cladding-plus-shear-participants or pure cladding-with-connections. Know both worlds: full bearing-wall tilt-up (the warehouse classic) and hybrid (panel design dominated by out-of-plane + connection compatibility with a drifting steel frame — panels must ride the frame's drift without prying their connections). Ask "who takes the lateral?" first on any tilt-up review.</p>
+ ${E}
+ `,
+ terms:[
+  ["Intermediate precast structural wall","Tilt-up's usual seismic classification (R=4); yielding directed to connections designed for 1.5Sy or capacity-protected."],
+  ["Hold-down","Panel-to-footing tension device resisting in-plane overturning of narrow panels/legs."],
+  ["Coupled piers","Legs connected across headers to overturn as a group rather than individually."],
+  ["Drag strut / collector","Element dragging diaphragm shear along a line into the panels that can take it."],
+  ["Hybrid system","Interior steel frame + tilt-up enclosure; panels detailed for frame drift compatibility."]
+ ],
+ quiz:[
+  {q:"In code taxonomy, tilt-up panels used for seismic resistance are usually:",
+   o:["Special moment frames","Intermediate precast structural walls (R = 4, bearing)","Ordinary masonry","Not classified"],a:1,
+   e:"Site-cast precast; intermediate detailing directs yielding into connections (1.5Sy rule) — vocabulary interviewers check."},
+  {q:"The governing in-plane problem for a louver-heavy DC wall is usually:",
+   o:["Pure shear on solid panels","Narrow legs: overturning and doubled duty — fixed with hold-downs, coupling, or drag to solid panels","Concrete crushing","Nothing"],a:1,
+   e:"40%-open walls leave slender piers; the fix set (hold-downs, coupled piers, drags) is a gold-standard interview answer."},
+  {q:"In a hybrid steel-frame + tilt-up building, the first review question is:",
+   o:["Paint color","Who takes the lateral — and are panel connections detailed for the frame's drift?","Crane size","Joint sealant brand"],a:1,
+   e:"Panel-as-shear-wall vs panel-as-cladding changes every connection; drift compatibility is the classic trap."}
+ ]
+},
+{unit:"Unit 2 · Panel Design", id:"t7", n:"07",
+ title:"Openings, legs, and headers",
+ sub:"Design strips around the holes — where real panels get interesting.",
+ min:11,
+ objectives:[
+  "Distribute out-of-plane load around openings using design strips",
+  "Design headers and legs including their share of everything above",
+  "Handle stacked and offset openings and the reveal-thickness trap"
+ ],
+ body:`
+ <p>Solid-panel design is arithmetic. Openings are engineering. The method is old-fashioned and reliable: <strong>design strips</strong>.</p>
+
+ <h3>The design-strip method</h3>
+ <ol>
+  <li>Carve the panel into vertical strips: full-height <strong>legs</strong> beside each opening, and a <strong>header strip</strong> over it.</li>
+  <li><strong>Header</strong> spans horizontally between legs, carrying its own weight + wind on its face + anything bearing on it (roof seats over doors!). Design as a beam (often with the panel's horizontal steel augmented by trim bars); deep headers over dock doors also act as coupling beams in-plane.</li>
+  <li><strong>Legs</strong> are slender-wall strips (full §11.8 treatment) carrying their own tributary wind <em>plus the header's reactions</em> — both the header's wind (out-of-plane point load at header bearing height) and its gravity. Axial from roof/parapet above concentrates into legs too: A leg beside a 12-ft louver bank might carry 2–3× the solid-wall strip demand at reduced width.</li>
+  <li>Check the leg's <strong>effective width</strong>: code limits how much strip you may claim each side of the opening (typically ≤ 12t each side, and not overlapping the neighbor's claim).</li>
+ </ol>
+
+ ${A("Watch out — three opening traps","al")}
+ <p>(1) <strong>Reveals crossing legs:</strong> a 1" architectural reveal in a 7¼" leg is a 14% section loss exactly where you can't afford it — check t at the reveal line. (2) <strong>Stacked/offset openings</strong> (louver over door) create Z-shaped load paths; trace them explicitly, don't average. (3) <strong>The magnifier on legs:</strong> higher axial + same ℓ<sub>c</sub> + often thinner effective section = the magnifier climbs fastest in legs. Panels rarely fail solid; calc packages fail at legs.</p>
+ ${E}
+
+ ${A("Structural Angle — the DC louver elevation","se")}
+ <p>Practice on the real thing: a data center intake wall with a continuous 8-ft-tall louver band creates a "table" panel — two legs and a deep header carrying a parapet/screen above. That header is now a transfer girder for parapet weight and screen wind, the legs are mini-columns, and in-plane the wall works as a portal frame. Sketch this load path from memory before your first interview; it's the single most likely whiteboard scenario in DC tilt-up.</p>
+ ${E}
+ `,
+ terms:[
+  ["Design strip","Vertical analysis strip (leg or solid band) treated as an independent slender wall with its tributary loads."],
+  ["Header","Horizontal panel band over an opening, spanning between legs — beam out-of-plane, coupling beam in-plane."],
+  ["Leg (jamb/pier)","Full-height strip beside an opening carrying its own tributary plus header reactions plus concentrated axial."],
+  ["Effective strip width","Code-limited width a leg may claim (~12t per side) without double-counting neighbors."],
+  ["Trim bars","Added reinforcement framing an opening's edges and corners (diagonal corner bars control re-entrant cracking)."]
+ ],
+ quiz:[
+  {q:"A leg beside a large louver opening carries:",
+   o:["Only its own strip's wind","Its tributary wind + header wind and gravity reactions + concentrated axial from above","Nothing extra","Only in-plane shear"],a:1,
+   e:"Legs collect everything the opening displaced — demand concentrates exactly where section reduced."},
+  {q:"The magnifier problem is worst in legs because:",
+   o:["Concrete is weaker there","Higher axial with same height and often reduced section pushes the P-Δ denominator down fastest","Wind skips legs","Steel is banned"],a:1,
+   e:"Legs are where slender-wall designs actually fail review — check them at reveal-reduced thickness."},
+  {q:"A 1\" reveal crossing a 7¼\" leg:",
+   o:["Is cosmetic","Cuts ~14% of section at the worst location — design at the reduced t","Adds strength","Only matters horizontally"],a:1,
+   e:"Reveals are section loss where legs can least afford it — a favorite review catch."}
+ ]
+},
+{unit:"Unit 2 · Panel Design", id:"t8", n:"08",
+ title:"Connections & the roof-anchorage story",
+ sub:"The most important lesson in the course: how tilt-up buildings actually fail, and the details that prevent it.",
+ min:14,
+ objectives:[
+  "Design the wall-to-roof anchorage per ASCE 7 §12.11.2 including sub-diaphragms and continuous ties",
+  "Detail panel-to-footing/slab and panel-to-panel connections and their philosophies",
+  "Tell the Northridge story with its engineering morals — an interview set-piece"
+ ],
+ body:`
+ <p>Panels almost never fail. <strong>Connections fail.</strong> In San Fernando (1971) and Northridge (1994), hundreds of tilt-up/masonry big-boxes lost their roofs the same way: the flexible metal-deck/plywood diaphragm whipped, the wall-to-roof connection tore out (cross-grain bending in wood ledgers, pulled-out shallow anchors, unanchored deck), panels fell outward, roofs followed. The modern anchorage provisions are the direct legislative product.</p>
+
+ <h3>The anchorage design chain (§12.11.2)</h3>
+ <ol>
+  <li><strong>Force:</strong> F<sub>p</sub> = 0.4S<sub>DS</sub>k<sub>a</sub>I<sub>e</sub>W<sub>p</sub>, k<sub>a</sub> = 1+L<sub>f</sub>/100 ≤ 2.0 (flexible diaphragm span), with floors: ≥0.2k<sub>a</sub>I<sub>e</sub>W<sub>p</sub> and ≥5 psf. W<sub>p</sub> = tributary wall weight to the roof line (half the wall + full parapet).</li>
+  <li><strong>Anchor the panel to the framing, not the deck:</strong> deck fasteners must never be the tension link (Northridge moral #1). Purpose-made joist-seat ties, embed straps, or holdown-style hardware to joists/beams.</li>
+  <li><strong>Sub-diaphragms:</strong> the anchorage force must travel <em>into</em> the diaphragm — design sub-diaphragms (aspect ratio ≤ 2.5:1) that gather anchor ties and deliver them to…</li>
+  <li><strong>Continuous cross-ties across the full building</strong>: the code demands a continuous tension path from one wall, across the entire roof, to the opposite wall. Splices, joist bottom-chord extensions, strap continuity — all designed for the amplified force. Steel-to-steel gets a 1.4 multiplier on certain elements; no counting on deck in tension.</li>
+  <li><strong>Both directions, every wall.</strong></li>
+ </ol>
+
+ <h3>The rest of the connection family</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Connection</th><th>Standard practice</th><th>Philosophy / trap</th></tr>
+  <tr><td>Panel ↔ footing</td><td>Bear on grout pads/shims; grouted dowels or welded embeds</td><td>In-plane shear + hold-down tension; erection tolerance vs strength</td></tr>
+  <tr><td>Panel ↔ slab</td><td>Dowels into closure strip pour-back</td><td>Base shear path; slab becomes part of the LFRS at the base</td></tr>
+  <tr><td>Panel ↔ panel</td><td>Weld plates at chord/drag lines (top), sometimes mid-height alignment</td><td>Intermediate-precast rule: connection yields at 1.5Sy or is capacity-protected; don't weld panels into an accidental rigid chain (shrinkage/thermal!)</td></tr>
+  <tr><td>Roof gravity ↔ panel</td><td>Joist seats on embedded plates/angles; girder pockets</td><td>Eccentricity into panel design (L03); vertical + anchorage tension on the same embed — check interaction</td></tr>
+  <tr><td>Steel frame ↔ panel (hybrid)</td><td>Slotted/flexible connections</td><td>Must allow frame drift without prying — rigid attachments crack panels</td></tr>
+ </table></div>
+
+ ${A("Interview set-piece — deliver this in 60 seconds","pw")}
+ <p>"Tilt-up's seismic history is a connection story. '71 and '94 tore roofs off because flexible diaphragms amplified wall anchorage forces and the connections — wood ledgers in cross-grain bending, deck-only attachments — couldn't take it. Today §12.11.2 makes us design anchorage at up to double the body force with k<sub>a</sub>, forbids deck-tension paths, and requires sub-diaphragms feeding continuous cross-ties building-wide. When I review a tilt-up package, I start at the roof line: anchorage forces, tie continuity, then panel flexure — because that's the order the earthquake checks them in." That paragraph, verbatim, is senior-engineer signaling.</p>
+ ${E}
+ `,
+ terms:[
+  ["Wall anchorage (§12.11.2)","The amplified tension connection of panel to roof framing — the Northridge provision."],
+  ["Sub-diaphragm","Local diaphragm region (AR ≤ 2.5:1) gathering wall anchors into cross-ties."],
+  ["Continuous cross-tie","Building-wide tension path wall-to-wall; every splice designed for the amplified force."],
+  ["Cross-grain bending","The banned wood-ledger failure mode that killed roofs in 1971/1994."],
+  ["1.5Sy connection rule","Intermediate-precast requirement: connections yield ductilely at 1.5× yield or are capacity-protected."],
+  ["Drift-compatible connection","Slotted/flexible panel-to-frame detail that survives steel-frame drift without prying."]
+ ],
+ quiz:[
+  {q:"Tilt-up buildings in Northridge predominantly failed at:",
+   o:["Panel midheight flexure","The wall-to-roof anchorage connection under amplified flexible-diaphragm forces","Footings","Windows"],a:1,
+   e:"Roofs tore off at connections — the origin of §12.11.2's ka amplification, sub-diaphragms, and continuous ties."},
+  {q:"The metal deck's role in wall anchorage tension is:",
+   o:["Primary anchor","None — deck must never be the tension link; anchor to framing with purpose-made hardware","Backup","Optional"],a:1,
+   e:"Deck-only attachment was a Northridge killer; anchorage goes panel-to-joist/beam, then sub-diaphragm, then cross-ties."},
+  {q:"Continuous cross-ties must run:",
+   o:["10 ft into the roof","Across the entire building, wall to opposite wall, spliced for the amplified force","Only at corners","Only in California"],a:1,
+   e:"A complete tension path building-wide, both directions — check every splice in review."},
+  {q:"Welding many panels rigidly together along a wall is:",
+   o:["Best practice","A trap — shrinkage/thermal restraint cracks panels; connect at designed points with ductile/capacity-protected details","Required","Irrelevant"],a:1,
+   e:"Panels want to move; the intermediate-precast philosophy puts controlled ductility at discrete connections."}
+ ]
+},
+/* ============ UNIT 3 · CONSTRUCTION ENGINEERING ============ */
+{unit:"Unit 3 · Construction Engineering", id:"t9", n:"09",
+ title:"Lifting engineering",
+ sub:"The panel's worst day is the day it stands up — rigging, suction, cracking stresses, and inserts.",
+ min:14,
+ objectives:[
+  "Explain the lifting problem: green concrete, face bending, suction",
+  "Select rigging configurations and check lifting stresses against cracking limits",
+  "Know insert design, strongbacks, and the division of responsibility"
+ ],
+ body:`
+ <p>A panel spends its life resisting a few dozen psf of wind. On erection day, it resists <strong>its own 100–200 kip weight bending about its weak axis, at 5–10 day concrete strength, hinging off a casting bed that doesn't want to let go</strong>. More panels crack during lifting than ever distress in service. This is why lifting is its own engineering discipline.</p>
+
+ <h3>The physics of the pick</h3>
+ <ul>
+  <li><strong>Face lift:</strong> crane lines connect to inserts in the panel's face through a rigging tree (spreader bars + sheave blocks that equalize line loads). As the crane booms up, the panel rotates from flat to vertical, passing through the worst case around 30–50° where self-weight bending about the weak axis peaks.</li>
+  <li><strong>Suction/adhesion:</strong> breaking free of the bond-breaker-coated slab adds an initial-pick multiplier — industry practice designs rigging and initial stresses for roughly <strong>1.3–1.5× panel weight</strong> at breakaway (bond breaker quality controls this; a bad spray job has bent booms).</li>
+  <li><strong>Green concrete:</strong> lifting happens at a specified <strong>f′<sub>ci</sub></strong> — commonly 2,500 psi minimum — verified by field cylinders/maturity. Both strength AND stiffness are reduced; cracking control is the whole game.</li>
+ </ul>
+
+ <h3>The stress check</h3>
+ ${EQ("Criterion: extreme-fiber tension during lift ≤ f<sub>r,lift</sub>/SF, with f<sub>r</sub> = 7.5√f′<sub>ci</sub> and SF typically ≈ 1.5 → e.g. 7.5√2500/1.5 ≈ <b>250 psi allowable</b>")}
+ <p>Rigging is chosen (number of rows of inserts up the height, columns across the width — 2×2 up to 4×2 = 8-point and beyond) so that the panel's bending moments <em>between insert rows</em>, at the worst tilt angle, keep tension under that limit — uncracked, because a crack born on lift day lives forever on the finished wall. Software (the lifting-hardware vendors' or TiltWerks-class tools) sweeps tilt angles automatically; you should be able to hand-check one configuration (capstone Part C does).</p>
+ <ul>
+  <li><strong>Strongbacks:</strong> where geometry can't win (narrow legs beside big openings, panels with low f′<sub>ci</sub>), bolt-on steel channels stiffen the panel through the pick.</li>
+  <li><strong>Inserts:</strong> proprietary (coil, plate-back) with published capacities; design factor ≈ 2 on ultimate, edge distances and panel-thickness minimums per catalog; extra rebar hairpins at each insert. Insert pullout through green concrete is the classic failure.</li>
+  <li><strong>Crane & sequence:</strong> pick weights size the crane (with radius); erection sequence must leave crane paths and brace footprints — a planning task that regularly reshapes panel joints.</li>
+ </ul>
+
+ ${A("Division of responsibility — say this correctly in interviews","al")}
+ <p>The <strong>EOR designs the panel for its final condition</strong> and states f′<sub>ci</sub> and any constraints; the <strong>lifting engineer (specialty engineer, usually via the hardware supplier or contractor)</strong> designs inserts, rigging, strongbacks, and stresses during handling; the contractor executes. The EOR still reviews for panel integrity (delegated-design submittal). Blurring this boundary — or an EOR ignoring lift feasibility while drawing 45-ft unbroken louver legs — is how real projects melt down. Owners' engineers police exactly this interface.</p>
+ ${E}
+ `,
+ terms:[
+  ["f'ci","Specified concrete strength at time of lift (commonly ≥2,500 psi), verified by cylinders/maturity."],
+  ["Suction factor","Initial-pick multiplier (~1.3–1.5×W) for bond-breaker adhesion at breakaway."],
+  ["Rigging tree","Spreader bars + equalizing sheave blocks distributing crane load to face inserts."],
+  ["Strongback","Temporary bolted steel stiffener carrying a weak panel region through the pick."],
+  ["Lifting insert","Proprietary cast-in anchor (coil/plate) with catalog capacities, SF≈2, edge/thickness minimums."],
+  ["Delegated design","Lifting/bracing engineered by a specialty engineer; EOR reviews the submittal — the tilt-up responsibility split."]
+ ],
+ quiz:[
+  {q:"Lifting stresses are checked against:",
+   o:["fy of the rebar","A cracking criterion — extreme-fiber tension ≤ 7.5√f'ci / ~1.5 (≈250 psi at 2,500 psi)","Bearing capacity","Nothing"],a:1,
+   e:"The panel must stay uncracked at its worst tilt angle; lift-day cracks are permanent facade defects."},
+  {q:"The suction allowance exists because:",
+   o:["Wind during lifting","Bond-breaker adhesion to the casting slab adds ~1.3–1.5× weight at initial pick","Cranes are weak","Concrete is heavy"],a:1,
+   e:"Breakaway force exceeds panel weight; bad bond-breaker application is a legendary source of bent booms and cracked panels."},
+  {q:"Who designs the lifting inserts and rigging?",
+   o:["The EOR on contract drawings","A specialty lifting engineer via contractor/hardware supplier, with EOR submittal review","The architect","OSHA"],a:1,
+   e:"Delegated construction engineering — the EOR sets f'ci and final design; blurred boundaries cause real failures."},
+  {q:"Strongbacks are used when:",
+   o:["Panels are too heavy for any crane","Panel geometry (narrow legs, low f'ci) can't pass lifting stresses unaided","Braces are missing","Always"],a:1,
+   e:"Bolt-on channels stiffen weak regions through the pick — typical at big louver openings."}
+ ]
+},
+{unit:"Unit 3 · Construction Engineering", id:"t10", n:"10",
+ title:"Bracing engineering",
+ sub:"Weeks of hurricane-season freestanding — the TCA guideline, brace forces, deadmen, and the removal decision.",
+ min:12,
+ objectives:[
+  "Design temporary braces per the TCA guideline: loads, geometry, capacities",
+  "Anchor braces: slab capacity, deadmen, helical anchors — and knee/lateral bracing of long braces",
+  "Govern the removal decision: what must exist before braces come off"
+ ],
+ body:`
+ <p>Between erection day and diaphragm completion — often <strong>4–12 weeks</strong> — every panel is a freestanding gravity dam held by pipe braces. Workers live under them. The TCA <em>Guideline for Temporary Wind Bracing of Tilt-Up Concrete Panels</em> is the national standard, and OSHA effectively enforces it.</p>
+
+ <h3>The design recipe</h3>
+ <ul>
+  <li><strong>Brace wind speed:</strong> temporary condition uses a construction-period wind (per TCA/ASCE 37 logic) — lower than the permanent design storm but non-negotiable; the guideline's default basis translates to roughly <strong>20 psf-class</strong> panel pressures for typical durations/exposures, adjusted for height and exposure. Site supervisors get a monitored wind threshold and a stand-down/evacuation protocol above it.</li>
+  <li><strong>Geometry:</strong> braces attach at ≥ ~60% of panel height (above the out-of-plane inflection demand), at <strong>45–60° from horizontal</strong>; minimum two braces per panel, spaced to also restrain panel twist. End panels and panels beside openings get extra attention.</li>
+  <li><strong>Force:</strong> statics — wind resultant on the freestanding panel × its lever arm to the base hinge, resisted by the brace's horizontal component at attachment height. Both directions: braces take compression (wind toward braces) as slender pipe columns — usually governing — and tension (suction) on their inserts.</li>
+  <li><strong>Long braces buckle:</strong> pipe braces 30–50+ ft long need <strong>knee braces and lateral (line) bracing</strong> at manufacturer-specified intervals to reach rated compression capacity. Missing knee bracing is the most common field deficiency.</li>
+  <li><strong>The anchor end:</strong> brace feet land on the floor slab (adhesive/expansion anchors — check slab thickness, edge distance, and cracked-concrete capacity; slabs get thickened strips where needed), or on <strong>deadmen</strong> (buried concrete blocks) / helical ground anchors when panels erect before the slab (common sequencing). Deadman sliding/uplift is a real geotech mini-design.</li>
+ </ul>
+
+ ${A("The removal decision — a named engineer signs it","al")}
+ <p>Braces come off only when the permanent lateral path exists: roof structure erected, <strong>deck welded/side-lapped to its design attachment</strong>, chords/collectors and panel-to-panel connections complete, anchorage hardware installed, closure strips poured and cured. Partial diaphragms = partial removal only under an engineered sequence. People die in this gap: panels have fallen in storms with braces removed "because the joists were up." The check isn't a date — it's a load path inspection, signed.</p>
+ ${E}
+
+ ${A("Structural Angle — owner's-engineer view","se")}
+ <p>On hyperscale schedules, bracing is on the critical path twice: brace footprints fight with slab pours and MEP trenches (site logistics), and removal gates the next trade wave. Expect to review: the bracing submittal (delegated design), slab/deadman anchor calcs, the wind-monitoring plan, and the signed removal checklist. Asking "show me the brace removal criteria" on a site visit instantly marks you as someone who knows where tilt-up's bodies are buried.</p>
+ ${E}
+ `,
+ terms:[
+  ["TCA bracing guideline","The national standard for tilt-up temporary wind bracing design and practice."],
+  ["Brace wind speed","Reduced construction-period design wind (ASCE 37 logic) with a monitored stand-down threshold."],
+  ["Knee/lateral bracing","Secondary bracing of long pipe braces required to achieve rated compression capacity — top field deficiency."],
+  ["Deadman","Buried concrete anchor block resisting brace reactions when the slab isn't available."],
+  ["Brace removal criteria","The signed load-path checklist (deck attachment, chords, connections, closures) gating brace removal."]
+ ],
+ quiz:[
+  {q:"Braces are typically attached:",
+   o:["At panel mid-thickness","At ≥ ~60% of panel height, 45–60° to horizontal, minimum two per panel","At the very top only","Anywhere convenient"],a:1,
+   e:"Geometry sets brace force via statics; twist restraint and end-panel effects drive the two-minimum."},
+  {q:"The most common bracing field deficiency is:",
+   o:["Wrong paint","Missing knee/lateral bracing on long pipe braces — gutting their compression capacity","Too many braces","Oversized deadmen"],a:1,
+   e:"A 40-ft pipe brace without knee bracing is a slender column pretending to be rated hardware."},
+  {q:"Brace removal is governed by:",
+   o:["The calendar","A signed load-path inspection: deck attached per design, chords/connections/closures complete","Joists being visually up","Crane availability"],a:1,
+   e:"'Joists were up' has killed people; the diaphragm exists only when its attachments do."},
+  {q:"When panels erect before the floor slab, brace reactions go to:",
+   o:["Nothing","Deadmen or helical ground anchors — engineered for sliding/uplift","The panel itself","The crane"],a:1,
+   e:"A common sequencing choice that turns bracing into a small geotech design problem."}
+ ]
+},
+{unit:"Unit 3 · Construction Engineering", id:"t11", n:"11",
+ title:"Casting, QC, and erection day",
+ sub:"Bond breaker, tolerances, cylinders, and the choreography of standing up a building.",
+ min:11,
+ objectives:[
+  "Walk the casting cycle: slab prep, forms, reveals, steel, embeds, cure",
+  "Know the QC hold points an owner's engineer witnesses",
+  "Understand erection-day choreography and common field fixes"
+ ],
+ body:`
+ <p>Design credibility in tilt-up comes from construction literacy. Here's the cycle you'll see (and audit) on site.</p>
+
+ <h3>The casting cycle</h3>
+ <ol>
+  <li><strong>Casting surface:</strong> the floor slab is the form face — its flatness becomes the panel's face. Slab protected, joints/blockouts taped.</li>
+  <li><strong>Bond breaker:</strong> the two-coat chemical release film. QC obsession #1 — coverage verified (sheen test); missed spots weld panels to slabs.</li>
+  <li><strong>Edge forms, reveals, blockouts:</strong> dimensional truth of the panel; chamfers and reveal strips tacked to the slab.</li>
+  <li><strong>Reinforcement & hardware:</strong> curtain(s) on chairs; trim/hairpin steel at openings and inserts; lifting + brace inserts; structural embeds surveyed to tight tolerance (a mislocated joist-seat embed is an RFI and a field weldment).</li>
+  <li><strong>Placement & finish:</strong> low-shrinkage mixes preferred; face down = form finish; back trowelled. Cure protected.</li>
+  <li><strong>Stack casting:</strong> panels cast atop each other (bond breaker between layers) where slab area is short — sequencing puzzle: bottom of the stack lifts last.</li>
+ </ol>
+
+ <h3>QC hold points (the owner's-engineer witness list)</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Hold point</th><th>What's verified</th></tr>
+  <tr><td>Pre-pour</td><td>Steel size/spacing/cover, insert type & location vs lifting drawings, embed survey, reveal depths vs design t, bond-breaker coverage</td></tr>
+  <tr><td>Strength-to-lift</td><td>Field cylinders or maturity meters ≥ f′<sub>ci</sub> — no cylinders, no pick</td></tr>
+  <tr><td>Erection</td><td>Rigging per lifting drawings; brace count/angle/anchors per bracing drawings; shim/grout at bearing</td></tr>
+  <tr><td>Post-erection</td><td>Plumbness/joint tolerances (ACI 117/551 — e.g., joint width ±¼", plumb within height/…); connection welds; closure strips; brace-removal checklist</td></tr>
+ </table></div>
+
+ <h3>Erection day & field fixes</h3>
+ <p>A rhythm: rig → break suction (slow) → rotate with tag lines → fly to footing → land on shims → plumb with braces → release. 8–15 panels/day when tuned. The classic field problems and their fixes — panel cast ¼" short (shim & joint sealant judgment), embed mislocated (survey, RFI, welded plate fix designed same-day), face crack from lifting (injection + document + engineer disposition), brace anchor hits a trench (relocate with engineer's redesign, not a field guess). An owner's engineer who has predisposed answers for these is worth their rate.</p>
+
+ ${A("Structural Angle — your forensics superpower","se")}
+ <p>Your Falcon background maps directly here: crack disposition, repair specification, embed remediation, tolerance adjudication — that's forensic/CA work on a fast clock. In interviews, connect it explicitly: "I've dispositioned cracks and detailed repairs on existing structures; tilt-up erection QC is the same discipline at construction speed."</p>
+ ${E}
+ `,
+ terms:[
+  ["Bond breaker","Chemical release film between slab and panel — QC obsession #1; failures weld panels down."],
+  ["Stack casting","Casting panels atop one another with bond breaker between — inverted lifting sequence."],
+  ["Maturity method","Temperature-history-based in-place strength verification for lift authorization."],
+  ["Embed survey","Precise location verification of structural embeds pre-pour — mislocation is the classic RFI."],
+  ["Crack disposition","Engineering judgment on lift/handling cracks: accept, inject, or reject — documented."]
+ ],
+ quiz:[
+  {q:"QC obsession #1 in casting is:",
+   o:["Concrete color","Bond-breaker coverage — missed spots weld the panel to the slab","Rebar brand","Form height"],a:1,
+   e:"Suction incidents from bad bond breaker have cracked panels and stalled cranes; sheen-test verification is standard."},
+  {q:"Lift authorization requires:",
+   o:["A sunny day","Verified in-place strength ≥ f'ci via cylinders or maturity","28-day strength","The architect on site"],a:1,
+   e:"No strength verification, no pick — the entire lifting design assumed f'ci."},
+  {q:"A mislocated joist-seat embed is typically resolved by:",
+   o:["Rejecting the panel","Survey + RFI + an engineered welded-plate fix, often same-day","Ignoring it","Moving the roof"],a:1,
+   e:"Field-fix fluency (with engineering discipline) is what separates useful engineers on erection day."}
+ ]
+},
+/* ============ UNIT 4 · DC & CAREER ============ */
+{unit:"Unit 4 · Data Centers & Career", id:"t12", n:"12",
+ title:"Tilt-up for data centers + the interview lens",
+ sub:"Where hyperscale bends the rules — and how to convert this course into offers.",
+ min:12,
+ objectives:[
+  "Adapt standard tilt-up practice to hyperscale data center specifics",
+  "Anticipate what owner-side reviews focus on in tilt-up packages",
+  "Rehearse the interview narratives this course armed you with"
+ ],
+ body:`
+ <p>Everything so far is the discipline. This lesson is the data center dialect.</p>
+
+ <h3>Where DC tilt-up bends standard practice</h3>
+ <ul>
+  <li><strong>Height:</strong> 40–55 ft clear + 6–15 ft screens → ℓ<sub>c</sub> at the top of the tested range; 11¼" panels, double curtains, and hybrid steel become common. The magnifier discipline of Lesson 05 is daily bread.</li>
+  <li><strong>Openings:</strong> louver walls (Lesson 07's table panels) on air-cooled designs; generator-yard walls with blast/acoustic considerations; oversized equipment doors.</li>
+  <li><strong>Roof collateral:</strong> 10–50 psf of hung MEP (busway, tray, piping) — the anchorage W<sub>p</sub> and the joist-seat gravity both grow; coordinate hung-load allowances early or eat RFIs forever.</li>
+  <li><strong>Insulated (sandwich) panels:</strong> energy codes push DC shells to double-wythe insulated tilt-up — composite/non-composite wythe design via proprietary ties, thermal bridging discipline, different lifting stresses. Know the vocabulary: structural wythe, facade wythe, percent composite.</li>
+  <li><strong>Fire & compartmentation:</strong> panels as rated separations between halls/electrical rooms (MCFE course tie-in).</li>
+  <li><strong>Fleet standardization:</strong> one prototype panel schedule reused across sites in different wind/seismic/snow climates — the multi-region exercise from Phase 0 is literally the job. The owner's structural standard (basis of design) rules everything; your review role is enforcing it against local adaptations.</li>
+  <li><strong>Schedule interlock:</strong> panel erection gates steel, which gates roof, which gates dry-in, which gates MEP — tilt-up float is program float. Owners track panels/day like a heartbeat.</li>
+ </ul>
+
+ <h3>What owner-side reviewers check in a tilt-up package (your future checklist)</h3>
+ <ol>
+  <li>Basis: correct wind (C&C!), S<sub>DS</sub>, Risk Category/I<sub>e</sub>, exposure, per the owner standard?</li>
+  <li>Slender-wall calcs: I<sub>cr</sub> honest, A<sub>se</sub> per combo, ε<sub>t</sub> shown, service Δ with P-Δ iterated? Legs at reveal-reduced t?</li>
+  <li>Roof line: §12.11.2 anchorage with k<sub>a</sub>, sub-diaphragms, continuous ties — traced, spliced, both directions?</li>
+  <li>Connections: 1.5Sy/capacity philosophy; drift compatibility if hybrid; embed interaction (gravity + anchorage tension)?</li>
+  <li>Construction engineering: f′<sub>ci</sub> stated; lifting/bracing delegated-design submittals scheduled; brace removal criteria written?</li>
+  <li>Standardization: deviations from the prototype flagged and justified?</li>
+ </ol>
+
+ ${A("Your three interview set-pieces from this course","pw")}
+ <p><strong>(1) The slender-wall narration</strong> (L04–05): P-Δ on cracked sections, magnifier management, the 1980s test program. <strong>(2) The Northridge connection story</strong> (L08): anchorage amplification, sub-diaphragms, continuous ties — delivered as history + review method. <strong>(3) The louver-wall problem</strong> (L07 + L06): legs, headers, coupled piers, in-plane starvation — the DC-specific scenario. Add the capstone artifact — a complete panel calc you produced yourself — and you can survive three levels of "why?" on each. That's the depth the people hired at this salary actually carry.</p>
+ ${E}
+ `,
+ terms:[
+  ["Sandwich panel wythes","Structural wythe + facade wythe over insulation, connected by composite ties (percent-composite design)."],
+  ["Roof collateral load","Hung MEP allowance (10–50 psf on DCs) inflating anchorage Wp and joist-seat gravity."],
+  ["Owner's structural standard","The hyperscaler basis-of-design your review enforces against local adaptation."],
+  ["Prototype panel schedule","The fleet-standard panel set re-verified per site climate — multi-region agility in practice."]
+ ],
+ quiz:[
+  {q:"DC tilt-up differs from warehouse tilt-up most consequentially in:",
+   o:["Concrete brand","Panel heights (40–55+ ft + screens), louver openings, heavy hung roof collateral, insulated wythes, fleet standardization","Paint","Nothing"],a:1,
+   e:"Every difference amplifies the course's hard parts: magnifiers, legs, anchorage Wp, and standards enforcement."},
+  {q:"An owner-side tilt-up review starts at:",
+   o:["The title block","The basis (C&C wind, SDS, Ie per owner standard), then Icr honesty, then the roof-line anchorage chain","The concrete mix","The joints"],a:1,
+   e:"Basis → slender-wall honesty → §12.11.2 chain → connections → construction engineering → standardization."},
+  {q:"The capstone calc matters in interviews because:",
+   o:["It's decoration","It lets you survive three levels of 'why?' with numbers you personally produced","Interviewers collect PDFs","It replaces the PE"],a:1,
+   e:"Depth = the ability to defend each step. A self-produced artifact converts course knowledge into hiring evidence."}
+ ]
+},
+/* ============ CAPSTONE ============ */
+{unit:"Capstone · The Portfolio Calc", id:"c1", n:"C1",
+ title:"Capstone A — design brief & loads",
+ sub:"Panel P-7 of a data hall: establish every number before touching capacity.",
+ min:15,
+ objectives:[
+  "Set up the design basis like a real calc package",
+  "Compute all loads: C&C wind, seismic body & anchorage, eccentric gravity, self-weight",
+  "Assemble the factored axial/moment inputs for the slender-wall check"
+ ],
+ body:`
+ <p><strong>The artifact you're producing:</strong> a complete, defensible design calculation for one data center tilt-up panel — out-of-plane slender wall, in-plane summary, lifting check, bracing check — formatted like a professional calc package. Work every number yourself alongside these pages; the course numbers are your answer key. <em>(Round-off may shift your values ±2% — that's fine. This is a training artifact: verify against current code editions before any real use.)</em></p>
+
+ <h3>Design brief — Panel P-7</h3>
+ <div class="scroll"><table class="data">
+  <tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
+  <tr><td>Panel</td><td class="n">24'-0" wide × 36'-0" tall × 9¼" thick</td><td>Solid interior-zone panel (no openings) — the baseline before you attempt legs</td></tr>
+  <tr><td>Clear vertical span ℓ<sub>c</sub></td><td class="n">32'-0" (384 in)</td><td>Bearing at footing to roof line; <b>4'-0" parapet</b> above the roof</td></tr>
+  <tr><td>Materials</td><td class="n">f′<sub>c</sub> = 4,000 psi · f<sub>y</sub> = 60 ksi</td><td>β₁ = 0.85; normal weight (λ=1.0)</td></tr>
+  <tr><td>Reinforcement (trial)</td><td class="n">#5 @ 12" vertical, single centered curtain</td><td>A<sub>s</sub> = 0.31 in²/ft · d = t/2 = 4.625 in</td></tr>
+  <tr><td>Roof</td><td class="n">DL 16 psf · L<sub>r</sub> 20 psf · joist trib 25 ft</td><td>Seat eccentricity e = t/2 + 3.5" = <b>8.125 in</b></td></tr>
+  <tr><td>Wind (C&C, ultimate)</td><td class="n">26 psf, Zone 4</td><td>115 mph Exp C class site; Zone 5 edge strips higher — extension exercise</td></tr>
+  <tr><td>Seismic</td><td class="n">S<sub>DS</sub> = 0.50 · I<sub>e</sub> = 1.0</td><td>Flexible roof diaphragm, span L<sub>f</sub> = 200 ft</td></tr>
+ </table></div>
+
+ <h3>Step L1 — self-weight quantities (per 1-ft strip)</h3>
+ ${EQ("Wall weight = (9.25/12)(150 pcf) = <b>115.6 psf</b> &nbsp;·&nbsp; Weight above midheight = (16 ft + 4 ft parapet)(115.6) = <b>2,312 plf = 2.31 k/ft</b>")}
+
+ <h3>Step L2 — wind vs seismic body force (which governs flexure?)</h3>
+ ${EQ("Seismic body: F<sub>p</sub> = 0.40 S<sub>DS</sub> I<sub>e</sub> W<sub>w</sub> = 0.40(0.50)(1.0)(115.6) = <b>23.1 psf</b> &lt; wind 26 psf → <b>wind governs</b> out-of-plane (1.0W vs 1.0E both ultimate-level)")}
+
+ <h3>Step L3 — the anchorage force is a DIFFERENT, bigger number</h3>
+ ${EQ("k<sub>a</sub> = 1 + L<sub>f</sub>/100 = 1 + 200/100 = 2.0 &nbsp;·&nbsp; W<sub>p</sub> = (ℓ<sub>c</sub>/2 + parapet)(115.6) = (16+4)(115.6) = 2,312 plf")}
+ ${EQ("F<sub>anch</sub> = 0.4 S<sub>DS</sub> k<sub>a</sub> I<sub>e</sub> W<sub>p</sub> = 0.4(0.50)(2.0)(1.0)(2,312) = <b>925 plf</b> — the roof connection designs for ~0.93 k/ft, ~2× what the body force alone would suggest. File for Capstone C and Lesson 08's chain.")}
+
+ <h3>Step L4 — gravity loads & the governing combo</h3>
+ ${EQ("Roof: D = 16(25) = 400 plf · L<sub>r</sub> = 20(25) = 500 plf at e = 8.125 in")}
+ ${EQ("Combo 1.2D + 1.0W + 0.5L<sub>r</sub>: &nbsp; P<sub>u,roof</sub> = 1.2(0.40)+0.5(0.50) = <b>0.73 k/ft</b> &nbsp;·&nbsp; P<sub>u,mid</sub> = 0.73 + 1.2(2.312) = <b>3.50 k/ft</b>")}
+ ${EQ("Entry check: P<sub>u</sub>/A<sub>g</sub> = 3,500/(12×9.25) = <b>31.5 psi ≤ 0.06f′<sub>c</sub> = 240 psi ✓</b> — flexure-dominated, §11.8 applies")}
+
+ <h3>Step L5 — first-order midheight moment</h3>
+ ${EQ("Wind: w<sub>u</sub>ℓ<sub>c</sub>²/8 = (0.026)(32)²/8 = 3.33 k-ft = <b>39.9 k-in</b> &nbsp;·&nbsp; Ecc. roof: P<sub>u,roof</sub>·e/2 = 0.73(8.125)/2 = <b>3.0 k-in</b> &nbsp;·&nbsp; <b>M<sub>ua</sub> = 42.9 k-in</b> per ft strip")}
+
+ ${A("Checkpoint before Capstone B","pw")}
+ <p>Your sheet should now show: 115.6 psf wall · 2.31 k/ft above midheight · wind 26 psf governing body design · anchorage 925 plf filed separately · P<sub>u,mid</sub> = 3.50 k/ft · M<sub>ua</sub> = 42.9 k-in · entry checks passed. Also run combo 0.9D+1.0W yourself (P<sub>u,mid</sub> = 2.44 k/ft) — you'll need it in B to confirm 1.2D governs capacity here. If every number matches within rounding, proceed.</p>
+ ${E}
+ `,
+ terms:[
+  ["Design basis sheet","Page 1 of a real calc package: geometry, materials, loads, code editions, assumptions — reviewers read it first."],
+  ["Body force vs anchorage force","23.1 psf on the panel vs 925 plf at the roof connection — the two-different-forces lesson in numbers."]
+ ],
+ quiz:[
+  {q:"For P-7, out-of-plane flexure is governed by:",
+   o:["Seismic (23.1 psf)","Wind C&C (26 psf)","They're identical","Gravity"],a:1,
+   e:"At SDS = 0.50 the 0.4SDSIeWw body force (23.1 psf) sits just under the 26 psf C&C wind — always compare both."},
+  {q:"The wall-anchorage design force came out to 925 plf because:",
+   o:["It equals the body force","ka = 2.0 on the 200-ft flexible diaphragm doubled the base value on tributary Wp","Wind controls anchorage","The parapet was ignored"],a:1,
+   e:"0.4(0.50)(2.0)(1.0)(2,312) = 925 plf — the Northridge amplification working exactly as intended."},
+  {q:"Pu at midheight (3.50 k/ft) includes:",
+   o:["Roof reaction only","Factored roof reaction + factored self-weight above midheight including the full parapet","Wind","The footing weight"],a:1,
+   e:"Everything above the critical section rides the deflected shape — parapet included."}
+ ]
+},
+{unit:"Capstone · The Portfolio Calc", id:"c2", n:"C2",
+ title:"Capstone B — the slender-wall calculation",
+ sub:"Ase, Icr, the magnifier, strength, and the iterated service deflection — every number shown.",
+ min:16,
+ objectives:[
+  "Execute the complete §11.8 sequence on P-7 with real numbers",
+  "Interpret each result the way a reviewer would",
+  "Confirm the design and understand its margins"
+ ],
+ body:`
+ <h3>Step B1 — constants</h3>
+ ${EQ("E<sub>c</sub> = 57,000√4000 = 3.605×10⁶ psi (3,605 ksi) &nbsp;·&nbsp; n = 29,000/3,605 = <b>8.04</b> (≥6 ✓)")}
+ ${EQ("S<sub>g</sub> = 12(9.25)²/6 = 171.1 in³ &nbsp;·&nbsp; f<sub>r</sub> = 7.5√4000 = 474 psi &nbsp;·&nbsp; <b>M<sub>cr</sub> = 81.1 k-in</b> &nbsp;·&nbsp; I<sub>g</sub> = 12(9.25)³/12 = 791.5 in⁴")}
+
+ <h3>Step B2 — effective steel & capacity</h3>
+ ${EQ("A<sub>se</sub> = A<sub>s</sub> + P<sub>u</sub>/f<sub>y</sub>·(h/2d) = 0.31 + 3.50/60·(1.0) = <b>0.368 in²/ft</b>")}
+ ${EQ("a = 0.368(60)/(0.85·4·12) = <b>0.541 in</b> &nbsp;·&nbsp; c = 0.541/0.85 = <b>0.637 in</b>")}
+ ${EQ("ε<sub>t</sub> = 0.003(4.625−0.637)/0.637 = <b>0.0188 ≥ 0.0075 ✓</b> tension-controlled, ϕ = 0.9")}
+ ${EQ("M<sub>n</sub> = 0.368(60)(4.625 − 0.541/2) = <b>96.2 k-in</b> &nbsp;·&nbsp; <b>ϕM<sub>n</sub> = 86.6 k-in</b> &nbsp;·&nbsp; ϕM<sub>n</sub> ≥ M<sub>cr</sub> (86.6 ≥ 81.1) ✓ — barely; note how #4@12 would FAIL this check")}
+
+ <h3>Step B3 — cracked stiffness</h3>
+ ${EQ("I<sub>cr</sub> = nA<sub>se</sub>(d−c)² + bc³/3 = 8.04(0.368)(3.988)² + 12(0.637)³/3 = 47.1 + 1.0 = <b>48.1 in⁴/ft</b> &nbsp;&nbsp;(vs I<sub>g</sub> 791.5 — 6% ✓ expected range)")}
+
+ <h3>Step B4 — magnified strength check</h3>
+ ${EQ("5P<sub>u</sub>ℓ<sub>c</sub>² = 5(3.50)(384)² = 2.58×10⁶ &nbsp;·&nbsp; 0.75(48)E<sub>c</sub>I<sub>cr</sub> = 36(3,605)(48.1) = 6.24×10⁶ &nbsp;·&nbsp; ratio = 0.413")}
+ ${EQ("Magnifier = 1/(1−0.413) = <b>1.70</b> &nbsp;·&nbsp; M<sub>u</sub> = 1.70(42.9) = <b>73.1 k-in ≤ ϕM<sub>n</sub> = 86.6 k-in ✓ (84% utilization)</b>")}
+ <p>Read that like a reviewer: the second-order effect added <strong>70%</strong> to the first-order moment. A calc that skipped honest I<sub>cr</sub> would have reported 42.9 vs 86.6 = "50% utilized, lots of fat" — and been wrong by the entire margin.</p>
+
+ <h3>Step B5 — service deflection (iterated)</h3>
+ ${EQ("Service wind 0.6W = 15.6 psf → M<sub>sa</sub> = 0.0156(32)²/8 = 2.00 k-ft = 24.0 k-in; + service ecc. (0.40 k roof D at e/2) ≈ 1.6 → <b>25.6 k-in</b> &nbsp;·&nbsp; P<sub>s</sub> = 0.40+2.31 = 2.71 k/ft")}
+ ${EQ("Δ<sub>cr</sub> = 5M<sub>cr</sub>ℓ<sub>c</sub>²/(48E<sub>c</sub>I<sub>g</sub>) = 5(81.1)(147,456)/(48·3,605·791.5) = <b>0.437 in</b>")}
+ ${EQ("Iterate: Δ₀ = (25.6/81.1)(0.437) = 0.138 in → M<sub>a</sub> = 25.6+2.71(0.138) = 26.0 → Δ₁ = 0.140 in — <b>converged ≈ 0.14 in</b> (M<sub>a</sub> &lt; ⅔M<sub>cr</sub> = 54.1, uncracked branch)")}
+ ${EQ("<b>Δ<sub>s</sub> = 0.14 in ≪ ℓ<sub>c</sub>/150 = 2.56 in ✓</b>")}
+
+ ${A("Design summary — and the sentences you'll say about it","pw")}
+ <p><strong>P-7: 9¼" panel, #5@12 centered — GOOD.</strong> Strength 84% (second-order added 70%), service deflection 5% of limit, ϕM<sub>n</sub>/M<sub>cr</sub> margin thin (the hidden governing check!). Interview sentences this buys you: "On my baseline panel the magnifier was 1.7 — I watched utilization live in the denominator, not the numerator." And: "Minimum-steel panels often fail ϕM<sub>n</sub> ≥ M<sub>cr</sub> before they fail strength — that's the check I audit first on thin panels." <strong>Extension exercises (do at least #1):</strong> (1) Zone 5 edge strip at 34 psf — show the same panel hits ~110% and pick the fix (spacing 10" vs thickness). (2) S<sub>DS</sub> = 1.0 site — seismic body force now 46 psf; redesign. (3) Stretch ℓ<sub>c</sub> to 40 ft (45-ft DC panel) — watch the magnifier blow past 2.5 and justify 11¼" + double curtains.</p>
+ ${E}
+ `,
+ terms:[
+  ["70% second-order amplification","P-7's magnifier of 1.70 — the honest Icr result a rosy-stiffness calc would have hidden."],
+  ["ϕMn ≥ Mcr as hidden governor","On lightly reinforced panels the anti-brittleness check fails before strength — audit it first."],
+  ["Uncracked service branch","Ma < ⅔Mcr → deflection on the Ig line; heavier panels/winds land on the interpolated branch."]
+ ],
+ quiz:[
+  {q:"P-7's Icr of 48.1 in⁴ vs Ig of 791.5 in⁴ demonstrates:",
+   o:["An arithmetic error","The cracked section is ~6% of gross stiffness — why P-Δ dominates slender panels","Ig is unsafe","Steel doesn't matter"],a:1,
+   e:"That 16:1 stiffness ratio is the entire reason the slender-wall method exists."},
+  {q:"The magnifier of 1.70 means:",
+   o:["The panel failed","Second-order effects added 70% to the first-order moment — and honest utilization is 84%, not 50%","Wind was doubled","ϕ = 1.70"],a:1,
+   e:"Skipping honest Icr would have misreported the margin by the entire P-Δ share."},
+  {q:"The thin margin on P-7 that a sharp reviewer flags first is:",
+   o:["Service deflection","ϕMn ≥ Mcr (86.6 vs 81.1) — the anti-brittleness check that #4@12 would fail","εt","Pu/Ag"],a:1,
+   e:"Lightly reinforced panels fail this before strength — the classic hidden governor on thin tilt-up."},
+  {q:"Stretching P-7 to a 40-ft clear span (45-ft DC panel) primarily:",
+   o:["Reduces wind","Explodes the magnifier past ~2.5, forcing 11¼\" thickness and/or double curtains","Changes fy","Nothing"],a:1,
+   e:"ℓc² sits in the magnifier's denominator term — height is quadratic poison; this is DC tilt-up's daily fight."}
+ ]
+},
+{unit:"Capstone · The Portfolio Calc", id:"c3", n:"C3",
+ title:"Capstone C — lifting, bracing & packaging the artifact",
+ sub:"Stand P-7 up safely, hold it for six weeks, and turn the whole calc into interview ammunition.",
+ min:15,
+ objectives:[
+  "Run the lifting check: weight, suction, rigging, cracking stress, inserts",
+  "Design the temporary braces: force, geometry, anchor demand, removal criteria",
+  "Package the complete calc as a portfolio artifact with a defense script"
+ ],
+ body:`
+ <h3>Step C1 — the pick</h3>
+ ${EQ("W = 24(36)(115.6 psf) = <b>99.9 kips</b> &nbsp;·&nbsp; with suction 1.4: initial-pick design load ≈ <b>140 kips</b> &nbsp;·&nbsp; f′<sub>ci</sub> = 2,500 psi → allowable lift tension ≈ 7.5√2500/1.5 = <b>250 psi</b>")}
+ <p><strong>Rigging: 8-point face lift</strong> (4 rows × 2 columns, rows equalized by sheave blocks ≈ 0.13H / 0.38H / 0.62H / 0.87H). Hand-verify one critical region — the cantilever above the top row at the flat position (worst suction case):</p>
+ ${EQ("Overhang = 0.13(36) = 4.68 ft &nbsp;·&nbsp; w = 115.6(1.4) = 162 psf &nbsp;·&nbsp; M = 162(4.68)²/2 = 1,774 lb-ft/ft = 21.3 k-in/ft")}
+ ${EQ("σ = M/S<sub>g</sub> = 21,300/171.1 = <b>124 psi ≤ 250 psi ✓</b> — then software sweeps every tilt angle 0→90° and all spans between rows; your hand check anchors trust in the sweep")}
+ <p><strong>Inserts:</strong> 8 inserts share ~140 k at worst equalization → ~17.5 k/insert working; select catalog insert with ultimate ≥ 2× (≥35 k) at 9¼" panel and f′<sub>ci</sub> 2,500, with hairpin bars per catalog. <em>(In practice the lifting engineer runs this; you're proving you can audit it.)</em></p>
+
+ <h3>Step C2 — the braces</h3>
+ ${EQ("TCA-basis construction wind ≈ 20 psf on the freestanding panel: resultant = 20(36)(24) = <b>17.3 kips at 18 ft</b> above base")}
+ ${EQ("Braces at 0.6H = 21.6 ft, θ = 55° from horizontal, n = 3 braces: &nbsp; H<sub>req</sub> = 17.3(18)/21.6 = 14.4 k → 4.8 k/brace horizontal → <b>axial T/C = 4.8/cos55° = 8.4 kips per brace</b>")}
+ <ul>
+  <li><strong>Compression case governs hardware:</strong> a ~40-ft pipe brace needs its knee + lateral bracing installed to be worth its rating at 8.4 k — Lesson 10's #1 field deficiency, now in your numbers.</li>
+  <li><strong>Anchor end:</strong> 8.4 k axial at 55° → 4.8 k shear + 6.9 k tension (suction case) on the slab anchor — demands an engineered adhesive anchor group in ≥6" slab (or a deadman if slab isn't poured), cracked-concrete capacities, edge distances checked.</li>
+  <li><strong>Removal:</strong> write the criteria sheet: deck welded per diaphragm design, chord/drag welds complete, panel-to-panel plates in, anchorage hardware torqued, closures cured — signed by the engineer of record for the bracing. Date-less. Load-path based.</li>
+ </ul>
+
+ <h3>Step C3 — packaging the artifact (do not skip)</h3>
+ <ol>
+  <li><strong>Format like a firm deliverable</strong> (10–14 pages): cover + basis of design → loads (Capstone A) → slender-wall design (B) → anchorage force summary → lifting check → bracing check → summary sheet with utilizations. Hand-written-then-scanned or typeset — either is respectable; sloppy is not.</li>
+  <li><strong>Add one page of "reviewer's notes" in your own voice:</strong> the three things you'd audit on someone else's version (Icr honesty, ϕMn≥Mcr, anchorage k<sub>a</sub>). This page converts a student calc into an <em>owner's-engineer</em> artifact.</li>
+  <li><strong>Extension #1 (Zone 5) attached</strong> — showing a failure and your fix demonstrates judgment, not just execution.</li>
+  <li><strong>Optional but potent:</strong> rebuild the calc as a small Python/spreadsheet tool and publish it (Track B synergy) — "I automated my slender-wall design into a parameter-sweep tool" is a sentence no other candidate in the room will have.</li>
+  <li><strong>The defense script</strong> — be ready for: "Why 1.4 suction?" (bond-breaker adhesion practice range), "Why is d = t/2?" (single centered curtain; two-curtain d increases capacity — the 11¼" DC move), "What if the diaphragm were rigid?" (k<sub>a</sub> → 1.0, anchorage halves), "Why ⅔M<sub>cr</sub> in the deflection branch?" (code's bilinear anchor point), "What governs first as panels get taller?" (the magnifier — quadratic in ℓ<sub>c</sub>). Three levels deep on each = hired-engineer depth.</li>
+ </ol>
+
+ ${A("You now hold the artifact","pw")}
+ <p>A complete panel calc — loads through bracing — with numbers you can defend, a failure case with a fix, and reviewer's notes in an owner's-engineer voice. Reference it in your resume ("designed a complete DC tilt-up panel package: slender-wall per ACI 318 §11.8 with P-Δ, §12.11.2 anchorage, lifting and TCA bracing checks") and bring it to interviews. This, plus Lessons 04–10's depth, is the tilt-up knowledge set the hired profiles carry.</p>
+ ${E}
+ `,
+ terms:[
+  ["8-point face lift","4 equalized rows × 2 columns — the standard rigging for tall rectangular panels."],
+  ["Reviewer's-notes page","Your audit commentary attached to the calc — the page that signals owner's-engineer altitude."],
+  ["Defense script","Prepared 3-levels-deep answers on every assumption — the difference between owning and reciting a calc."]
+ ],
+ quiz:[
+  {q:"The hand check of the top-row cantilever at flat position gave 124 psi vs 250 allowed, which:",
+   o:["Proves the whole lift","Anchors trust in the software's full tilt-angle sweep — one verified region validates your reading of the rest","Is irrelevant","Replaces inserts"],a:1,
+   e:"Owner's engineers hand-check one critical region to calibrate confidence in delegated-design software output."},
+  {q:"Each brace on P-7 carries about:",
+   o:["1 kip","8.4 kips axial (4.8 k horizontal at 55°, 3 braces, 0.6H attachment)","50 kips","Zero"],a:1,
+   e:"Statics on the 17.3 k freestanding wind resultant — and the compression case demands the knee bracing be installed."},
+  {q:"The single page that most elevates the artifact is:",
+   o:["A fancier cover","The reviewer's-notes page auditing your own calc in an owner's-engineer voice","More load combos","A photo"],a:1,
+   e:"It reframes you from calc-producer to design-reviewer — the actual job description at hyperscalers."}
+ ]
+}
+];
+
+const EXTRA_TERMS=[
+ ["Bond breaker","Chemical release agent between slab and panel; adhesion failures cause suction incidents.","Construction"],
+ ["Grout pad / shims","Bearing interface between panel base and footing, set to erection tolerance.","Construction"],
+ ["Tag line","Rope controlling panel rotation during the pick.","Construction"],
+ ["Closure strip","Perimeter slab pour-back completing the base connection after erection.","Construction"],
+ ["Panel joint","~¾\" sealed gap; panels independent out-of-plane across it.","Anatomy"],
+ ["Chord","Diaphragm edge tension/compression element along the panel line.","Design"],
+ ["Sub-diaphragm","Local roof region (AR ≤ 2.5) gathering wall anchors into cross-ties.","Design"],
+ ["ka amplification","1+Lf/100 ≤ 2.0 wall-anchorage multiplier for flexible diaphragms.","Design"],
+ ["Slender wall method","ACI 318 §11.8 P-Δ design on the cracked section — tilt-up's core method.","Design"],
+ ["Icr","Cracked transformed moment of inertia; ~5–8% of Ig for single-curtain panels.","Design"],
+ ["Ase","Effective steel area including axial contribution: As + Pu/fy·(h/2d).","Design"],
+ ["Magnifier","1/[1−5Puℓc²/(0.75·48EcIcr)] — the P-Δ amplification on Mua.","Design"],
+ ["ℓc/150","Service deflection limit with P-Δ, iterated.","Design"],
+ ["Design strip","Vertical strip (leg/solid band) analyzed as an independent slender wall.","Design"],
+ ["Hold-down","Panel-to-footing tension device for in-plane overturning of narrow piers.","Design"],
+ ["f'ci","Concrete strength at lift, commonly ≥2,500 psi, field-verified.","Lifting"],
+ ["Suction factor","~1.3–1.5× weight allowance at initial pick.","Lifting"],
+ ["Strongback","Bolt-on stiffener carrying weak panel regions through the pick.","Lifting"],
+ ["Rigging tree","Spreaders + equalizer blocks distributing crane load to inserts.","Lifting"],
+ ["Brace wind speed","Reduced construction-period wind basis per TCA/ASCE 37.","Bracing"],
+ ["Knee bracing","Secondary bracing enabling long pipe braces' rated compression capacity.","Bracing"],
+ ["Deadman","Buried concrete anchor block for brace reactions without a slab.","Bracing"],
+ ["Removal criteria","Signed load-path checklist gating brace removal.","Bracing"],
+ ["Intermediate precast wall","Tilt-up's usual seismic class (R=4); connection ductility at 1.5Sy.","Seismic"],
+ ["Continuous cross-tie","Wall-to-wall roof tension path, every splice designed for Fanch.","Seismic"],
+ ["Sandwich panel","Insulated two-wythe tilt-up with composite ties — the DC energy-code variant.","DC"],
+ ["Screen parapet","Tall panel extension hiding rooftop equipment; wind both ways + ap=2.5 cantilever seismic.","DC"]
+];
+
+const EXAM=[
+ {q:"For panel out-of-plane flexure, wind pressure comes from:",o:["MWFRS Ch. 27","C&C Ch. 30 (Zones 4/5)","10 psf minimum","Tornado provisions only"],a:1,e:"The panel is a component; C&C governs its own flexure. MWFRS is for the building's lateral system."},
+ {q:"Ase for a centered single curtain equals:",o:["As","As + Pu/fy","As − Pu/fy","2As"],a:1,e:"h/2d = 1 for centered steel, so Ase = As + Pu/fy — folded into both ϕMn and Icr, per combo."},
+ {q:"Icr for a typical single-curtain 9¼\" panel is roughly what fraction of Ig?",o:["~50%","~25%","~6%","100%"],a:2,e:"≈48 vs 792 in⁴ in the capstone — the 16:1 ratio that makes P-Δ dominate."},
+ {q:"P-7's magnifier of 1.70 tells a reviewer:",o:["Design failed","Second-order added 70%; a near-1.0 magnifier on similar slenderness means wrong stiffness was used","Wind was high","ϕ was wrong"],a:1,e:"Magnifier magnitude is the fastest audit signal on any slender-wall calc."},
+ {q:"The §11.8 ductility gate for out-of-plane slender walls is:",o:["εt ≥ 0.004","εt ≥ 0.005","εt ≥ 0.0075","No limit"],a:2,e:"Stricter than ordinary flexure — keeps designs inside the tested ductile regime."},
+ {q:"The hidden governor on lightly reinforced thin panels is usually:",o:["Shear","ϕMn ≥ Mcr","Bearing","Sliding"],a:1,e:"Anti-brittleness: capacity must exceed cracking moment — #4@12 fails it where #5@12 barely passes."},
+ {q:"Service deflection is checked as:",o:["Δ ≤ ℓ/600, gross section","Δs ≤ ℓc/150 with iterated service P-Δ on the bilinear curve","Δ ≤ 1 inch always","Not required"],a:1,e:"Ma = Msa + PsΔs is circular — iterate; bilinear between (Mcr,Δcr) and (Mn,Δn)."},
+ {q:"Wall-to-roof seismic anchorage force uses:",o:["0.4SDSIeWw only","0.4SDS·ka·Ie·Wp with ka = 1+Lf/100 ≤ 2.0","Wind","0.1Wp"],a:1,e:"§12.11.2 — flexible-diaphragm amplification, the Northridge fix; ~2× the naive value at Lf ≥ 100 ft."},
+ {q:"Metal deck's permitted role in the anchorage tension path:",o:["Primary tie","None — anchor to framing; deck never the tension link","Half the force","Backup"],a:1,e:"Deck-only attachment was a Northridge killer; sub-diaphragms + continuous cross-ties carry the force."},
+ {q:"Tilt-up's usual seismic wall classification and R:",o:["Special RC wall, R=6","Intermediate precast structural wall, R=4 (bearing)","OMF, R=3","Cantilever column, R=1.25"],a:1,e:"Site-cast precast in code taxonomy; connections yield at 1.5Sy or are capacity-protected."},
+ {q:"Legs beside big louver openings are dangerous because:",o:["Concrete shrinks there","They stack higher axial + header reactions on reduced (often reveal-cut) section — magnifier climbs fastest","Wind skips them","Steel is banned"],a:1,e:"Panels rarely fail solid; calc packages fail at legs — check at reveal-reduced t."},
+ {q:"Lifting stresses are limited to about:",o:["fy","7.5√f'ci/1.5 (≈250 psi at f'ci=2,500)","f'c","Zero"],a:1,e:"Uncracked criterion at the worst tilt angle — lift-day cracks are permanent."},
+ {q:"The suction allowance at initial pick is about:",o:["1.0×W","1.3–1.5×W","3×W","10×W"],a:1,e:"Bond-breaker adhesion; the reason the flat position often governs the top-row cantilever."},
+ {q:"Long pipe braces achieve rated capacity only with:",o:["Paint","Knee and lateral (line) bracing installed — the #1 field deficiency","Thicker slab","More sealant"],a:1,e:"An unbraced 40-ft pipe is a slender column pretending to be hardware."},
+ {q:"Braces may be removed when:",o:["Joists are visually up","The signed load-path checklist passes: deck attached per design, chords/connections/closures complete","30 days pass","The crane leaves"],a:1,e:"Removal is a load-path inspection, not a date — people have died in this gap."}
+];
+
+const RESOURCES=[
+ ["Primary references",[
+  ["ACI 318-19 §11.8 + ACI PRC-551.2","https://www.concrete.org/store/productdetail.aspx?ItemID=551215","The code method + the design guide with worked examples — buy/borrow 551.2; preview PDF is free."],
+  ["ACI PRC-551.1 (Construction Guide)","https://www.concrete.org","Casting, bond breakers, lifting, tolerances — the construction half."],
+  ["TCA — Temporary Wind Bracing Guideline","https://tilt-up.org","The national bracing standard; TCA Academy courses on design and construction."],
+  ["ACI on-demand: Tilt-Up Concrete Construction (CEU551)","https://www.concrete.org/store/productdetail.aspx?ItemID=CEU551&Format=ONLINE_LEARNING&Language=English&Units=US_Units","The structured video course from your Phase 0 plan."]
+ ]],
+ ["Worked examples & practice",[
+  ["StructurePoint tilt-up example (ACI 551)","https://structurepoint.org/publication/pdf/Reinforced-Concrete-Tilt-Up-Wall-Panel-Analysis-Design-ACI551.pdf","Free complete worked panel example — cross-check your capstone against it."],
+  ["TCA Tilt-Up Academy","https://tilt-up.org/academy/","Seminar library on design, engineering, and construction."],
+  ["STRUCTURE Magazine tilt-up & DC articles","https://www.structuremag.org","Search 'tilt-up' and 'data center' — practitioner articles including the DC design-parameters piece."]
+ ]],
+ ["Hardware & software ecosystem",[
+  ["Dayton Superior / Meadow Burke handbooks","https://www.daytonsuperior.com","Lifting/brace insert catalogs — capacities, edge distances, rigging guidance; free and canonical."],
+  ["Vendor lifting software literacy","https://tilt-up.org/resources/","Know what the lifting engineer's tilt-angle sweep outputs look like so you can audit them."]
+ ]]
+];
+
+/* ============================ APP ============================ */
+(function(){
+ const main=document.getElementById('main');
+ const tocEl=document.getElementById('toc');
+ const KEY='tiltup-mastery-v1';
+ let store={};try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+ store.done=store.done||{};store.quiz=store.quiz||{};store.fc=store.fc||{};store.exam=store.exam||null;
+ const save=()=>localStorage.setItem(KEY,JSON.stringify(store));
+
+ const PAGES=COURSE.map(m=>({type:'lesson',m})).concat([{type:'exam'},{type:'flash'},{type:'gloss'},{type:'res'}]);
+ let idx=(store.last!=null&&store.last<PAGES.length)?store.last:0;
+
+ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ const label2=pg=>pg.type==='exam'?'Final exam':pg.type==='flash'?'Flashcards':pg.type==='gloss'?'Glossary':'Resources';
+
+ function buildTOC(){
+  tocEl.innerHTML='';let last=null;
+  COURSE.forEach((m,i)=>{
+   if(m.unit!==last){last=m.unit;const g=document.createElement('div');g.className='grp';g.textContent=m.unit;tocEl.appendChild(g)}
+   const b=document.createElement('button');
+   b.innerHTML='<span class="n">'+m.n+'</span><span>'+m.title+'</span><span class="dot"></span>';
+   if(store.done[m.id])b.classList.add('done');
+   if(PAGES[idx].type==='lesson'&&PAGES[idx].m.id===m.id)b.setAttribute('aria-current','true');
+   b.onclick=()=>go(i);tocEl.appendChild(b);
+  });
+  const g=document.createElement('div');g.className='grp';g.textContent='Assessment & Reference';tocEl.appendChild(g);
+  [['Final exam (15 Q)',COURSE.length],['Flashcards',COURSE.length+1],['Glossary',COURSE.length+2],['Resources',COURSE.length+3]].forEach(([lab,pi])=>{
+   const b=document.createElement('button');b.innerHTML='<span class="n">·</span><span>'+lab+'</span>';
+   if(idx===pi)b.setAttribute('aria-current','true');b.onclick=()=>go(pi);tocEl.appendChild(b);
+  });
+  const done=COURSE.filter(m=>store.done[m.id]).length;
+  document.getElementById('ovtext').textContent=done+' of '+COURSE.length+' complete'+(store.exam?(' · exam '+store.exam.correct+'/'+store.exam.total):'');
+  document.getElementById('ovbar').style.width=(done/COURSE.length*100)+'%';
+ }
+
+ function quizHTML(qs){
+  return qs.map((q,qi)=>{
+   const opts=q.o.map((o,oi)=>'<label class="opt"><input type="radio" name="q'+qi+'" value="'+oi+'">'+esc(o)+'</label>').join('');
+   return '<div class="q" data-qi="'+qi+'"><div class="stem">'+(qi+1)+'. '+esc(q.q)+'</div>'+opts+'<div class="exp">'+esc(q.e)+'</div></div>';
+  }).join('');
+ }
+ function gradeQuiz(container,qs){
+  let correct=0;
+  qs.forEach((q,qi)=>{
+   const qEl=container.querySelector('.q[data-qi="'+qi+'"]');
+   const sel=qEl.querySelector('input:checked');
+   qEl.querySelectorAll('.opt').forEach(o=>o.classList.remove('correct','wrong'));
+   qEl.querySelectorAll('.opt')[q.a].classList.add('correct');
+   if(sel){if(+sel.value===q.a)correct++;else qEl.querySelectorAll('.opt')[+sel.value].classList.add('wrong')}
+   qEl.classList.add('answered');
+  });
+  return correct;
+ }
+
+ function renderLesson(m){
+  const objs=m.objectives.map(o=>'<li>'+o+'</li>').join('');
+  const terms=m.terms.length?'<h3>Key terms</h3><dl>'+m.terms.map(t=>'<div class="term"><dt>'+t[0]+'</dt><dd>'+t[1]+'</dd></div>').join('')+'</dl>':'';
+  const quiz=m.quiz.length?
+   '<div class="quiz"><p class="qh">Self-check · '+m.quiz.length+' questions</p><form>'+quizHTML(m.quiz)+'</form>'+
+   '<div class="btnrow"><button class="act" id="check">Check answers</button><button class="act ghost" id="markdone">Mark complete</button><span class="score" id="qscore"></span></div></div>'
+   :'<div class="btnrow"><button class="act ghost" id="markdone">Mark complete</button></div>';
+  main.innerHTML='<p class="lead">'+m.n+' · '+m.unit+'</p><h2>'+m.title+'</h2><p class="sub">'+m.sub+'</p>'+
+   '<div class="meta"><span>~'+m.min+' min</span><span>'+m.quiz.length+' questions</span><span>'+(store.done[m.id]?'✓ complete':'in progress')+'</span></div>'+
+   '<div class="obj"><p class="h">Objectives</p><ul>'+objs+'</ul></div>'+m.body+terms+quiz+'<div class="pager"></div>';
+  const cb=main.querySelector('#check');
+  if(cb)cb.onclick=e=>{e.preventDefault();
+   const c=gradeQuiz(main,m.quiz);
+   store.quiz[m.id]={correct:c,total:m.quiz.length};save();
+   main.querySelector('#qscore').textContent='Score: '+c+'/'+m.quiz.length;
+   if(c===m.quiz.length)markDone(m);
+  };
+  const md=main.querySelector('#markdone');
+  if(md)md.onclick=e=>{e.preventDefault();markDone(m);md.textContent='✓ Complete'};
+  pager();
+ }
+ function markDone(m){store.done[m.id]=true;save();buildTOC();
+  const meta=main.querySelector('.meta');if(meta)meta.lastElementChild.textContent='✓ complete'}
+
+ function renderExam(){
+  main.innerHTML='<p class="lead">Assessment</p><h2>Final exam</h2>'+
+   '<p class="sub">15 questions across the whole course. 80% (12/15) is the fluency bar.'+(store.exam?' Last attempt: '+store.exam.correct+'/'+store.exam.total+'.':'')+'</p>'+
+   '<div class="quiz"><form>'+quizHTML(EXAM)+'</form>'+
+   '<div class="btnrow"><button class="act" id="grade">Grade exam</button><span class="score" id="xscore"></span></div></div><div class="pager"></div>';
+  main.querySelector('#grade').onclick=e=>{e.preventDefault();
+   const c=gradeQuiz(main,EXAM);
+   store.exam={correct:c,total:EXAM.length};save();buildTOC();
+   main.querySelector('#xscore').textContent='Score: '+c+'/'+EXAM.length+(c>=12?' — fluency bar cleared. Say it in interviews.':' — review the flagged lessons and retake.');
+  };
+  pager();
+ }
+
+ function allCards(){
+  const cards=[];
+  COURSE.forEach(m=>m.terms.forEach(t=>cards.push({f:t[0],b:t[1]})));
+  EXTRA_TERMS.forEach(t=>cards.push({f:t[0],b:t[1]}));
+  return cards;
+ }
+ function renderFlash(){
+  const cards=allCards();
+  let order=store.fc.order;
+  if(!order||order.length!==cards.length){order=cards.map((_,i)=>i);store.fc={order:order,pos:0,known:{}};save()}
+  let pos=store.fc.pos||0;
+  function draw(){
+   if(pos>=order.length)pos=0;
+   const c=cards[order[pos]];
+   const knownCount=Object.keys(store.fc.known).length;
+   main.innerHTML='<p class="lead">Drill</p><h2>Flashcards</h2><p class="sub">'+cards.length+' cards from every lesson. Tap to flip; mark what you own.</p>'+
+    '<div class="fc"><div class="fcCard" id="card" tabindex="0" role="button" aria-label="flashcard"><div class="front">'+esc(c.f)+'</div><div class="back">'+esc(c.b)+'</div></div>'+
+    '<div class="fcnav"><button class="act ghost" id="again">↺ Again later</button><button class="act" id="got">✓ Got it</button></div>'+
+    '<div class="fcmeta">Card '+(pos+1)+' / '+order.length+' · '+knownCount+' marked known</div></div><div class="pager"></div>';
+   const card=main.querySelector('#card');
+   card.onclick=()=>card.classList.toggle('flipped');
+   card.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();card.classList.toggle('flipped')}};
+   main.querySelector('#got').onclick=()=>{store.fc.known[order[pos]]=1;pos++;store.fc.pos=pos;save();draw()};
+   main.querySelector('#again').onclick=()=>{const cur=order.splice(pos,1)[0];order.push(cur);store.fc.order=order;save();draw()};
+   pager();
+  }
+  draw();
+ }
+
+ function renderGloss(){
+  const all=[];
+  COURSE.forEach(m=>m.terms.forEach(t=>all.push([t[0],t[1],m.n])));
+  EXTRA_TERMS.forEach(t=>all.push(t));
+  const seen=new Set();
+  const uniq=all.filter(t=>{const k=t[0].toLowerCase();if(seen.has(k))return false;seen.add(k);return true}).sort((a,b)=>a[0].localeCompare(b[0]));
+  main.innerHTML='<p class="lead">Reference</p><h2>Glossary</h2><p class="sub">'+uniq.length+' terms of mission-critical fluency.</p>'+
+   '<input class="search" id="gs" placeholder="Filter… (e.g. 2N, CDU, MOP, arc flash)">'+
+   '<dl id="glist">'+uniq.map(t=>'<div class="term" data-t="'+esc((t[0]+' '+t[1]).toLowerCase())+'"><dt>'+esc(t[0])+'<span class="cat">'+esc(t[2])+'</span></dt><dd>'+esc(t[1])+'</dd></div>').join('')+'</dl><div class="pager"></div>';
+  const gs=main.querySelector('#gs');
+  gs.oninput=()=>{const v=gs.value.toLowerCase();main.querySelectorAll('#glist .term').forEach(el=>{el.style.display=el.dataset.t.includes(v)?'':'none'})};
+  pager();
+ }
+
+ function renderRes(){
+  main.innerHTML='<p class="lead">Reference</p><h2>Resources & sources</h2><p class="sub">The authorities behind this program, and the roads beyond it.</p>'+
+   RESOURCES.map(g=>'<h3>'+g[0]+'</h3><div class="reslist">'+g[1].map(it=>'<div class="res"><a href="'+it[1]+'" target="_blank" rel="noopener">'+it[0]+' ↗</a><p>'+it[2]+'</p></div>').join('')+'</div>').join('')+
+   '<div class="call pw" style="margin-top:20px"><span class="tag">Accuracy note</span><p>Figures herein (outage statistics, PUE/WUE, equipment sizes, case details) reflect the cited 2025–2026 sources and public reporting; case-study details are "as publicly reported." For design work or citations, confirm against the current primary source and code edition.</p></div><div class="pager"></div>';
+  pager();
+ }
+
+ function pager(){
+  const p=main.querySelector('.pager');if(!p)return;
+  const prev=idx>0?PAGES[idx-1]:null,next=idx<PAGES.length-1?PAGES[idx+1]:null;
+  const lab=pg=>pg.type==='lesson'?pg.m.title:label2(pg);
+  p.innerHTML='<button '+(prev?'':'disabled')+' id="pv"><span class="lbl">◂ Previous</span>'+(prev?lab(prev):'—')+'</button>'+
+   '<button class="next" '+(next?'':'disabled')+' id="nx"><span class="lbl">Next ▸</span>'+(next?lab(next):'—')+'</button>';
+  if(prev)p.querySelector('#pv').onclick=()=>go(idx-1);
+  if(next)p.querySelector('#nx').onclick=()=>go(idx+1);
+ }
+
+ function render(){
+  const pg=PAGES[idx];
+  if(pg.type==='lesson')renderLesson(pg.m);
+  else if(pg.type==='exam')renderExam();
+  else if(pg.type==='flash')renderFlash();
+  else if(pg.type==='gloss')renderGloss();
+  else renderRes();
+  document.getElementById('mobcrumb').textContent=pg.type==='lesson'?(pg.m.n+' · '+pg.m.title):label2(pg);
+  buildTOC();
+  window.scrollTo({top:0,behavior:'auto'});
+  if(window.innerWidth<960)document.getElementById('side').classList.add('hide');
+ }
+ function go(i){idx=i;store.last=i;save();render()}
+
+ document.getElementById('menu').onclick=()=>document.getElementById('side').classList.toggle('hide');
+ document.getElementById('theme').onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme');
+  const dark=cur?cur==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.setAttribute('data-theme',dark?'light':'dark');
+ };
+ document.getElementById('lessonpill').textContent=COURSE.length+' lessons';
+ render();
+})();
+</script>
