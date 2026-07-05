@@ -1,0 +1,19 @@
+Lecture six. The P E M B reviewer's gotcha list. Metal buildings fail reviews in predictable places. Seven gotchas; learn them and you can audit a package in an afternoon.
+
+Gotcha one, the headliner: collateral load. That's the allowance for everything hung from the structure: lights, sprinklers, ceilings, and in our world, cable tray, busway, and piping. A standard commercial metal building carries maybe three to five pounds per square foot collateral. A data-center-adjacent building can want ten, twenty, even fifty. Remember: zero fat. Sprinkler mains added to a three-p-s-f building are purlins working at a hundred ten percent. The review question is always: what collateral load is in the manufacturer's order documents, in writing, and does it match the final mechanical drawings? And the life-cycle version: every future retrofit needs a load check against the original order, because the original design has no slack.
+
+Gotcha two: drift and serviceability. Optimized frames are flexible; code lets industrial buildings drift generously. But your building has masonry wainscots, glazing, or, worse, connects to a conventional structure, and differential drift cracks the hard finishes and shears the connections. Specify drift limits in the performance spec, don't inherit the manufacturer's default.
+
+Gotcha three: the reactions versioning from last lecture. Foundation design basis versus final reaction letter. Check the dates, every time.
+
+Gotcha four: the hairpin assumption. Thrust resistance via slab hairpins presumes a continuous, uncut, existing slab. Phasing, trenches, future conduits: any of them void it. Prefer tie rods or designed footings where the slab's future is uncertain, and either way, write the assumption on the drawings.
+
+Gotcha five: bracing removal and openings. The X-braced bays are the building's spine, and they love to conflict with future doors, louvers, and equipment. Field-cut brace rods are a real thing that really happens. The spec should map braced bays as untouchable, and any modification goes back through the manufacturer's engineer.
+
+Gotcha six: the roof as structure. Standing-seam clips, screw-down fasteners, purlin flange braces: the sheeting system braces the purlins, and the purlins brace the frame rafters' inner flanges. Solar panels, new R T Us, or a re-roof change that bracing, and suddenly members that were braced continuously are unbraced for feet at a time. Rooftop additions on P E M B are never just a weight check; they're a stability check.
+
+Gotcha seven: seismic classification. Metal building frames are usually ordinary moment frames and ordinary braced systems with height and seismicity limits; in higher seismic zones the rules tighten and some standard offerings stop qualifying. Confirm the manufacturer's seismic design basis matches the site, and that the anchor-bolt and base details deliver the system's assumed behavior, the anchorage series you just finished applies verbatim at every column base.
+
+And a bonus for mission-critical work: risk category. Standard P E M B quoting assumes category two. A pump house essential to a category-four campus may itself need elevated importance factors, snow, wind, and seismic. The performance spec, again: state the category, don't let the quote assume it.
+
+The pattern behind all seven: P E M B problems are specification and interface problems. The manufacturer's engineering is almost always competent within what it was told; the failures live in what it wasn't told. Which makes the owner's engineer, the teller, the most important engineer in the transaction. Next, the final lecture: the P E M B review exercise, and closing the series into your interview story.
