@@ -105,3 +105,16 @@ hiring managers.
 - In application forms: "Yes, authorized to work" + "Yes, requires sponsorship" (transfer). Do not elaborate.
 - Prioritize employers with proven H-1B filing history for civil/structural titles (big tech owner-side, Exponent, large developers) over ones that say "sponsorship not available" (many consulting firms).
 - Long-game: the content + open-source + (later) publications trail you're building is exactly the evidence base for an **EB-2 NIW or O-1/EB-1A** self-petition — critical-infrastructure AI tooling is a strong national-interest story. Every post, repo, and talk compounds toward visa independence.
+
+---
+
+## Rev 3 addendum — Forensic headline variant (Headline B)
+
+> **Structural Engineer, P.E. | Facade & Building-Envelope Failure Investigation | Forensics · Restoration · High-Rise Design (LeMessurier) | ASCE · IIBEC | Python for Structural Assessment**
+
+Use when courting Exponent/WJE/SGH (their reviewers scan for a nameable failure
+niche + license + publications). Skills to add: Failure Analysis, Building
+Envelope (pin), Forensic Engineering, Litigation Support, Curtain Wall, Water
+Intrusion, Seismic Retrofit. Full track (postings verbatim, credential ladder
+SE→publications→IIBEC→ICRI→NAFE→SEAK, year-by-year map, panel review) lives in
+the Command Center → Forensics Track tab.
