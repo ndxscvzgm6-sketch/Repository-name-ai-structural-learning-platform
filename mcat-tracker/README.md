@@ -17,7 +17,11 @@ python3 -m http.server 8000   # then open http://localhost:8000/mcat-tracker/
 ```
 
 Progress lives in `localStorage` under the key `hnoo-mcat-v1`, so it is
-per-browser and per-device. Clearing site data resets everything.
+per-browser and per-device. **Back it up:** Progress → *Your data* →
+**Download backup** writes a JSON file you can keep, and **Restore from file**
+loads it back (on any browser or device). Clearing site data, switching
+browsers or changing device wipes the tracker otherwise, so take a backup
+every few weeks.
 
 ## Screens
 
@@ -65,3 +69,27 @@ Two blocks near the top of `index.html` are the ones worth touching:
 `SUBJECTS` below them holds the syllabus. Moving a subject from
 `status: 'locked'` to `'active'` is what unlocks its practice when the course
 starts.
+
+## Writing questions
+
+Two properties of the bank matter as much as the science, because a bank that
+leaks its answers teaches a habit that fails on test day.
+
+**Keep the key balanced.** Correct answers should land on A, B, C and D at
+roughly equal rates. A bank where one letter dominates can be scored well
+without reading the questions, and a student will pick that pattern up without
+ever noticing she has.
+
+**Keep the options parallel.** If the correct answer is reliably the longest
+or the most qualified option, that is a second free answer. Write distractors
+at comparable length and specificity, and trim the answer rather than padding
+the distractors.
+
+Both are checkable — count the `answer` values across the bank, and count how
+often the longest option is the correct one. The second number should sit near
+25–35%, not above it.
+
+Where a question's options are genuinely ordered — ascending numbers, or a
+logical `only / only / both / neither` set — leave them in their natural order
+and balance the key elsewhere. Ordering is information the student is meant to
+use.
