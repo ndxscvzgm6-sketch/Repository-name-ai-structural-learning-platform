@@ -1,0 +1,2194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MCAT Tracker</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Serif:ital@0;1&family=Public+Sans:ital,wght@0,300..700;1,400&display=swap" rel="stylesheet" />
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#FCFAF9;background-image:radial-gradient(1000px 560px at 88% -12%,rgba(212,67,107,.08),transparent 62%),radial-gradient(820px 520px at -12% 34%,rgba(124,107,214,.07),transparent 62%),radial-gradient(900px 560px at 62% 112%,rgba(224,112,74,.06),transparent 62%);background-attachment:fixed;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+a{color:#D4436B;text-decoration:none}
+a:hover{color:#A82F52}
+button{font:inherit;cursor:pointer}
+::selection{background:#FBD9E3}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.05)}}
+
+/* Hover states. The design medium expressed these as `style-hover` attributes;
+   inline styles win over stylesheet rules, hence !important. */
+.hv-pink:hover{background:#FBEEF3 !important}
+.hv-blush:hover{background:#FDF6F8 !important}
+.hv-mist:hover{background:#FEFBFC !important}
+.hv-rose:hover{background:#FDF2F5 !important}
+.hv-deep:hover{background:#B03A5E !important}
+.hv-plum:hover{background:#7A2A50 !important}
+.hv-b92:hover{filter:brightness(0.92)}
+.hv-b93:hover{filter:brightness(0.93)}
+.hv-b96:hover{filter:brightness(0.96)}
+.hv-b97:hover{filter:brightness(0.97)}
+.hv-outline:hover{border-color:#D4436B !important;color:#D4436B !important}
+.hv-link:hover{color:#D4436B !important}
+.hv-link2:hover{color:#B03A5E !important}
+.hv-edge:hover{border-color:#EFC9D8 !important}
+.hv-edge2:hover{border-color:#E4DBE0 !important}
+.hv-lift:hover{border-color:#EFC9D8 !important;transform:translateY(-2px);box-shadow:0 14px 30px rgba(212,67,107,.12)}
+.hv-pop:hover{transform:scale(1.12)}
+.hv-pop2:hover{transform:scale(1.08)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- ============================================================
+     Question bank
+     Verbatim from the design bundle. Sets window.MCAT_PASSAGES and
+     window.MCAT_BANK. Add items here to grow a subject's bank; a topic's
+     five rounds slice distinct windows once a bank holds 5 x roundLength
+     questions, and reshuffle the same pool below that.
+     ============================================================ -->
+<script>
+/* Question bank — MCAT-difficulty practice items. Classic script: sets globals. */
+window.MCAT_PASSAGES = {
+  p1: {
+    title: "Humanities — conservation ethics",
+    text: "When a restorer removes three centuries of varnish from a canvas, what emerges is not the painting the artist saw. Pigments have shifted; the ground has darkened; the varnish itself, applied within the artist's lifetime, was part of the intended surface. Conservation therefore cannot be a return. It is a choice among possible presents, made on behalf of a viewer who has not yet arrived.\n\nThe profession's ethic of reversibility — use only materials a later hand can undo — reads as modesty, and largely it is. But reversibility also postpones judgment indefinitely, and postponement is not neutral. A canvas left in its darkened state is also being interpreted: it is being read as a document rather than as a picture. Museums that decline to intervene are not abstaining from the argument; they have simply chosen the side that requires no defense.\n\nWhat restoration exposes, then, is that every act of preservation contains a theory of what the object is for. The cleaned ceiling and the deliberately unretouched fresco are not opposite policies. They are the same policy applied to different answers to a prior question — one the technical literature is remarkably reluctant to ask."
+  },
+  p2: {
+    title: "Social sciences — evidence in historiography",
+    text: "Historians once treated the written record as the floor beneath which evidence could not be trusted. Oral testimony was thought to decay: memory revised itself, communities flattered themselves, and the interval between event and telling introduced error at a rate no method could correct. The document, by contrast, sat still.\n\nThe objection was never wrong about memory. It was wrong about documents. A tax roll is not a neutral deposit; it records what an administration wished to count, in the categories it found convenient, about people who had reason to misreport. Its stillness is not accuracy but finality — the error, once made, stops moving.\n\nOral tradition errs differently. It drifts, but it drifts under supervision: a version that offends a community's sense of itself is contested aloud, and the contest leaves traces a careful listener can hear. Where the archive gives us one account with its assumptions hidden, testimony often gives us several with the disagreement intact.\n\nNone of this makes speech more reliable than paper. It makes the reliability of paper a claim to be argued rather than a premise to begin from."
+  }
+};
+
+window.MCAT_BANK = {
+  biology: [
+    { topic: "Gene regulation", stem: "A researcher deletes a 200-bp sequence located 8 kb upstream of a mammalian gene. Transcription of the gene falls to 5% of normal levels, while the core promoter and transcription start site remain intact. The deleted sequence most likely functioned as:",
+      options: ["An operator that binds a repressor protein", "An enhancer bound by transcriptional activators", "A polyadenylation signal", "A Shine–Dalgarno sequence"], answer: 1,
+      why: "Distal cis-regulatory elements that increase transcription from thousands of bases away are enhancers; they loop to the promoter via mediator. Operators and Shine–Dalgarno sequences are prokaryotic, and poly-A signals sit 3′ of the coding sequence." },
+    { topic: "DNA replication", stem: "In eukaryotic lagging-strand synthesis, which combination of activities removes the RNA primers and fills the resulting gaps?",
+      options: ["DNA polymerase α alone", "RNase H together with DNA polymerase δ", "Primase followed by topoisomerase II", "Telomerase followed by ligase"], answer: 1,
+      why: "RNase H (with FEN1) excises the RNA primer laid down by pol α/primase, and pol δ extends the adjacent 3′ end into the gap before ligase seals the nick." },
+    { topic: "Mendelian genetics", stem: "A woman homozygous for an autosomal recessive disease allele has children with a phenotypically normal heterozygous man. What is the probability that a given child is an affected girl?",
+      options: ["1/8", "1/4", "1/2", "3/4"], answer: 1,
+      why: "aa × Aa gives 1/2 affected offspring; sex is independent, so 1/2 × 1/2 = 1/4." },
+    { topic: "Membrane transport", stem: "An intestinal epithelial cell is treated with a specific inhibitor of the Na⁺/K⁺ ATPase. The most immediate consequence is:",
+      options: ["Increased intracellular K⁺ concentration", "Membrane hyperpolarization", "Reduced Na⁺-dependent glucose uptake", "Increased ATP synthesis"], answer: 2,
+      why: "SGLT1 is secondary active transport: it depends on the inward Na⁺ gradient the pump maintains. Losing the pump collapses that gradient, so glucose uptake falls; intracellular K⁺ drops and the cell depolarizes." },
+    { topic: "Viruses", stem: "Which pair of viral enzymes best explains a retrovirus's ability to establish a permanent, heritable infection of a host cell?",
+      options: ["Reverse transcriptase and integrase", "RNA-dependent RNA polymerase and neuraminidase", "Lysozyme and a λ-type repressor", "Protease and hemagglutinin"], answer: 0,
+      why: "Reverse transcriptase converts the RNA genome to dsDNA and integrase inserts it into host chromatin as a provirus, which is then replicated with the host genome." },
+    { topic: "Cell cycle", stem: "A compound inactivates the spindle assembly checkpoint. Cells treated with it will most likely:",
+      options: ["Arrest at the G1/S restriction point", "Enter anaphase with unattached kinetochores, producing aneuploid daughters", "Fail to replicate their DNA", "Complete karyokinesis but not cytokinesis"], answer: 1,
+      why: "The SAC delays anaphase until every kinetochore is attached to the spindle. Without it, sister chromatids separate prematurely and segregate unequally." },
+    { topic: "Mutation", stem: "A single base substitution in the third position of a codon leaves the encoded amino acid unchanged. This outcome is best explained by:",
+      options: ["Degeneracy of the genetic code, producing a silent mutation", "A missense mutation with a conservative substitution", "Nonsense-mediated decay of the transcript", "A frameshift corrected downstream"], answer: 0,
+      why: "Most synonymous codons differ at the wobble (third) position, so third-position changes frequently produce no amino acid change — a silent mutation." },
+    { topic: "Biotechnology", stem: "PCR designed to amplify a single 300-bp product yields bands at both 300 bp and 600 bp on an agarose gel. The most likely explanation is:",
+      options: ["The polymerase lacks 3′→5′ proofreading activity", "Primers annealed at a second, partially complementary site, giving a longer amplicon", "The template DNA was degraded before amplification", "The annealing temperature was set above the primer Tm"], answer: 1,
+      why: "Extra discrete bands indicate nonspecific priming — a second amplicon. Degradation or too-high annealing temperature reduces yield rather than adding bands, and proofreading affects fidelity, not product length." },
+    { topic: "Prokaryotic genetics", stem: "Transfer of bacterial DNA from one cell to another by a bacteriophage vector is termed:",
+      options: ["Conjugation", "Transformation", "Transduction", "Transposition"], answer: 2,
+      why: "Transduction is phage-mediated. Conjugation requires cell-to-cell contact via a pilus; transformation is uptake of naked DNA; transposition moves DNA within a genome." },
+    { topic: "Embryogenesis", stem: "Structures derived from the mesodermal germ layer include:",
+      options: ["Epidermis and the central nervous system", "Gut epithelium, liver, and pancreas", "Skeletal muscle, bone, and the cardiovascular system", "The lens of the eye and tooth enamel"], answer: 2,
+      why: "Mesoderm gives rise to muscle, bone, connective tissue, kidney, gonads, blood, and vessels. Neural tissue and epidermis are ectodermal; gut epithelium and its derivatives are endodermal." }
+,
+    { topic: "DNA structure, packaging & replication", stem: "As a replication fork advances, positive supercoils accumulate ahead of it. Which enzyme resolves this torsional strain?",
+      options: ["Helicase", "Topoisomerase", "DNA ligase", "Primase"], answer: 1,
+      why: "Topoisomerases nick and reseal DNA to relax supercoils generated by unwinding.",
+      whys: ["Helicase unwinds the duplex — it creates the strain rather than relieving it", "Topoisomerase nicks, swivels, and reseals the backbone to relax supercoils", "Ligase seals nicks between Okazaki fragments; it cannot relax supercoiling", "Primase lays RNA primers and has no nuclease or swivel activity"] },
+    { topic: "DNA structure, packaging & replication", stem: "A culture of bacteria grown for many generations in ¹⁵N medium is switched to ¹⁴N medium. After exactly two rounds of replication, the DNA consists of:",
+      options: ["All intermediate-density molecules", "Half intermediate-density, half light molecules", "Half heavy, half light molecules", "All light molecules"], answer: 1,
+      why: "Semiconservative replication: after round one all molecules are hybrid; after round two, half remain hybrid and half are fully light.",
+      whys: ["True only after the first round, not the second", "Each hybrid molecule yields one hybrid and one light duplex in round two", "Fully heavy DNA disappears after the first replication in ¹⁴N", "All-light DNA would require additional rounds of replication"] },
+    { topic: "DNA structure, packaging & replication", stem: "Human somatic cells lack telomerase activity. The most direct consequence of this is:",
+      options: ["Accumulation of point mutations in coding regions", "Progressive chromosome shortening with each division, contributing to replicative senescence", "Failure to remove RNA primers from the lagging strand", "Inability to repair double-strand breaks"], answer: 1,
+      why: "The end-replication problem means linear chromosome ends shorten each cycle unless telomerase extends them; somatic cells therefore hit a division limit.",
+      whys: ["Point mutation rates depend on polymerase fidelity and repair, not telomerase", "Without telomere extension, ends erode each division until the cell senesces", "Primer removal is handled by RNase H/FEN1 regardless of telomerase", "Double-strand break repair uses NHEJ and homologous recombination"] },
+    { topic: "Transcription and RNA processing", stem: "α-Amanitin selectively inhibits RNA polymerase II. Synthesis of which RNA would fall most directly?",
+      options: ["Ribosomal RNA (28S, 18S)", "Transfer RNA", "Messenger RNA", "5S ribosomal RNA"], answer: 2,
+      why: "Pol II transcribes protein-coding genes into mRNA (and most snRNAs). Pol I makes large rRNAs; pol III makes tRNA and 5S rRNA.",
+      whys: ["Large rRNAs are made by RNA polymerase I in the nucleolus", "tRNA is a polymerase III product", "mRNA is the defining product of RNA polymerase II", "5S rRNA is transcribed by polymerase III"] },
+    { topic: "Transcription and RNA processing", stem: "A mutation destroys the GU sequence at the 5′ end of an intron in a pre-mRNA. The most likely outcome is:",
+      options: ["Failure of capping at the 5′ end of the transcript", "Retention of the intron or skipping of the adjacent exon in the mature mRNA", "Premature polyadenylation within the intron", "Loss of ribosome binding at the Shine–Dalgarno sequence"], answer: 1,
+      why: "The 5′ GU (with branch point and 3′ AG) defines the splice site; destroying it prevents spliceosome recognition, causing intron retention or exon skipping.",
+      whys: ["Capping occurs at the transcript's 5′ end independent of splice signals", "Without the 5′ splice-donor site the spliceosome cannot excise the intron correctly", "Poly-A signals (AAUAAA) are separate elements near the 3′ end", "Shine–Dalgarno sequences are prokaryotic; splicing is eukaryotic"] },
+    { topic: "Translation and the genetic code", stem: "During initiation of eukaryotic translation, the initiator methionyl-tRNA is positioned directly in the ribosome's:",
+      options: ["A site", "P site", "E site", "Exit tunnel"], answer: 1,
+      why: "Initiator tRNA is unique in entering the P site during initiation; all subsequent aminoacyl-tRNAs enter at the A site.",
+      whys: ["The A site receives every incoming tRNA except the initiator", "Only the initiator tRNA loads directly into the peptidyl (P) site", "The E site is where deacylated tRNAs exit after peptide transfer", "The exit tunnel passes the growing polypeptide, not tRNAs"] },
+    { topic: "Translation and the genetic code", stem: "There are 61 sense codons but far fewer distinct tRNA species in most cells. This is possible because:",
+      options: ["Multiple ribosomes read each codon differently", "Non-standard base pairing is tolerated at the third codon position (wobble)", "Aminoacyl-tRNA synthetases edit codons before translation", "Most codons are never used in vivo"], answer: 1,
+      why: "Wobble pairing lets one tRNA anticodon read several synonymous codons differing at position three.",
+      whys: ["Ribosomes do not alter codon identity", "Relaxed pairing at the 3′ codon base lets single tRNAs cover codon families", "Synthetases charge tRNAs with amino acids; they never edit mRNA", "Codon usage is biased but essentially all sense codons are used"] },
+    { topic: "Gene regulation in prokaryotes (operons)", stem: "In E. coli growing in medium containing both glucose and lactose, transcription of the lac operon is low because:",
+      options: ["The lac repressor remains bound to the operator", "cAMP levels are low, so the CAP activator does not stimulate the promoter", "Allolactose degrades the operon's mRNA", "RNA polymerase cannot recognize prokaryotic promoters when glucose is present"], answer: 1,
+      why: "Lactose inactivates the repressor, but glucose keeps cAMP low; without cAMP–CAP the weak lac promoter fires only at low levels (catabolite repression).",
+      whys: ["Allolactose from lactose releases the repressor from the operator", "Low cAMP means CAP cannot activate the promoter — the key glucose effect", "Allolactose is an inducer; it does not degrade mRNA", "Polymerase recognizes promoters fine; it simply needs CAP for strong initiation here"] },
+    { topic: "Gene regulation in prokaryotes (operons)", stem: "The trp operon is transcribed at high levels only when tryptophan is scarce. In this system, tryptophan acts as a:",
+      options: ["Inducer that inactivates the repressor", "Corepressor that activates the repressor", "Activator of the promoter", "Ribosome-binding inhibitor"], answer: 1,
+      why: "In repressible operons the end product (trp) binds the aporepressor, activating it to block transcription — classic feedback repression.",
+      whys: ["Inducers turn operons on; trp turns its operon off", "Trp binds the repressor and enables it to bind the operator", "Trp does not act as a transcriptional activator", "Attenuation involves ribosome stalling, but trp itself is not a ribosome inhibitor"] },
+    { topic: "Eukaryotic gene regulation & epigenetics", stem: "Extensive methylation of CpG islands in a gene's promoter region is most associated with:",
+      options: ["Increased transcription of the gene", "Transcriptional silencing of the gene", "Increased translation efficiency", "Alternative splicing of the transcript"], answer: 1,
+      why: "Promoter CpG methylation recruits repressive complexes and compacts chromatin, silencing transcription — a heritable epigenetic mark.",
+      whys: ["Methylation of promoters correlates with repression, not activation", "Methyl-CpG-binding proteins recruit histone deacetylases that close chromatin", "Translation occurs downstream and is not directly set by promoter methylation", "Splicing is directed by spliceosomal signals, not promoter methylation"] },
+    { topic: "Eukaryotic gene regulation & epigenetics", stem: "A microRNA binds with partial complementarity to the 3′ untranslated region of an mRNA. The expected result is:",
+      options: ["Enhanced ribosome loading onto the transcript", "Translational repression and/or destabilization of the mRNA", "Cleavage of the DNA encoding the mRNA", "Export of the mRNA from the nucleus"], answer: 1,
+      why: "miRNAs guide the RISC complex to 3′UTRs, repressing translation and promoting decay.",
+      whys: ["miRNA binding blocks, not enhances, translation initiation", "RISC-bound transcripts are translationally silenced and often deadenylated", "miRNAs act on RNA, never on the genomic DNA", "Nuclear export is not the function of cytoplasmic RISC"] },
+    { topic: "Mendelian genetics and inheritance patterns", stem: "A woman who carries an X-linked recessive allele has children with an unaffected man. What fraction of their sons is expected to be affected?",
+      options: ["None", "One quarter", "One half", "All"], answer: 2,
+      why: "Sons receive their X from the carrier mother: half get the mutant X and are affected, since fathers give sons a Y.",
+      whys: ["Half of the mother's X chromosomes carry the allele, so sons are at risk", "1/4 is the fraction of all children who are affected sons, not of sons", "Each son has a 1/2 chance of inheriting the mutant maternal X", "All sons affected would require a homozygous mother"] },
+    { topic: "Chromosomal inheritance, linkage & recombination", stem: "Genes A and B are 20 map units apart. An AaBb individual with alleles in cis (AB/ab) is test-crossed. What percentage of offspring show a recombinant phenotype?",
+      options: ["5%", "10%", "20%", "40%"], answer: 2,
+      why: "Map distance approximates recombination frequency: 20 cM → 20% recombinant offspring (10% each class).",
+      whys: ["5% would correspond to 5 cM", "10% is one recombinant class, not the total", "20 map units means 20% total recombinants in a test cross", "40% would imply the genes are nearly unlinked (50% is the maximum)"] },
+    { topic: "Chromosomal inheritance, linkage & recombination", stem: "A child with trisomy 21 has two different chromosome 21 centromeric markers from the mother plus one from the father. The extra chromosome most likely arose from:",
+      options: ["Maternal nondisjunction in meiosis I", "Maternal nondisjunction in meiosis II", "Paternal nondisjunction in meiosis I", "A mitotic error after fertilization"], answer: 0,
+      why: "Two distinct maternal homologs (different centromeric markers) indicate the homologs failed to separate — a meiosis I error.",
+      whys: ["Failure of homolog separation passes both different maternal centromeres to one egg", "MII errors give two copies of the same chromatid — identical centromeric markers", "The father contributed only one chromosome 21 here", "A post-zygotic error would duplicate one existing chromosome, not add a distinct one"] },
+    { topic: "Population genetics and Hardy–Weinberg", stem: "An autosomal recessive disease affects 1 in 2,500 individuals in a population at Hardy–Weinberg equilibrium. The expected carrier frequency is closest to:",
+      options: ["1/25", "1/50", "1/100", "1/625"], answer: 0,
+      why: "q² = 1/2500 → q = 1/50, p ≈ 49/50; carriers 2pq ≈ 2 × (49/50) × (1/50) ≈ 1/25.",
+      whys: ["2pq ≈ 2q when q is small: about 1 in 25", "1/50 is the allele frequency q, not the carrier frequency", "1/100 underestimates; carriers are twice pq", "1/625 has no basis in the H–W terms here"] },
+    { topic: "Mutations, DNA repair & genetic variability", stem: "Patients with xeroderma pigmentosum develop skin cancers from sunlight exposure because they cannot repair UV-induced pyrimidine dimers. The defective pathway is:",
+      options: ["Mismatch repair", "Base excision repair", "Nucleotide excision repair", "Non-homologous end joining"], answer: 2,
+      why: "NER excises bulky, helix-distorting lesions such as thymine dimers; its loss causes XP.",
+      whys: ["Mismatch repair fixes replication errors, and its loss causes Lynch syndrome", "BER removes small, non-distorting base lesions like deaminated cytosine", "NER removes an oligonucleotide containing the bulky dimer and fills the gap", "NHEJ rejoins double-strand breaks, not intrastrand dimers"] },
+    { topic: "Mutations, DNA repair & genetic variability", stem: "A tumor shows expansion and contraction of short repetitive DNA sequences throughout the genome (microsatellite instability). This pattern points to a defect in:",
+      options: ["Nucleotide excision repair", "Mismatch repair", "Homologous recombination", "Photoreactivation"], answer: 1,
+      why: "Slipped-strand errors at microsatellites are normally corrected by mismatch repair; MMR loss (as in Lynch syndrome) produces microsatellite instability.",
+      whys: ["NER handles bulky adducts, not replication slippage", "MMR corrects polymerase slippage at repeats; without it repeats mutate freely", "HR repairs double-strand breaks using a sister template", "Photoreactivation is a bacterial/plant UV-repair mechanism absent in humans"] },
+    { topic: "Recombinant DNA and biotechnology (PCR, cloning, gels, sequencing)", stem: "In agarose gel electrophoresis of DNA fragments, the band closest to the positive electrode after a run contains:",
+      options: ["The largest fragment", "The smallest fragment", "The most positively charged fragment", "The most methylated fragment"], answer: 1,
+      why: "DNA is uniformly negative and migrates toward the anode; small fragments sieve through the gel fastest and travel farthest.",
+      whys: ["Large fragments are retarded by the gel matrix and stay near the well", "Smallest fragments migrate farthest toward the anode", "All DNA carries the same charge-to-mass ratio from its phosphate backbone", "Methylation does not meaningfully change electrophoretic mobility here"] },
+    { topic: "Recombinant DNA and biotechnology (PCR, cloning, gels, sequencing)", stem: "To insert a gene into a plasmid so the ends anneal before ligation, a researcher should cut both the insert and the vector with:",
+      options: ["Any two different restriction enzymes", "The same restriction enzyme that leaves complementary sticky ends", "DNase I", "Reverse transcriptase"], answer: 1,
+      why: "Cutting both molecules with the same sticky-end enzyme creates complementary overhangs that base-pair, positioning the fragments for ligase.",
+      whys: ["Different enzymes generally leave incompatible overhangs", "Identical palindromic cuts give mutually complementary single-stranded ends", "DNase I degrades DNA nonspecifically", "Reverse transcriptase copies RNA into cDNA; it does not cut vectors"] },
+    { topic: "Recombinant DNA and biotechnology (PCR, cloning, gels, sequencing)", stem: "Sanger (chain-termination) sequencing depends on the incorporation of dideoxynucleotides because they:",
+      options: ["Lack a 3′-OH group, terminating strand elongation", "Cannot base-pair with the template", "Are fluorescent only when unincorporated", "Block primer annealing"], answer: 0,
+      why: "Without a 3′-OH, no phosphodiester bond can form with the next nucleotide, so synthesis stops at known bases, generating a ladder of fragments.",
+      whys: ["No 3′-OH means the chain cannot be extended past the ddNTP", "ddNTPs pair normally with the template — that's why they incorporate", "Labeling works because incorporated ddNTPs mark fragment ends", "ddNTPs act during elongation, after the primer has annealed"] },
+    { topic: "Cell theory, organelle structure & function", stem: "A pancreatic cell dedicated to secreting digestive enzymes would be expected to contain especially prominent:",
+      options: ["Smooth ER and peroxisomes", "Rough ER and Golgi apparatus", "Lysosomes and centrioles", "Free ribosomes only"], answer: 1,
+      why: "Secreted proteins are synthesized on rough ER, then modified and packaged by the Golgi — the secretory pathway.",
+      whys: ["Smooth ER serves lipid synthesis and detoxification, not protein export", "Rough ER makes secretory proteins; the Golgi sorts and ships them", "Lysosomes digest material; centrioles organize spindles", "Free ribosomes make cytosolic proteins, not secreted ones"] },
+    { topic: "Cell theory, organelle structure & function", stem: "In I-cell disease, hydrolases that belong in the lysosome are found secreted outside the cell. The defect is a failure to:",
+      options: ["Translate hydrolase mRNAs", "Add the mannose-6-phosphate sorting tag in the Golgi", "Acidify the lysosome", "Form autophagosomes"], answer: 1,
+      why: "M6P is the address label that routes hydrolases from the Golgi to lysosomes; without it they follow the default secretory path.",
+      whys: ["The enzymes are made normally — they are simply missorted", "Missing M6P tags means no receptor capture, so hydrolases are secreted", "Acidification failures impair enzyme activity, not their destination", "Autophagosome formation is separate from hydrolase trafficking"] },
+    { topic: "Cell theory, organelle structure & function", stem: "A disorder is transmitted from affected mothers to all of their children, while affected fathers never transmit it. The causative mutation most likely resides in:",
+      options: ["An X-linked dominant gene", "Mitochondrial DNA", "An imprinted autosomal gene", "A Y-linked gene"], answer: 1,
+      why: "Mitochondria — and their DNA — come from the egg, so inheritance is strictly maternal.",
+      whys: ["X-linked dominant fathers would pass the trait to all daughters", "Only oocytes contribute mitochondria to the zygote", "Imprinting alters expression by parent-of-origin but both sexes transmit alleles", "Y-linked traits pass exclusively father to son"] },
+    { topic: "Cell theory, organelle structure & function", stem: "A protein destined for secretion is directed to the endoplasmic reticulum by:",
+      options: ["A nuclear localization sequence", "An N-terminal signal sequence recognized by SRP", "A mannose-6-phosphate tag", "Ubiquitination"], answer: 1,
+      why: "The signal recognition particle binds the emerging N-terminal signal peptide and docks the ribosome on the ER translocon.",
+      whys: ["NLS motifs route proteins into the nucleus through nuclear pores", "SRP pauses translation and delivers the ribosome to the ER membrane", "M6P sorts lysosomal enzymes after they are already in the pathway", "Ubiquitin marks proteins for proteasomal degradation"] },
+    { topic: "Plasma membrane structure and transport", stem: "At low temperature, adding cholesterol to a phospholipid bilayer primarily:",
+      options: ["Decreases fluidity by packing between phospholipids", "Increases fluidity by preventing tight packing of fatty acyl tails", "Has no effect on fluidity", "Causes the bilayer to disassemble"], answer: 1,
+      why: "Cholesterol is a fluidity buffer: at low temperature it disrupts tail packing (raising fluidity); at high temperature it restrains motion.",
+      whys: ["That describes cholesterol's effect at high temperature", "Below the transition temperature, cholesterol keeps tails from crystallizing", "Cholesterol measurably modulates fluidity in both directions", "Cholesterol stabilizes rather than dissolves bilayers"] },
+    { topic: "Plasma membrane structure and transport", stem: "Human red blood cells placed in 0.45% saline (roughly half-isotonic) will:",
+      options: ["Shrink as water leaves the cell", "Swell, and may lyse, as water enters the cell", "Remain unchanged", "Actively pump sodium in to compensate"], answer: 1,
+      why: "0.9% saline is isotonic to red cells; half that concentration is hypotonic, so water flows in by osmosis.",
+      whys: ["Shrinking (crenation) happens in hypertonic solutions", "Water moves toward the higher intracellular solute concentration, swelling the cell", "Only ~0.9% saline leaves red cell volume unchanged", "RBCs cannot counteract a strong osmotic influx by pumping ions inward"] },
+    { topic: "Plasma membrane structure and transport", stem: "Uptake of a solute into a cell increases with concentration but plateaus at high concentrations. This kinetic behavior indicates:",
+      options: ["Simple diffusion through the bilayer", "Carrier-mediated transport with saturable binding sites", "Bulk-phase endocytosis", "Osmotic flow"], answer: 1,
+      why: "Saturation kinetics are the signature of a finite number of transport proteins; simple diffusion increases linearly with the gradient.",
+      whys: ["Simple diffusion shows no plateau — flux keeps rising with concentration", "A limited pool of carriers saturates, capping the transport rate", "Bulk endocytosis is nonspecific and roughly proportional to concentration", "Osmosis is water movement, not solute uptake kinetics"] },
+    { topic: "Cytoskeleton, cell junctions & extracellular matrix", stem: "A neuron must move synaptic vesicle precursors from the soma down the axon toward the terminal. This anterograde transport is driven primarily by:",
+      options: ["Kinesin walking toward microtubule plus ends", "Dynein walking toward microtubule minus ends", "Myosin moving along actin toward the nucleus", "Passive diffusion along neurofilaments"], answer: 0,
+      why: "Axonal microtubules are oriented plus-end-out, so plus-end-directed kinesins carry cargo away from the soma.",
+      whys: ["Kinesin is the plus-end motor, and axon plus ends point to the terminal", "Dynein powers retrograde transport back toward the soma", "Myosin/actin transport is short-range, not axon-length delivery", "Diffusion is far too slow over axonal distances; neurofilaments are structural"] },
+    { topic: "Cytoskeleton, cell junctions & extracellular matrix", stem: "Cardiac muscle cells contract in near-synchrony because ions and small signaling molecules pass directly between neighboring cells through:",
+      options: ["Tight junctions", "Desmosomes", "Gap junctions", "Hemidesmosomes"], answer: 2,
+      why: "Gap junctions are connexon channels linking adjacent cytoplasms, electrically coupling cardiomyocytes.",
+      whys: ["Tight junctions seal the space between cells; nothing passes cell-to-cell", "Desmosomes are mechanical rivets resisting shear", "Connexon pores let current and small molecules flow directly between cells", "Hemidesmosomes anchor cells to the basement membrane"] },
+    { topic: "Mitosis, the cell cycle & checkpoint control", stem: "Growth factors drive a cell past the restriction point in part by activating cyclin D–CDK4/6, which phosphorylates Rb. Hyperphosphorylated Rb then:",
+      options: ["Binds E2F more tightly, blocking S phase", "Releases E2F, permitting transcription of S-phase genes", "Degrades cyclin E", "Activates p53"], answer: 1,
+      why: "Rb is a brake that sequesters E2F; phosphorylation releases the brake and commits the cell to DNA replication.",
+      whys: ["Hypophosphorylated Rb is the E2F-binding, growth-suppressing form", "Freed E2F transcribes cyclin E, DNA polymerase, and other S-phase genes", "Rb phosphorylation actually leads to cyclin E accumulation", "p53 responds to DNA damage through a separate pathway"] },
+    { topic: "Mitosis, the cell cycle & checkpoint control", stem: "After ionizing radiation, cells with functional p53 arrest in G1 or undergo apoptosis. Tumor cells lacking p53 instead:",
+      options: ["Arrest permanently in G0", "Continue cycling with damaged DNA, accumulating mutations", "Repair damage faster than normal cells", "Cannot replicate DNA at all"], answer: 1,
+      why: "p53 is the guardian of the genome; without it, damage checkpoints fail and genomic instability accelerates tumor evolution.",
+      whys: ["Loss of p53 removes, not enforces, arrest signals", "No G1 checkpoint means damaged templates are replicated and inherited", "Repair is impaired or unchanged — never enhanced — without p53 signaling", "Replication machinery works fine; the surveillance is what's missing"] },
+    { topic: "Meiosis, gametogenesis & genetic variation", stem: "Which two processes are the principal sources of genetic variation among the gametes of a single individual?",
+      options: ["DNA proofreading and mismatch repair", "Crossing over in prophase I and independent assortment at metaphase I", "Cytokinesis and karyokinesis", "Replication and transcription"], answer: 1,
+      why: "Recombination shuffles alleles within chromosomes; independent assortment shuffles whole chromosomes — together generating enormous gamete diversity.",
+      whys: ["Repair systems reduce variation by fixing errors", "These two meiosis-I events independently randomize allele combinations", "Cell-division mechanics distribute chromosomes but do not diversify them", "Replication and transcription copy information rather than recombine it"] },
+    { topic: "Meiosis, gametogenesis & genetic variation", stem: "At ovulation, the released human oocyte is arrested at which stage, completing meiosis only if fertilization occurs?",
+      options: ["Prophase I", "Metaphase I", "Metaphase II", "Telophase II"], answer: 2,
+      why: "Oocytes arrest in prophase I from fetal life until each cycle's ovulation, then arrest again at metaphase II until sperm entry triggers completion.",
+      whys: ["Prophase I arrest is the long dictyate arrest before ovulation", "Metaphase I is passed just before the first polar body forms", "The ovulated egg waits at metaphase II for fertilization", "Telophase II occurs only after the sperm triggers anaphase II"] },
+    { topic: "Cell communication, second messengers & apoptosis", stem: "Epinephrine binding a β-adrenergic receptor raises intracellular cAMP. The correct order of events is:",
+      options: ["Receptor → Gs α-subunit activates adenylyl cyclase → cAMP → protein kinase A", "Receptor → phospholipase C → cAMP → protein kinase C", "Receptor → adenylyl cyclase phosphorylates Gs → PKA → cAMP", "Receptor → cAMP opens receptor channel → PKA"], answer: 0,
+      why: "β-receptors are GPCRs coupled to Gs: GTP-bound αs stimulates adenylyl cyclase, and cAMP activates PKA.",
+      whys: ["This is the canonical Gs–cyclase–cAMP–PKA cascade", "PLC generates IP₃ and DAG for the Gq pathway, not cAMP", "Adenylyl cyclase makes cAMP; it does not phosphorylate G proteins", "β-receptors are not ligand-gated channels"] },
+    { topic: "Cell communication, second messengers & apoptosis", stem: "Release of cytochrome c from mitochondria into the cytosol commits a cell to apoptosis by:",
+      options: ["Blocking ATP synthesis, causing necrosis", "Nucleating the apoptosome and activating initiator caspase-9", "Directly digesting genomic DNA", "Opening plasma-membrane death channels"], answer: 1,
+      why: "Cytochrome c binds Apaf-1 to form the apoptosome, activating caspase-9 and the executioner caspase cascade — the intrinsic pathway.",
+      whys: ["Apoptosis is ATP-dependent and orderly; necrosis is the uncontrolled alternative", "The apoptosome converts mitochondrial permeabilization into caspase activation", "DNA fragmentation is done later by caspase-activated nucleases", "The intrinsic pathway begins at mitochondria, not surface channels"] },
+    { topic: "Cell communication, second messengers & apoptosis", stem: "A growth factor receptor that dimerizes and cross-phosphorylates tyrosine residues on its partner upon ligand binding is a:",
+      options: ["G protein-coupled receptor", "Receptor tyrosine kinase", "Ligand-gated ion channel", "Nuclear hormone receptor"], answer: 1,
+      why: "Dimerization plus trans-autophosphorylation on tyrosines is the defining activation mechanism of RTKs (e.g., insulin, EGF receptors).",
+      whys: ["GPCRs signal through heterotrimeric G proteins, not autophosphorylation", "Cross-phosphorylated tyrosines recruit SH2-domain signaling proteins", "Channel receptors pass ions rather than phosphorylate", "Nuclear receptors are intracellular transcription factors"] },
+    { topic: "Bioenergetics and cellular respiration overview", stem: "2,4-Dinitrophenol (DNP) carries protons across the inner mitochondrial membrane. In treated cells, oxygen consumption ______ while ATP synthesis ______.",
+      options: ["decreases; increases", "increases; decreases", "increases; increases", "decreases; decreases"], answer: 1,
+      why: "Uncouplers dissipate the proton gradient as heat: the ETC runs faster (more O₂ used) but ATP synthase loses its driving force.",
+      whys: ["Electron transport speeds up when the back-pressure of the gradient is lost", "Classic uncoupling: respiration up, phosphorylation down, energy lost as heat", "ATP synthesis cannot rise without a proton-motive force", "O₂ consumption falls only with direct ETC inhibitors, not uncouplers"] },
+    { topic: "Bioenergetics and cellular respiration overview", stem: "The primary purpose of converting pyruvate to lactate in exercising muscle is to:",
+      options: ["Produce additional ATP directly", "Regenerate NAD⁺ so glycolysis can continue", "Store energy as lactate for later use", "Reduce the acidity of the cytoplasm"], answer: 1,
+      why: "Fermentation exists to reoxidize NADH; without NAD⁺, the glyceraldehyde-3-phosphate step of glycolysis stalls.",
+      whys: ["The lactate step itself yields no ATP", "Reducing pyruvate reoxidizes NADH to NAD⁺, keeping glycolysis running", "Lactate is a byproduct exported to the liver, not an energy store in muscle", "Lactate production accompanies, and does not relieve, cytosolic acidification"] },
+    { topic: "Bioenergetics and cellular respiration overview", stem: "Cyanide blocks cytochrome c oxidase (complex IV). Which statement describes the immediate consequence?",
+      options: ["Electrons flow to O₂ through an alternative complex", "The entire electron transport chain backs up and the proton gradient collapses", "Glycolysis stops immediately", "ATP synthase pumps protons to compensate"], answer: 1,
+      why: "With the terminal electron acceptor step blocked, upstream carriers stay reduced, pumping stops, and oxidative ATP production fails.",
+      whys: ["Mammalian mitochondria have no bypass to O₂ around complex IV", "No electron flow means no proton pumping — the gradient dissipates", "Glycolysis continues (even accelerates) anaerobically", "Running synthase in reverse consumes ATP; it cannot restore respiration"] },
+    { topic: "Prokaryotic cell structure, growth & genetics", stem: "Gram-negative bacteria are distinguished from gram-positive bacteria by having:",
+      options: ["A thicker peptidoglycan wall that retains crystal violet", "An outer membrane containing lipopolysaccharide and a thin peptidoglycan layer", "No cell wall at all", "A membrane-bound nucleus"], answer: 1,
+      why: "The gram-negative envelope is a thin peptidoglycan layer plus an LPS-rich outer membrane (endotoxin), which excludes the stain.",
+      whys: ["Thick, stain-retaining walls define gram-positive organisms", "The LPS outer membrane over thin peptidoglycan is the gram-negative signature", "Wall-less bacteria (Mycoplasma) are a separate category entirely", "No bacterium has a membrane-bound nucleus"] },
+    { topic: "Prokaryotic cell structure, growth & genetics", stem: "A bacterium with a 20-minute doubling time starts as a single cell in ideal medium. After 2 hours of exponential growth, the population is:",
+      options: ["6 cells", "12 cells", "64 cells", "120 cells"], answer: 2,
+      why: "2 hours = 6 doublings; 2⁶ = 64.",
+      whys: ["6 is the number of doublings, not the cell count", "12 would be linear growth (6 × 2), but growth is exponential", "Six doublings of one cell give 2⁶ = 64 cells", "120 confuses minutes with the exponential result"] },
+    { topic: "Bacterial gene transfer: conjugation, transformation, transduction", stem: "After conjugation between an F⁺ and an F⁻ bacterium, the typical outcome is:",
+      options: ["The recipient receives random chromosomal genes and stays F⁻", "The recipient receives the F plasmid and becomes F⁺", "The donor loses its chromosome", "Both cells lyse"], answer: 1,
+      why: "F⁺ × F⁻ crosses transfer the F plasmid itself via the pilus; chromosomal transfer requires Hfr donors.",
+      whys: ["Chromosomal gene transfer is the Hfr scenario, not simple F⁺ crosses", "A copy of the F plasmid moves across, converting the recipient to F⁺", "Transfer is replicative — the donor keeps its DNA", "Conjugation is nonlethal to both partners"] },
+    { topic: "Viral structure, life cycles & retroviruses", stem: "A bacteriophage integrates its genome into the host chromosome and is passively replicated for many generations before stress triggers virion production. The initial state describes:",
+      options: ["The lytic cycle", "Lysogeny, with the phage genome as a prophage", "Transformation", "Abortive infection"], answer: 1,
+      why: "Lysogeny is dormant integration as a prophage; induction (e.g., by UV or stress) flips the switch to the lytic program.",
+      whys: ["The lytic cycle is the productive, cell-bursting phase that comes later", "Integrated, silently inherited phage DNA is the definition of a prophage", "Transformation is uptake of naked environmental DNA", "Abortive infection produces no stable association at all"] },
+    { topic: "Viral structure, life cycles & retroviruses", stem: "A virus with a positive-sense single-stranded RNA genome can, upon entry into the cytoplasm:",
+      options: ["Be translated directly by host ribosomes", "Serve directly as a template for DNA synthesis by host polymerases", "Integrate into the host genome without any enzymes", "Only replicate inside the nucleus"], answer: 0,
+      why: "(+)ssRNA is effectively mRNA — ribosomes translate it immediately, producing the viral replicase.",
+      whys: ["Positive-sense RNA has mRNA polarity and is read directly", "Host cells have no RNA-dependent DNA polymerase; retroviruses must carry one", "Integration requires reverse transcriptase and integrase", "Most (+)ssRNA viruses replicate entirely in the cytoplasm"] },
+    { topic: "Viroids, prions and subviral particles", stem: "Prion diseases propagate without any nucleic acid because the infectious agent is:",
+      options: ["A naked circular RNA", "A misfolded protein that templates refolding of the normal isoform", "A defective virus requiring a helper", "A bacterial toxin"], answer: 1,
+      why: "PrPSc converts normal PrPC into the protease-resistant β-sheet-rich conformation, propagating the misfold protein-to-protein.",
+      whys: ["Naked circular RNAs are viroids, plant pathogens", "Conformational templating by misfolded PrP is the prion mechanism", "Defective helper-dependent agents (like hepatitis D) still use nucleic acid", "Toxins poison cells but do not self-propagate"] },
+    { topic: "Natural selection, fitness & speciation", stem: "The sickle-cell allele remains at high frequency in malaria-endemic regions primarily because:",
+      options: ["The mutation rate to the sickle allele is unusually high", "Heterozygotes have higher fitness than either homozygote where malaria is common", "Genetic drift favors the allele in large populations", "The allele is dominant"], answer: 1,
+      why: "Heterozygote advantage (overdominance) maintains both alleles: HbAS resists malaria without sickle-cell disease.",
+      whys: ["Mutation pressure alone is far too weak to hold an allele at these frequencies", "Balancing selection through heterozygote advantage preserves the polymorphism", "Drift is strongest in small populations and is directionless", "Dominance describes expression, not why selection retains the allele"] },
+    { topic: "Natural selection, fitness & speciation", stem: "A river permanently divides a rodent population; over many generations the two groups become unable to interbreed. This is an example of:",
+      options: ["Sympatric speciation", "Allopatric speciation", "Artificial selection", "Convergent evolution"], answer: 1,
+      why: "Geographic isolation followed by independent divergence to reproductive isolation is allopatric speciation.",
+      whys: ["Sympatric speciation happens without a geographic barrier", "A physical barrier splitting the range is the allopatric mechanism", "No human selective breeding is involved", "Convergence is unrelated lineages evolving similar traits"] },
+    { topic: "Fertilization, cleavage & gastrulation", stem: "Immediately after a sperm fuses with the egg membrane, polyspermy is blocked most durably by:",
+      options: ["Depolarization of the egg membrane lasting for days", "The cortical reaction, which modifies the zona pellucida", "Ejection of the second polar body", "Fusion of all remaining sperm with each other"], answer: 1,
+      why: "Cortical granule enzymes harden the zona and destroy sperm receptors — the slow, permanent block; membrane depolarization is only the fast, transient block.",
+      whys: ["The electrical fast block lasts seconds to minutes, not days", "Cortical granule release remodels the zona so no further sperm can bind", "Polar body ejection completes meiosis and is unrelated to sperm entry", "Sperm do not fuse with one another"] },
+    { topic: "Germ layers and their derivatives", stem: "During gastrulation, cells migrating through the primitive streak establish the three germ layers. The notochord that subsequently forms is derived from:",
+      options: ["Ectoderm", "Mesoderm", "Endoderm", "Trophoblast"], answer: 1,
+      why: "The notochord is axial mesoderm; it later induces the overlying ectoderm to form the neural plate.",
+      whys: ["Ectoderm forms epidermis and the nervous system, including what the notochord induces", "Axial mesoderm condenses into the notochord along the midline", "Endoderm lines the gut tube and its outgrowths", "Trophoblast builds the placenta, not embryonic structures"] },
+    { topic: "Cell differentiation, induction & determination", stem: "Transplanting the dorsal lip of the blastopore to the opposite side of an amphibian embryo induces a second body axis. This experiment demonstrates:",
+      options: ["Cytoplasmic determinants act cell-autonomously", "Induction: one tissue directs the developmental fate of neighboring tissue", "Genomic equivalence is false", "Gastrulation requires no signaling"], answer: 1,
+      why: "Spemann and Mangold's organizer experiment showed that secreted signals from one region instruct surrounding cells — the paradigm of embryonic induction.",
+      whys: ["Cell-autonomous determinants cannot explain re-patterning of host tissue", "The graft recruited host cells into a new axis — instruction between tissues", "Genomic equivalence (all cells share the genome) is supported, not refuted", "The result is direct evidence that signaling drives gastrulation patterning"] },
+    { topic: "Stem cells, regeneration & senescence", stem: "Cells of the inner cell mass of a blastocyst can form every embryonic tissue but cannot alone form a viable embryo, because they cannot make trophoblast derivatives. They are therefore described as:",
+      options: ["Totipotent", "Pluripotent", "Multipotent", "Unipotent"], answer: 1,
+      why: "Pluripotent cells form all three germ layers but not extraembryonic placenta; only the zygote and early blastomeres are totipotent.",
+      whys: ["Totipotency includes the trophoblast lineage — only the earliest cells qualify", "All-germ-layer potential minus extraembryonic tissue defines pluripotency", "Multipotent cells (like hematopoietic stem cells) are limited to one lineage family", "Unipotent cells produce a single cell type"] }
+  ],
+  genchem: [
+    { topic: "Acids, bases & buffers", stem: "A solution contains 0.20 M HA and 0.020 M A⁻. If the pKa of HA is 4.8, the pH is closest to:",
+      options: ["2.8", "3.8", "4.8", "5.8"], answer: 1,
+      why: "Henderson–Hasselbalch: pH = pKa + log([A⁻]/[HA]) = 4.8 + log(0.1) = 4.8 − 1 = 3.8." },
+    { topic: "Titration", stem: "A weak diprotic acid is titrated with standardized NaOH. At the first half-equivalence point:",
+      options: ["pH = pKa1", "pH = pKa2", "pH = 7.0", "[H₂A] = [A²⁻]"], answer: 0,
+      why: "Half-way to the first equivalence point, [H₂A] = [HA⁻], so the log term vanishes and pH = pKa1 — the point of maximum buffering for the first proton." },
+    { topic: "Periodic trends", stem: "The first ionization energy of aluminum is lower than that of magnesium. The best explanation is that:",
+      options: ["Al has a larger effective nuclear charge than Mg", "The electron removed from Al comes from a higher-energy 3p orbital, whereas Mg loses an electron from a filled 3s subshell", "Al has a smaller atomic radius than Mg", "Mg is a transition metal and Al is not"], answer: 1,
+      why: "Removing the single 3p electron of Al is easier than breaking into Mg's stable filled 3s² subshell — one of the standard breaks in the left-to-right ionization energy trend." },
+    { topic: "Thermodynamics", stem: "A reaction has ΔH = +30 kJ/mol and ΔS = +100 J/(mol·K), both temperature-independent. Above approximately what temperature does it become spontaneous?",
+      options: ["3 K", "30 K", "300 K", "It is never spontaneous"], answer: 2,
+      why: "ΔG = ΔH − TΔS < 0 requires T > ΔH/ΔS = 30,000 J / 100 J·K⁻¹ = 300 K. Watch the kJ→J conversion." },
+    { topic: "Kinetics", stem: "For the reaction A + B → C, doubling [A] quadruples the initial rate while doubling [B] leaves it unchanged. The rate law is:",
+      options: ["rate = k[A][B]", "rate = k[A]²", "rate = k[A]²[B]", "rate = k[A][B]²"], answer: 1,
+      why: "Rate ∝ [A]² (2² = 4) and is zero order in B, so rate = k[A]². Overall order is 2." },
+    { topic: "Equilibrium", stem: "For N₂(g) + 3H₂(g) ⇌ 2NH₃(g), ΔH < 0. Which change shifts the equilibrium toward NH₃?",
+      options: ["Increasing the temperature", "Increasing the total pressure by decreasing volume", "Adding a platinum catalyst", "Adding an inert gas at constant volume"], answer: 1,
+      why: "Compression favors the side with fewer moles of gas (4 → 2), so NH₃ increases. Heating an exothermic reaction shifts it left; catalysts and inert gas at constant volume do not shift equilibrium." },
+    { topic: "Electrochemistry", stem: "In a galvanic cell built from Zn/Zn²⁺ and Cu/Cu²⁺ half-cells (E°Zn²⁺/Zn = −0.76 V, E°Cu²⁺/Cu = +0.34 V), which statement is correct?",
+      options: ["Zinc is the cathode and gains mass", "Electrons flow through the external circuit from the copper electrode to the zinc electrode", "Zinc is oxidized at the anode, which is the negative terminal", "The cell reaction has a positive ΔG°"], answer: 2,
+      why: "The more negative reduction potential is oxidized: Zn → Zn²⁺ at the anode, which is negative in a galvanic cell. Electrons travel Zn → Cu externally and ΔG° = −nFE°cell < 0." },
+    { topic: "Solubility equilibria", stem: "The molar solubility of AgCl (Ksp = 1.8 × 10⁻¹⁰) in 0.10 M NaCl is approximately:",
+      options: ["1.3 × 10⁻⁵ M", "1.8 × 10⁻⁹ M", "1.8 × 10⁻¹¹ M", "Unchanged from pure water"], answer: 1,
+      why: "With [Cl⁻] fixed at 0.10 M by the common ion, s = Ksp/[Cl⁻] = 1.8 × 10⁻¹⁰ / 0.10 = 1.8 × 10⁻⁹ M — far below the 1.3 × 10⁻⁵ M solubility in pure water." },
+    { topic: "Gases & kinetic theory", stem: "Helium and oxygen gas are held at the same temperature. The ratio of the root-mean-square speed of He to that of O₂ is closest to:",
+      options: ["1:1", "2.8:1", "8:1", "1:2.8"], answer: 1,
+      why: "v_rms ∝ √(1/M), so the ratio is √(32/4) = √8 ≈ 2.8. Lighter gas, faster molecules at equal temperature." },
+    { topic: "Spectroscopy", stem: "An unknown compound shows a strong IR absorption near 1710 cm⁻¹ and a very broad band spanning 2500–3300 cm⁻¹. The compound most likely contains:",
+      options: ["An aldehyde", "A carboxylic acid", "A primary alcohol only", "A secondary amine"], answer: 1,
+      why: "The C=O stretch near 1710 cm⁻¹ combined with the characteristically broad, low O–H stretch of a hydrogen-bonded dimer is the carboxylic acid signature." }
+  ],
+  psych: [
+    { topic: "Sensory thresholds", stem: "A participant can reliably detect a change in the weight of a 100 g object at 102 g, and a change in a 200 g object at 204 g. This pattern is described by:",
+      options: ["Weber's law", "Signal detection theory", "Sensory adaptation", "The absolute threshold"], answer: 0,
+      why: "Weber's law states the just-noticeable difference is a constant proportion of the original stimulus — here 2%." },
+    { topic: "Memory", stem: "In a free-recall task, participants remember the last few list items best when tested immediately, but this advantage disappears after a 30-second distractor task. This finding is most consistent with the recency effect depending on:",
+      options: ["Long-term consolidation in the hippocampus", "Short-term/working memory storage", "Semantic encoding depth", "Proactive interference"], answer: 1,
+      why: "Recency reflects items still held in short-term memory; a filled delay displaces them. Primacy, which survives delay, reflects rehearsal into long-term memory." },
+    { topic: "Learning & conditioning", stem: "A rat receives food after an unpredictable number of lever presses. Its responding is rapid, steady, and highly resistant to extinction. The schedule is:",
+      options: ["Fixed ratio", "Variable ratio", "Fixed interval", "Variable interval"], answer: 1,
+      why: "Variable-ratio reinforcement produces the highest, steadiest response rates and the greatest resistance to extinction because reinforcement timing is unpredictable." },
+    { topic: "Emotion", stem: "A student's heart pounds during an exam; noticing the racing heart and the exam context, she concludes she is anxious. Which theory of emotion best accounts for this sequence?",
+      options: ["James–Lange theory", "Cannon–Bard theory", "Schachter–Singer two-factor theory", "The Yerkes–Dodson law"], answer: 2,
+      why: "Two-factor theory requires physiological arousal plus a cognitive label drawn from context. James–Lange omits the appraisal step; Cannon–Bard has arousal and emotion occur simultaneously and independently." },
+    { topic: "Consciousness & sleep", stem: "Which EEG finding characterizes REM sleep?",
+      options: ["High-amplitude delta waves", "Sleep spindles and K-complexes", "Low-amplitude, high-frequency activity resembling wakefulness", "Dominant alpha activity with eyes closed"], answer: 2,
+      why: "REM is 'paradoxical sleep': cortical activity resembles waking (beta-like, with sawtooth waves) while skeletal muscle is atonic. Spindles/K-complexes mark stage 2; delta marks stage 3." },
+    { topic: "Attribution & social cognition", stem: "A driver is cut off in traffic and immediately concludes the other driver is reckless, without considering that the driver might be responding to an emergency. This illustrates:",
+      options: ["Self-serving bias", "The fundamental attribution error", "The halo effect", "Cognitive dissonance"], answer: 1,
+      why: "Attributing another person's behavior to disposition while discounting situational causes is the fundamental attribution error." },
+    { topic: "Development", stem: "An 8-year-old understands that pouring water into a taller glass does not change its volume but cannot reason about a hypothetical world with different physical laws. She is best placed in which Piagetian stage?",
+      options: ["Preoperational", "Concrete operational", "Formal operational", "Sensorimotor"], answer: 1,
+      why: "Conservation marks the concrete operational stage (roughly 7–11); abstract and hypothetical reasoning emerges with formal operations." },
+    { topic: "Cognition & heuristics", stem: "After extensive news coverage of an airline crash, people overestimate the risk of flying relative to driving. This judgment error reflects:",
+      options: ["The representativeness heuristic", "The availability heuristic", "Belief perseverance", "Functional fixedness"], answer: 1,
+      why: "Availability substitutes ease of recall for actual frequency; vivid, well-publicized events feel more probable." },
+    { topic: "Personality", stem: "A researcher measures participants on conscientiousness, neuroticism, and openness to predict job performance. This approach belongs to which theoretical tradition?",
+      options: ["Psychoanalytic", "Humanistic", "Trait", "Behaviorist"], answer: 2,
+      why: "Quantifying stable dispositional dimensions (the Five Factor Model) is the trait approach. Humanistic theory emphasizes self-actualization; behaviorism rejects internal dispositions as explanations." },
+    { topic: "Stress", stem: "In Selye's general adaptation syndrome, which stage is characterized by depleted physiological resources and heightened susceptibility to illness?",
+      options: ["Alarm", "Resistance", "Exhaustion", "Appraisal"], answer: 2,
+      why: "Alarm is the initial sympathetic/HPA surge, resistance sustains elevated cortisol, and exhaustion follows when reserves are depleted — the stage linked to immunosuppression and disease." }
+  ],
+  anatphys: [
+    { topic: "Neurons & action potentials", stem: "Tetrodotoxin selectively blocks voltage-gated Na⁺ channels. In a treated axon, the most direct consequence is:",
+      options: ["Failure to reach threshold and propagate an action potential", "Prolonged depolarization from delayed repolarization", "Loss of the resting membrane potential", "Continuous neurotransmitter release"], answer: 0,
+      why: "The rising phase of the action potential requires Na⁺ influx. Blocking those channels prevents depolarization and propagation; the resting potential, set largely by K⁺ leak and the Na⁺/K⁺ ATPase, persists." },
+    { topic: "Cardiac cycle", stem: "During isovolumetric ventricular contraction, which valves are closed?",
+      options: ["Only the atrioventricular valves", "Only the semilunar valves", "Both the atrioventricular and semilunar valves", "Neither set of valves"], answer: 2,
+      why: "All four valves are shut, so ventricular volume is constant while pressure rises. The semilunar valves open only once ventricular pressure exceeds aortic/pulmonary pressure." },
+    { topic: "Renal physiology", stem: "Increased secretion of antidiuretic hormone raises urine osmolarity primarily by:",
+      options: ["Increasing Na⁺ reabsorption in the distal convoluted tubule", "Inserting aquaporin-2 channels into the collecting duct apical membrane", "Dilating the afferent arteriole to raise GFR", "Inhibiting the Na⁺/K⁺/2Cl⁻ cotransporter"], answer: 1,
+      why: "ADH acts on V2 receptors to traffic aquaporin-2 to the collecting duct apical membrane, permitting water reabsorption down the medullary osmotic gradient. Aldosterone drives distal Na⁺ reabsorption; loop diuretics block NKCC2." },
+    { topic: "Respiratory & gas transport", stem: "Which change shifts the oxygen–hemoglobin dissociation curve to the right?",
+      options: ["Increased 2,3-bisphosphoglycerate", "Respiratory alkalosis", "Hypothermia", "Replacement of adult hemoglobin with fetal hemoglobin"], answer: 0,
+      why: "2,3-BPG stabilizes the T (deoxy) state, lowering O₂ affinity and promoting unloading in tissue. Alkalosis, cold, and HbF all increase affinity (left shift)." },
+    { topic: "Endocrine feedback", stem: "A patient takes high-dose exogenous glucocorticoids for several weeks. Expected laboratory findings include:",
+      options: ["Elevated ACTH and elevated CRH", "Suppressed ACTH and adrenal cortical atrophy", "Elevated ACTH with low cortisol", "Unchanged ACTH with adrenal hypertrophy"], answer: 1,
+      why: "Exogenous glucocorticoid feeds back negatively on the hypothalamus and anterior pituitary, suppressing CRH and ACTH; without ACTH trophic support the adrenal cortex atrophies." },
+    { topic: "Muscle contraction", stem: "In the cross-bridge cycle, binding of a new ATP molecule to myosin causes:",
+      options: ["The power stroke", "Detachment of the myosin head from actin", "Ca²⁺ release from the sarcoplasmic reticulum", "Troponin to shift tropomyosin off the actin binding site"], answer: 1,
+      why: "ATP binding releases myosin from actin; its hydrolysis then re-cocks the head. Pi release drives the power stroke, and Ca²⁺ binding to troponin — not ATP — exposes the binding sites." },
+    { topic: "Immune system", stem: "Which cell type presents exogenous antigen on MHC class II to activate a naïve CD4⁺ T cell?",
+      options: ["Dendritic cell", "Cytotoxic CD8⁺ T cell", "Erythrocyte", "Platelet"], answer: 0,
+      why: "Professional antigen-presenting cells — dendritic cells, macrophages, and B cells — express MHC II. All nucleated cells present endogenous peptide on MHC I; erythrocytes lack MHC entirely." },
+    { topic: "Digestive system", stem: "Acidic chyme entering the duodenum triggers S cells to release secretin, which primarily stimulates:",
+      options: ["Gastric parietal cell acid secretion", "Pancreatic bicarbonate secretion into the duodenum", "Gallbladder contraction", "Pepsinogen release from chief cells"], answer: 1,
+      why: "Secretin drives pancreatic ductal HCO₃⁻ secretion to neutralize duodenal acid and inhibits gastric acid secretion. CCK, not secretin, is the main stimulus for gallbladder contraction." },
+    { topic: "Autonomic nervous system", stem: "Which response is mediated by sympathetic activation?",
+      options: ["Bronchiolar dilation", "Increased gastric motility", "Pupillary constriction", "Increased salivary secretion"], answer: 0,
+      why: "β2 receptors relax bronchiolar smooth muscle. The other three are parasympathetic effects mediated largely by muscarinic receptors." },
+    { topic: "Reproductive physiology", stem: "The mid-cycle luteinizing hormone surge is most directly responsible for:",
+      options: ["Endometrial proliferation", "Ovulation and formation of the corpus luteum", "Follicular recruitment at the start of the cycle", "Maintenance of pregnancy after implantation"], answer: 1,
+      why: "Rising estradiol switches to positive feedback, producing the LH surge that ruptures the dominant follicle and converts the remnant into the corpus luteum. FSH recruits follicles; hCG maintains early pregnancy." }
+  ],
+  cars: [
+    { passage: "p1", topic: "Main idea", stem: "The central thesis of the passage is that:",
+      options: ["Cleaning artworks damages them more often than conservators admit", "Every preservation decision embodies an unstated view of what the object is for", "Reversible materials should be required in all conservation work", "Museums should intervene more aggressively than they currently do"], answer: 1,
+      why: "The final paragraph states it directly: every act of preservation contains a theory of what the object is for. The author's complaint is that this prior question goes unasked, not that cleaning is destructive." },
+    { passage: "p1", topic: "Author's attitude", stem: "The author's attitude toward the ethic of reversibility is best described as:",
+      options: ["Dismissive of it as professional self-flattery", "Sympathetic to its modesty but critical of the judgment it defers", "Fully persuaded by its neutrality", "Indifferent, since it rarely affects practice"], answer: 1,
+      why: "'Reads as modesty, and largely it is' concedes the virtue; 'postponement is not neutral' registers the criticism. Neither dismissal nor full endorsement fits." },
+    { passage: "p1", topic: "Inference", stem: "The phrase 'chosen the side that requires no defense' most nearly implies that:",
+      options: ["Non-intervention is treated as a default and therefore escapes scrutiny", "Museums lack the technical expertise to justify cleaning", "Conservators disagree about which solvents are reversible", "Darkened canvases are more valuable to scholars than cleaned ones"], answer: 0,
+      why: "The author argues inaction is itself an interpretive choice, but one that is not perceived as needing justification — its cost is invisibility, not incompetence." },
+    { passage: "p1", topic: "Rhetorical function", stem: "The clause 'Pigments have shifted; the ground has darkened' functions primarily to:",
+      options: ["Illustrate the technical difficulty of solvent selection", "Support the claim that the artist's original appearance is unrecoverable", "Contrast oil painting with fresco", "Concede a point that the author later refutes"], answer: 1,
+      why: "The list of irreversible physical changes grounds the assertion two sentences later that 'conservation cannot be a return.'" },
+    { passage: "p1", topic: "Reasoning beyond the text", stem: "Suppose a survey found that most conservators believe cleaning restores an artist's original intent. This finding would most likely be used by the author to:",
+      options: ["Revise the claim that conservation cannot be a return", "Argue that the profession holds a theory of the object without examining it", "Demonstrate that the technical literature is more rigorous than claimed", "Show that reversibility has been abandoned in practice"], answer: 1,
+      why: "A widely held but unexamined belief is exactly what the author's closing sentence predicts: the field acts on an answer to a question it is reluctant to ask." },
+    { passage: "p2", topic: "Main idea", stem: "The passage is primarily concerned with arguing that:",
+      options: ["Oral testimony is a more reliable source than written documents", "The reliability of written records is an assumption that must itself be argued for", "Memory decays too quickly to serve historical research", "Tax rolls are the least trustworthy form of administrative record"], answer: 1,
+      why: "The final sentence names the thesis: the reliability of paper is 'a claim to be argued rather than a premise.' The author explicitly denies the stronger claim in option A." },
+    { passage: "p2", topic: "Vocabulary in context", stem: "In context, 'Its stillness is not accuracy but finality' means that documents:",
+      options: ["Are produced more slowly than oral accounts", "Preserve their errors unchanged rather than being free of error", "Become more accurate as they age", "Cannot be reinterpreted by later historians"], answer: 1,
+      why: "Stillness is reframed: the record does not improve or self-correct, so a mistake made at the moment of writing is fixed permanently — 'the error, once made, stops moving.'" },
+    { passage: "p2", topic: "Argument structure", stem: "The author concedes which point to the traditional view?",
+      options: ["That documents record neutral information", "That memory revises itself over time", "That oral tradition is unsupervised", "That administrative categories are convenient"], answer: 1,
+      why: "'The objection was never wrong about memory' grants the decay premise, then denies the comparison by attacking the assumed reliability of documents." },
+    { passage: "p2", topic: "Inference", stem: "The author would most likely agree that the strength of oral tradition lies in:",
+      options: ["The absence of error in transmission", "The preservation of visible disagreement among versions", "Its independence from community values", "Its greater age relative to written records"], answer: 1,
+      why: "Testimony 'gives us several with the disagreement intact' — the contest between versions is audible evidence, whereas the archive hides its assumptions in a single account." },
+    { passage: "p2", topic: "Reasoning beyond the text", stem: "A study finds that oral genealogies in one region agree with parish registers in 90% of cases. This finding would:",
+      options: ["Strengthen the argument by showing oral sources are accurate", "Weaken the argument by showing documents are reliable after all", "Leave the argument largely intact, since it concerns how each source's errors are produced rather than how often they occur", "Contradict the claim that memory revises itself"], answer: 2,
+      why: "The author's case is about the structure of error and the burden of proof, not about rates of agreement; two sources agreeing does not establish that either one's reliability may be presumed." }
+  ]
+};
+</script>
+
+<!-- ============================================================
+     Syllabus + settings
+     ============================================================ -->
+<script>
+/* Settings. The design surfaced these as authoring props; here they are the
+   one place to edit who the tracker is for and how it grades. */
+var CONFIG = {
+  learnerName: 'Han Ni',
+  examDate: '2027-05-29',   // test day, YYYY-MM-DD
+  prepStart: '2026-08-24',  // day the countdown bar starts filling from
+  passMark: 70,             // % a round must clear to count as passed
+  roundLength: 10,          // questions per practice round
+  showLocked: true          // list not-yet-coursework subjects on Subjects
+};
+
+var SUBJECTS = [
+    { id: 'biology', name: 'Biology', short: 'BIO', section: 'Bio / Biochem section', status: 'active',
+      blurb: 'Molecular biology, genetics, the cell, and development — the content Bio I and II covered, retested at MCAT depth.',
+      groups: [
+        { concept: 'Molecular biology & genetics', topics: ['DNA structure, packaging & replication', 'Transcription and RNA processing', 'Translation and the genetic code', 'Gene regulation in prokaryotes (operons)', 'Eukaryotic gene regulation & epigenetics', 'Mendelian genetics and inheritance patterns', 'Chromosomal inheritance, linkage & recombination', 'Mutations, DNA repair & genetic variability', 'Population genetics and Hardy–Weinberg', 'Recombinant DNA and biotechnology (PCR, cloning, gels, sequencing)'] },
+        { concept: 'Cells, organelles & signalling', topics: ['Cell theory, organelle structure & function', 'Plasma membrane structure and transport', 'Cytoskeleton, cell junctions & extracellular matrix', 'Mitosis, the cell cycle & checkpoint control', 'Meiosis, gametogenesis & genetic variation', 'Cell communication, second messengers & apoptosis', 'Bioenergetics and cellular respiration overview', 'Photosynthesis basics and autotroph metabolism'] },
+        { concept: 'Microbes, viruses & evolution', topics: ['Prokaryotic cell structure, growth & genetics', 'Bacterial gene transfer: conjugation, transformation, transduction', 'Viral structure, life cycles & retroviruses', 'Viroids, prions and subviral particles', 'Natural selection, fitness & speciation', 'Phylogeny, taxonomy & evidence for evolution'] },
+        { concept: 'Development & reproduction', topics: ['Fertilization, cleavage & gastrulation', 'Germ layers and their derivatives', 'Cell differentiation, induction & determination', 'Stem cells, regeneration & senescence'] }
+      ] },
+    { id: 'genchem', name: 'General Chemistry', short: 'GC', section: 'Chem / Phys section', status: 'active',
+      blurb: 'Everything Chem I and II built: structure, equilibrium, thermodynamics, and the analytical methods the MCAT hides inside passages.',
+      groups: [
+        { concept: 'Atomic structure & bonding', topics: ['Atomic structure, isotopes & electron configuration', 'Quantum numbers, orbitals & the Aufbau principle', 'Periodic trends: radius, ionization energy, electronegativity', 'Ionic, covalent & metallic bonding', 'Lewis structures, formal charge & resonance', 'VSEPR geometry, hybridization & molecular polarity', 'Intermolecular forces and physical properties'] },
+        { concept: 'Reactions & stoichiometry', topics: ['Stoichiometry, empirical formulas & limiting reagents', 'Reaction types: precipitation, acid–base, redox', 'Oxidation states and balancing redox reactions', 'Chemical kinetics: rate laws, order & mechanism', 'Catalysis, activation energy & the Arrhenius equation', 'Chemical equilibrium, Keq and Le Châtelier\u2019s principle'] },
+        { concept: 'Solutions, acids & bases', topics: ['Solutions, molarity, dilution & concentration units', 'Solubility rules, Ksp and the common-ion effect', 'Colligative properties and Raoult\u2019s law', 'Acid–base definitions, pH, pOH & conjugate pairs', 'Weak acid/base equilibria, Ka and Kb', 'Buffers and the Henderson–Hasselbalch equation', 'Titration curves, indicators & polyprotic systems'] },
+        { concept: 'Energy & analytical methods', topics: ['Thermochemistry, enthalpy & Hess\u2019s law', 'Entropy, Gibbs free energy & spontaneity', 'Calorimetry, heat capacity & phase changes', 'Gas laws, kinetic molecular theory & real gases', 'Electrochemistry: galvanic and electrolytic cells', 'The Nernst equation and concentration cells', 'Nuclear chemistry: decay modes, half-life & binding energy', 'Separations: extraction, distillation, chromatography', 'Spectroscopy: IR, UV–Vis, NMR & mass spectrometry'] }
+      ] },
+    { id: 'anatphys', name: 'Anatomy & Physiology', short: 'A&P', section: 'Bio / Biochem section', status: 'active',
+      blurb: 'The organ systems foundational concept. Currently in Human Anat & Physiology I — practice as each system is covered in lecture.',
+      groups: [
+        { concept: 'Nervous & endocrine control', topics: ['Neuron structure, resting potential & ion gradients', 'Action potentials, propagation & myelination', 'Synaptic transmission and neurotransmitters', 'CNS organization: brain regions & spinal cord', 'Peripheral, autonomic & somatic nervous systems', 'Reflex arcs and sensory–motor integration', 'Special senses: eye, ear & chemoreception', 'Endocrine glands, hormone classes & receptors', 'Hypothalamic–pituitary axes and feedback loops', 'Glucose, calcium & stress hormone regulation'] },
+        { concept: 'Circulation, respiration & defence', topics: ['Heart anatomy, cardiac cycle & conduction system', 'Cardiac output, hemodynamics & blood pressure control', 'Blood composition, hematopoiesis & clotting', 'Oxygen and carbon dioxide transport in blood', 'Lung anatomy, ventilation mechanics & volumes', 'Gas exchange, V/Q matching & control of breathing', 'Innate immunity: barriers, phagocytes & complement', 'Adaptive immunity: B cells, T cells & antigen presentation', 'Lymphatic system, fluid balance & immunological memory'] },
+        { concept: 'Digestion, excretion & support', topics: ['GI anatomy, motility & sphincter control', 'Secretions, enzymatic digestion & absorption', 'Liver, pancreas & biliary function', 'Nephron anatomy, filtration & GFR regulation', 'Tubular reabsorption, secretion & the countercurrent system', 'Renal control of osmolarity, volume & acid–base balance', 'Skeletal muscle: sarcomere, sliding filament & motor units', 'Smooth and cardiac muscle; muscle metabolism & fatigue', 'Bone structure, remodeling & joint mechanics', 'Skin, thermoregulation & barrier function'] },
+        { concept: 'Reproduction & homeostasis', topics: ['Male and female reproductive anatomy', 'Gametogenesis and the menstrual cycle', 'Pregnancy, placental function & fetal circulation', 'Homeostasis and integrated multi-system regulation'] }
+      ] },
+    { id: 'psych', name: 'Psychology', short: 'PSY', section: 'Psych / Soc section', status: 'active',
+      blurb: 'Foundational concepts 6 through 8. Intro to Psychology is in progress this term — mark topics ready as lecture reaches them.',
+      groups: [
+        { concept: 'Sensation, perception & consciousness', topics: ['Sensory thresholds, Weber\u2019s law & signal detection', 'Vision: structure, phototransduction & colour theories', 'Hearing, the vestibular sense & sound localization', 'Taste, smell, touch, pain & proprioception', 'Bottom-up vs top-down processing and perceptual organization', 'Attention: selective, divided & inattentional blindness', 'States of consciousness, sleep stages & circadian rhythm', 'Dreaming, sleep disorders & hypnosis', 'Psychoactive drugs, tolerance & the reward pathway'] },
+        { concept: 'Learning, memory & cognition', topics: ['Classical conditioning: acquisition, extinction & generalization', 'Operant conditioning, reinforcement schedules & shaping', 'Observational learning and cognitive approaches to learning', 'Memory encoding, storage, retrieval & sensory registers', 'Forgetting, interference & the neural basis of memory', 'Cognition, problem solving & decision making', 'Heuristics, biases & intuitive judgment', 'Intelligence: theories, testing & heritability', 'Language development, theories & brain regions'] },
+        { concept: 'Emotion, motivation & personality', topics: ['Theories of emotion: James–Lange, Cannon–Bard, Schachter–Singer', 'Limbic system, amygdala & the physiology of emotion', 'Stress appraisal, physiology & coping strategies', 'Motivation: drive reduction, incentive & arousal theories', 'Hunger, eating behaviour & sexual motivation', 'Personality: psychoanalytic and humanistic theories', 'Personality: trait, social-cognitive & biological approaches', 'Psychological disorders and their biological bases', 'Treatment approaches and the biopsychosocial model'] },
+        { concept: 'Development & social behaviour', topics: ['Piaget, Vygotsky & cognitive development', 'Erikson, Kohlberg & psychosocial/moral development', 'Attachment, parenting styles & the family', 'Attitudes, behaviour & cognitive dissonance', 'Attribution theory and the fundamental attribution error', 'Conformity, obedience & group decision making', 'Bystander effect, altruism & aggression', 'Self-concept, identity formation & socialization', 'Stereotypes, prejudice & discrimination'] }
+      ] },
+    { id: 'cars', name: 'CARS', short: 'CARS', section: 'Critical Analysis & Reasoning', status: 'active',
+      blurb: 'No coursework required and no content to memorize. Fifty-three questions on humanities and social science passages — pure method.',
+      groups: [
+        { concept: 'Foundations of comprehension', topics: ['Finding the main idea and author\u2019s purpose', 'Vocabulary and phrases in context', 'Tone, voice & rhetorical register', 'Passage mapping and paragraph function'] },
+        { concept: 'Reasoning within the text', topics: ['Argument structure: claims, evidence & assumptions', 'Inference and implication questions', 'Author\u2019s attitude and evaluative language', 'Strengthen and weaken reasoning within the passage'] },
+        { concept: 'Reasoning beyond the text', topics: ['Applying new information to the author\u2019s argument', 'Analogy and generalization questions', 'Humanities passages: philosophy, ethics & criticism', 'Social science passages: history, economics & anthropology', 'Timing, triage & the 90-minute strategy'] }
+      ] },
+    { id: 'biochem', name: 'Biochemistry', short: 'BC', section: 'Bio / Biochem section', status: 'locked', course: 'Biochemistry',
+      blurb: 'A quarter of the Bio/Biochem section and a chunk of Chem/Phys. Topics are mapped out; practice unlocks with the course.',
+      groups: [
+        { concept: 'Proteins & enzymes', topics: ['Amino acid structure, classification & titration behaviour', 'Peptide bonds and the four levels of protein structure', 'Protein folding, chaperones & denaturation', 'Enzyme classes, cofactors & catalytic mechanisms', 'Michaelis–Menten kinetics, Km and Vmax', 'Enzyme inhibition: competitive, non-competitive, allosteric', 'Regulation by phosphorylation, zymogens & feedback'] },
+        { concept: 'Metabolism', topics: ['Glycolysis and its regulation', 'Pyruvate oxidation and the citric acid cycle', 'Oxidative phosphorylation and the electron transport chain', 'Glycogen metabolism, gluconeogenesis & the pentose phosphate pathway', 'Lipid structure, transport & lipoproteins', 'Fatty acid oxidation, ketogenesis & lipid synthesis', 'Amino acid metabolism and the urea cycle', 'Metabolic integration: fed, fasted & starved states'] },
+        { concept: 'Molecules & methods', topics: ['Carbohydrate structure, anomers & glycosidic linkages', 'Nucleotide structure and nucleic acid chemistry', 'Bioenergetics: coupled reactions, ATP & redox potential', 'Membrane composition, fluidity & transport proteins', 'Protein separation: chromatography, electrophoresis, blotting', 'Enzyme assays, spectrophotometry & Bradford/ELISA methods'] }
+      ] },
+    { id: 'ochem', name: 'Organic Chemistry', short: 'OC', section: 'Chem / Phys section', status: 'locked', course: 'Organic Chemistry I & II',
+      blurb: 'Tested lightly but predictably: mechanisms, stereochemistry, spectroscopy and the organic chemistry of biomolecules.',
+      groups: [
+        { concept: 'Structure & stereochemistry', topics: ['Nomenclature of functional groups', 'Isomerism: constitutional, conformational & stereoisomers', 'Chirality, R/S assignment & optical activity', 'Newman projections, ring conformations & strain', 'Resonance, inductive effects & acidity trends'] },
+        { concept: 'Reactions & mechanisms', topics: ['Nucleophilic substitution: SN1 and SN2', 'Elimination reactions: E1, E2 & Zaitsev\u2019s rule', 'Alkene and alkyne addition reactions', 'Alcohols, ethers, epoxides & thiols', 'Aldehydes and ketones: nucleophilic addition, acetals, imines', 'Enols, enolates, aldol and keto–enol tautomerism', 'Carboxylic acids and derivatives: esters, amides, anhydrides', 'Amines, imines & nitrogen-containing compounds', 'Aromaticity and electrophilic aromatic substitution', 'Oxidation and reduction of organic compounds'] },
+        { concept: 'Analysis & biomolecules', topics: ['IR spectroscopy and functional group identification', '¹H and ¹³C NMR interpretation', 'Mass spectrometry and fragmentation patterns', 'Separations: extraction, recrystallization, TLC & distillation', 'Organic chemistry of carbohydrates and lipids', 'Amino acids and peptides through an organic lens'] }
+      ] },
+    { id: 'physics', name: 'Physics', short: 'PHY', section: 'Chem / Phys section', status: 'locked', course: 'General Physics I & II',
+      blurb: 'Roughly a quarter of the Chem/Phys section, always applied to biological systems: fluids in vessels, optics in the eye, circuits in membranes.',
+      groups: [
+        { concept: 'Mechanics', topics: ['Kinematics, vectors & projectile motion', 'Newton\u2019s laws, friction & equilibrium', 'Work, energy, power & conservation of energy', 'Momentum, impulse & collisions', 'Rotational motion, torque & angular momentum', 'Periodic motion: springs, pendulums & resonance', 'Gravitation and circular motion'] },
+        { concept: 'Fluids, waves & thermodynamics', topics: ['Density, pressure, buoyancy & Pascal\u2019s principle', 'Fluid dynamics: continuity, Bernoulli & viscous flow', 'Surface tension, capillary action & blood flow', 'Wave properties, superposition & standing waves', 'Sound: intensity, decibels, resonance & the Doppler effect', 'Heat transfer, thermal expansion & specific heat', 'Laws of thermodynamics and heat engines'] },
+        { concept: 'Electromagnetism, optics & atomic', topics: ['Electrostatics: charge, Coulomb\u2019s law, fields & potential', 'Capacitors, dielectrics & stored energy', 'DC circuits: resistance, Ohm\u2019s law, power & RC behaviour', 'Magnetic fields, forces & electromagnetic induction', 'Electromagnetic spectrum and wave–particle duality', 'Geometric optics: mirrors, lenses & refraction', 'Interference, diffraction & polarization', 'Atomic structure, photoelectric effect & spectra', 'Nuclear decay, half-life & radiation dosimetry'] }
+      ] },
+    { id: 'soc', name: 'Sociology', short: 'SOC', section: 'Psych / Soc section', status: 'locked', course: 'Introduction to Sociology',
+      blurb: 'Foundational concepts 9 and 10 — social structures and inequality, including the health disparities content that shows up in every form.',
+      groups: [
+        { concept: 'Theory & interaction', topics: ['Theoretical approaches: functionalism, conflict theory, symbolic interactionism', 'Social constructionism and rational choice theory', 'Social interaction: status, roles & dramaturgical approach', 'Groups, networks & organizations', 'Deviance, social control, stigma & labelling'] },
+        { concept: 'Culture & institutions', topics: ['Culture, norms, values & material culture', 'Socialization agents and the life course', 'Family structures, marriage & kinship', 'Education as an institution and hidden curriculum', 'Religion, secularization & religiosity', 'Government, economy & the medical institution'] },
+        { concept: 'Demography & inequality', topics: ['Demographic structure: age, gender, race & ethnicity', 'Fertility, mortality, migration & the demographic transition', 'Urbanization, globalization & social change', 'Social movements and collective behaviour', 'Social class, stratification & mobility', 'Poverty, spatial inequality & residential segregation', 'Social determinants of health & health disparities', 'Healthcare access, the sick role & patient behaviour'] }
+      ] }
+];
+</script>
+
+<!-- ============================================================
+     App
+     ============================================================ -->
+<script>
+(function () {
+'use strict';
+
+var root = document.getElementById('root');
+
+/* ------------------------------------------------------------------
+   Constants
+   ------------------------------------------------------------------ */
+
+var ACCENTS = {
+  biology:  { a: '#D4436B', deep: '#B03A5E', soft: '#FDEFF4', bd: '#F5D3DF' },
+  genchem:  { a: '#7C6BD6', deep: '#6656BE', soft: '#F1EFFB', bd: '#DFD9F4' },
+  anatphys: { a: '#E0704A', deep: '#C05834', soft: '#FDF1EC', bd: '#F6D9CC' },
+  psych:    { a: '#B84FA4', deep: '#9C3D89', soft: '#FAEFF8', bd: '#EFD5EA' },
+  cars:     { a: '#3F8F7B', deep: '#337663', soft: '#EDF6F2', bd: '#D2E8DF' }
+};
+var NEUTRAL = { a: '#B8A0AE', deep: '#9C8797', soft: '#F6F2F4', bd: '#E9E1E5' };
+function acc(id) { return ACCENTS[id] || NEUTRAL; }
+
+var SPECIAL = { final: 'Full syllabus', review: 'Review queue', misses: 'Error log', carsdaily: 'Daily CARS' };
+function isSpecial(id) { return !!SPECIAL[id]; }
+function homeOf(id) { return id === 'final' ? 'subjects' : 'today'; }
+
+var KEY = 'hnoo-mcat-v1';
+var PER_Q = 95;                    // seconds per question in timed sittings
+var REVIEW_INTERVALS = [1, 3, 7, 14, 28];   // spaced-repetition ladder, in days
+
+/* ------------------------------------------------------------------
+   State
+   ------------------------------------------------------------------ */
+
+var state = {
+  view: 'today', subjectId: null, session: null, report: null,
+  save: null, calView: 'month', calCursor: 0, ed: null
+};
+
+function setState(patch) { for (var k in patch) state[k] = patch[k]; render(); }
+
+/* ------------------------------------------------------------------
+   Persistence
+   ------------------------------------------------------------------ */
+
+function blank() {
+  return { done: {}, rounds: {}, log: {}, events: {}, misses: {}, topicStats: {}, history: [], carsLog: {}, plan: { h: 14, days: [1, 1, 1, 1, 1, 1, 1] } };
+}
+function load() {
+  try {
+    var r = JSON.parse(localStorage.getItem(KEY));
+    if (r && r.done) {
+      var b = blank();
+      Object.keys(b).forEach(function (k) { if (r[k] === undefined) r[k] = b[k]; });
+      return r;
+    }
+  } catch (e) {}
+  return blank();
+}
+function save() { return state.save || blank(); }
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function persist(next) {
+  try { localStorage.setItem(KEY, JSON.stringify(next)); } catch (e) {}
+  setState({ save: next });
+}
+
+/* ------------------------------------------------------------------
+   Dates
+   ------------------------------------------------------------------ */
+
+function dateKey(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function parseDate(s) { var p = String(s).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function examDate() { return parseDate(CONFIG.examDate || '2027-05-29'); }
+function passMark() { return CONFIG.passMark || 70; }
+function roundLen() { return CONFIG.roundLength || 10; }
+function fmtTime(m) {
+  m = parseInt(m, 10);
+  var h12 = ((Math.floor(m / 60) + 11) % 12) + 1, mm = m % 60;
+  return h12 + (mm ? ':' + String(mm).padStart(2, '0') : '') + (m < 720 ? ' AM' : ' PM');
+}
+
+/* ------------------------------------------------------------------
+   Syllabus lookups
+   ------------------------------------------------------------------ */
+
+SUBJECTS.forEach(function (s) {
+  var n = 0;
+  s.groups.forEach(function (g) { g.items = g.topics.map(function (t) { return { id: s.id + '-' + (n++), name: t }; }); });
+  s.topicCount = n;
+});
+
+function subject(id) { return SUBJECTS.find(function (s) { return s.id === id; }); }
+function allTopics(s) { var out = []; s.groups.forEach(function (g) { (g.items || []).forEach(function (t) { out.push(t); }); }); return out; }
+
+var _banks = {};
+function bankOf(id) {
+  if (!_banks[id]) {
+    var b = (window.MCAT_BANK || {})[id];
+    if (!b) return [];
+    _banks[id] = b.map(function (q, i) {
+      var copy = { _k: id + '#' + i, _subj: id };
+      for (var f in q) copy[f] = q[f];
+      return copy;
+    });
+  }
+  return _banks[id];
+}
+
+function roundRec(tid, r) { return save().rounds[tid + '#' + r]; }
+function topicRounds(tid) {
+  var sv = save(), n = 0, best = 0;
+  for (var r = 1; r <= 5; r++) {
+    var rec = sv.rounds[tid + '#' + r];
+    if (rec) { n++; best = Math.max(best, Math.round(rec.c / rec.t * 100)); }
+  }
+  return { n: n, best: best };
+}
+function subjStats(s) {
+  var topics = allTopics(s), sv = save();
+  var done = 0, rounds = 0, c = 0, t = 0;
+  topics.forEach(function (tp) { if (sv.done[tp.id]) done++; });
+  Object.keys(sv.rounds).forEach(function (k) {
+    if (k.indexOf(s.id + '-') === 0 || k.indexOf(s.id + '#exam') === 0) {
+      var r = sv.rounds[k]; rounds++; c += r.c; t += r.t;
+    }
+  });
+  var total = topics.length || 1;
+  return { done: done, total: topics.length, pct: Math.round(done / total * 100), rounds: rounds, acc: t ? Math.round(c / t * 100) : null };
+}
+function nextTopicFor(s) {
+  var sv = save(), topics = allTopics(s);
+  for (var i = 0; i < topics.length; i++) {
+    var tp = topics[i], tr = topicRounds(tp.id);
+    if (tr.n < 5) return { topic: tp, round: tr.n + 1, done: !!sv.done[tp.id] };
+  }
+  return { topic: topics[0], round: 1, done: true };
+}
+function streakDays() {
+  var log = save().log, n = 0, d = new Date();
+  if (!log[dateKey(d)]) d.setDate(d.getDate() - 1);
+  while (log[dateKey(d)]) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function totals() {
+  var sv = save(), c = 0, t = 0, n = 0;
+  Object.keys(sv.rounds).forEach(function (k) { var r = sv.rounds[k]; c += r.c; t += r.t; n++; });
+  return { c: c, t: t, n: n, acc: t ? Math.round(c / t * 100) : null };
+}
+function isDue(m, todayKey) {
+  var d = parseDate(m.last);
+  d.setDate(d.getDate() + REVIEW_INTERVALS[Math.min(m.streak || 0, 4)]);
+  return dateKey(d) <= todayKey;
+}
+
+/* ------------------------------------------------------------------
+   Round engine
+   ------------------------------------------------------------------ */
+
+/* Seeded Fisher-Yates, so a given topic + round always deals the same
+   questions in the same order — a retake is a genuine retake. */
+function seedShuffle(arr, seedStr) {
+  var h = 2166136261;
+  for (var i = 0; i < seedStr.length; i++) { h ^= seedStr.charCodeAt(i); h = Math.imul(h, 16777619); }
+  var out = arr.slice();
+  for (var j = out.length - 1; j > 0; j--) {
+    h = (Math.imul(h, 1103515245) + 12345) & 0x7fffffff;
+    var k = h % (j + 1), tmp = out[j]; out[j] = out[k]; out[k] = tmp;
+  }
+  return out;
+}
+
+var qTimer = null;
+function stopTimer() { if (qTimer) { clearInterval(qTimer); qTimer = null; } }
+function startTimer() { stopTimer(); qTimer = setInterval(tickQ, 1000); }
+function tickQ() {
+  var s = state.session;
+  if (!s || !s.timed) { stopTimer(); return; }
+  if (s.remaining > 1) {
+    s.remaining--;
+    paintClock();          // patch the clock in place; a full repaint every
+    return;                // second would fight the user's scroll position
+  }
+  if (s.i + 1 < s.qs.length) setState({ session: assign(s, { i: s.i + 1, remaining: PER_Q }) });
+  else finish(s);
+}
+function paintClock() {
+  var s = state.session, el = document.getElementById('dc-clock');
+  if (!el || !s) return;
+  el.textContent = Math.floor(s.remaining / 60) + ':' + String(s.remaining % 60).padStart(2, '0');
+  el.style.background = s.remaining <= 15 ? '#FDF2F5' : '#F7F1F4';
+  el.style.color = s.remaining <= 15 ? '#C33F68' : '#6E5266';
+}
+function assign(a, b) { var o = {}; for (var k in a) o[k] = a[k]; for (var k2 in b) o[k2] = b[k2]; return o; }
+
+function launch(part, subjectId) {
+  stopTimer();
+  var sess = assign({ i: 0, picks: {}, revealed: false, flags: {}, elim: {}, remaining: PER_Q }, part);
+  setState({ view: 'round', subjectId: subjectId, report: null, session: sess });
+  if (sess.timed) startTimer();
+}
+
+function startRound(subjId, topicId, topicName, round) {
+  var bank = bankOf(subjId);
+  if (!bank.length) return;
+  var len = roundLen(), qs;
+  if (bank.length >= len * 5) {
+    qs = seedShuffle(bank, subjId + topicId).slice((round - 1) * len, round * len);
+  } else {
+    qs = seedShuffle(bank, subjId + topicId + round).slice(0, len);
+  }
+  // keep questions on a shared passage adjacent, the way the real exam sets them
+  if (subjId === 'cars') qs = qs.slice().sort(function (a, b) { return (a.passage || '').localeCompare(b.passage || ''); });
+  launch({ subjId: subjId, topicId: topicId, topicName: topicName, round: round, qs: qs, timed: topicId.indexOf('#exam') > -1 }, subjId);
+}
+
+function startSpecial(kind) {
+  var sv = save(), tk = dateKey(new Date());
+  if (kind === 'carsdaily') {
+    var bank = bankOf('cars');
+    if (!bank.length) return;
+    var daily = seedShuffle(bank, 'cars' + tk).slice(0, 3).sort(function (a, b) { return (a.passage || '').localeCompare(b.passage || ''); });
+    launch({ subjId: 'carsdaily', topicId: 'carsdaily', topicName: 'Daily CARS', round: 1, qs: daily, timed: false }, null);
+    return;
+  }
+  var items = Object.keys(sv.misses || {}).map(function (k) { return assign({ k: k }, sv.misses[k]); });
+  var pick = kind === 'review' ? items.filter(function (m) { return isDue(m, tk); }) : items;
+  pick.sort(function (a, b) { return (a.last || '').localeCompare(b.last || ''); });
+  var qs = pick.slice(0, 10)
+    .map(function (m) { return bankOf(m.subj)[parseInt(m.k.split('#')[1], 10)]; })
+    .filter(Boolean);
+  if (!qs.length) return;
+  launch({ subjId: kind, topicId: kind, topicName: SPECIAL[kind], round: 1, qs: qs, timed: false }, null);
+}
+
+function startFinal(round) {
+  var active = SUBJECTS.filter(function (s) { return s.status === 'active'; });
+  var qs = [];
+  active.forEach(function (s) { qs = qs.concat(seedShuffle(bankOf(s.id), 'final' + round + s.id).slice(0, 4)); });
+  if (!qs.length) return;
+  qs = seedShuffle(qs, 'finalmix' + round);
+  var withP = qs.filter(function (q) { return q.passage; });
+  var noP = qs.filter(function (q) { return !q.passage; });
+  withP.sort(function (a, b) { return a.passage.localeCompare(b.passage); });
+  launch({ subjId: 'final', topicId: 'final', topicName: 'Final exam ' + round, round: round, qs: noP.concat(withP), timed: true }, null);
+}
+
+function choose(i) {
+  var s = state.session;
+  if (!s || s.revealed) return;
+  var picks = assign(s.picks, {}); picks[s.i] = i;
+  var elim = assign(s.elim, {});
+  if (elim[s.i] && elim[s.i][i]) { var e2 = assign(elim[s.i], {}); delete e2[i]; elim[s.i] = e2; }
+  setState({ session: assign(s, { picks: picks, elim: elim }) });
+}
+function toggleElim(i) {
+  var s = state.session;
+  if (!s || s.revealed) return;
+  var elim = assign(s.elim, {}), cur = assign(elim[s.i] || {}, {});
+  if (cur[i]) delete cur[i]; else cur[i] = 1;
+  elim[s.i] = cur;
+  var picks = assign(s.picks, {});
+  if (cur[i] && picks[s.i] === i) delete picks[s.i];
+  setState({ session: assign(s, { elim: elim, picks: picks }) });
+}
+function toggleFlag() {
+  var s = state.session;
+  if (!s) return;
+  var flags = assign(s.flags, {});
+  if (flags[s.i]) delete flags[s.i]; else flags[s.i] = 1;
+  setState({ session: assign(s, { flags: flags }) });
+}
+function primary() {
+  var s = state.session;
+  if (!s) return;
+  if (s.timed) {
+    if (s.i + 1 < s.qs.length) { setState({ session: assign(s, { i: s.i + 1, remaining: PER_Q }) }); return; }
+    finish(s); return;
+  }
+  if (!s.revealed) {
+    if (s.picks[s.i] === undefined) return;
+    setState({ session: assign(s, { revealed: true }) }); return;
+  }
+  if (s.i + 1 < s.qs.length) { setState({ session: assign(s, { i: s.i + 1, revealed: false }) }); return; }
+  finish(s);
+}
+function exitRound() {
+  var s = state.session;
+  stopTimer();
+  setState({
+    view: isSpecial(s.subjId) ? homeOf(s.subjId) : 'subject',
+    subjectId: isSpecial(s.subjId) ? null : s.subjId,
+    session: null
+  });
+}
+function finish(s) {
+  stopTimer();
+  var c = 0;
+  s.qs.forEach(function (q, i) { if (s.picks[i] === q.answer) c++; });
+  var k = dateKey(new Date());
+  var next = clone(save());
+  // the review queue and the error log are drills, not scored rounds
+  if (s.subjId !== 'review' && s.subjId !== 'misses') next.rounds[s.topicId + '#' + s.round] = { c: c, t: s.qs.length, at: k };
+  next.log[k] = (next.log[k] || 0) + 1;
+  if (s.subjId === 'carsdaily') { next.carsLog = next.carsLog || {}; next.carsLog[k] = 1; }
+  next.misses = next.misses || {}; next.topicStats = next.topicStats || {}; next.history = next.history || [];
+  s.qs.forEach(function (q, i) {
+    if (!q._k) return;
+    var ok = s.picks[i] === q.answer;
+    var m = next.misses[q._k];
+    if (ok) {
+      // right twice running retires a question from the error log
+      if (m) { m.streak = (m.streak || 0) + 1; m.last = k; if (m.streak >= 2) delete next.misses[q._k]; }
+    } else {
+      next.misses[q._k] = { subj: q._subj, topic: q.topic || '', count: (m ? m.count : 0) + 1, streak: 0, last: k };
+    }
+    var tkey = q._subj + '|' + (q.topic || 'General');
+    var ts = next.topicStats[tkey] || { c: 0, t: 0 };
+    ts.t++; if (ok) ts.c++;
+    next.topicStats[tkey] = ts;
+  });
+  next.history.push({ d: k, s: s.subjId, p: Math.round(c / s.qs.length * 100) });
+  if (next.history.length > 60) next.history = next.history.slice(-60);
+  try { localStorage.setItem(KEY, JSON.stringify(next)); } catch (e) {}
+  setState({ save: next, view: 'report', report: { session: s, correct: c } });
+}
+function toggleTopic(tid) {
+  var next = clone(save());
+  if (next.done[tid]) delete next.done[tid]; else next.done[tid] = 1;
+  persist(next);
+}
+function setPlan(h, days) {
+  var next = clone(save());
+  next.plan = { h: h, days: days };
+  persist(next);
+}
+
+/* ------------------------------------------------------------------
+   Calendar
+   ------------------------------------------------------------------ */
+
+function calCursorDate() {
+  var d = state.calCursor ? new Date(state.calCursor) : new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+function calGo(dir) {
+  var d = calCursorDate();
+  if (state.calView !== 'week') { d.setDate(1); d.setMonth(d.getMonth() + dir); }
+  else d.setDate(d.getDate() + dir * 7);
+  setState({ calCursor: d.getTime() });
+}
+function openEditor(dk, time, id) {
+  var ev = id ? (save().events || {})[id] : null;
+  setState({ ed: {
+    id: id || null, dateKey: dk,
+    time: ev ? String(ev.time) : (time || 'all'),
+    dur: ev ? (ev.dur || 60) : 60,
+    title: ev ? ev.title : '',
+    subjId: ev ? (ev.subjId || '') : ''
+  } });
+}
+function saveEvent() {
+  var ed = state.ed;
+  if (!ed) return;
+  var next = clone(save());
+  if (!next.events) next.events = {};
+  var id = ed.id || 'e' + Date.now();
+  var subj = ed.subjId && subject(ed.subjId) ? subject(ed.subjId).name : '';
+  next.events[id] = {
+    d: ed.dateKey, time: ed.time, dur: ed.dur,
+    title: (ed.title || '').trim() || (subj ? subj + ' study' : 'Study session'),
+    subjId: ed.subjId
+  };
+  try { localStorage.setItem(KEY, JSON.stringify(next)); } catch (e) {}
+  setState({ save: next, ed: null });
+}
+function deleteEvent() {
+  var ed = state.ed;
+  if (!ed || !ed.id) return;
+  var next = clone(save());
+  if (next.events) delete next.events[ed.id];
+  try { localStorage.setItem(KEY, JSON.stringify(next)); } catch (e) {}
+  setState({ save: next, ed: null });
+}
+
+/* ------------------------------------------------------------------
+   Derived view model
+   One pass over state produces everything the screens draw.
+   ------------------------------------------------------------------ */
+
+function computeVals() {
+  var S = state, sv = save();
+  var active = SUBJECTS.filter(function (s) { return s.status === 'active'; });
+  var locked = SUBJECTS.filter(function (s) { return s.status === 'locked'; });
+  var exam = examDate();
+  var now = new Date(); now.setHours(0, 0, 0, 0);
+  var daysLeft = Math.max(0, Math.round((exam - now) / 86400000));
+  var start = parseDate(CONFIG.prepStart || '2026-08-24');
+  var span = Math.max(1, Math.round((exam - start) / 86400000));
+  var timePct = Math.min(100, Math.max(2, Math.round((span - daysLeft) / span * 100)));
+  var tot = totals();
+  var streak = streakDays();
+
+  var tDone = 0, tAll = 0;
+  active.forEach(function (s) { var st = subjStats(s); tDone += st.done; tAll += st.total; });
+  var overallPct = tAll ? Math.round(tDone / tAll * 100) : 0;
+  var weeksLeft = Math.max(1, Math.ceil(daysLeft / 7));
+  var perWeek = Math.ceil(Math.max(0, tAll - tDone) / weeksLeft);
+  var plan = sv.plan || { h: 14, days: [1, 1, 1, 1, 1, 1, 1] };
+  var capacity = plan.h * 3;                     // ~20 min a round
+  var roundsNeeded = Math.ceil(Math.max(0, tAll * 5 - tot.n) / weeksLeft);
+  var wkMon = new Date(); wkMon.setHours(0, 0, 0, 0); wkMon.setDate(wkMon.getDate() - ((wkMon.getDay() + 6) % 7));
+  var wkDone = 0;
+  for (var wi = 0; wi < 7; wi++) { var d0 = new Date(wkMon); d0.setDate(wkMon.getDate() + wi); wkDone += sv.log[dateKey(d0)] || 0; }
+  var wkTarget = Math.min(capacity, roundsNeeded);
+
+  var navOn = { bg: '#FBEEF3', fg: '#B03A5E', fw: 600 };
+  var navOff = { bg: 'transparent', fg: '#6E5266', fw: 500 };
+  var v = S.view;
+
+  function card(s) {
+    var st = subjStats(s), A = acc(s.id);
+    return {
+      id: s.id, name: s.name, section: s.section, pct: st.pct, acc: A.a, soft: A.soft, bd: A.bd,
+      topicsLabel: st.done + '/' + st.total + ' topics ready',
+      roundsLabel: st.rounds + ' rounds done',
+      accLabel: st.acc === null ? 'no score yet' : st.acc + '% accuracy',
+      meta: st.done + ' of ' + st.total + ' topics ready · ' + (st.acc === null ? 'not tested yet' : st.acc + '% accuracy'),
+      open: function () { setState({ view: 'subject', subjectId: s.id }); }
+    };
+  }
+
+  var vals = {
+    learnerName: CONFIG.learnerName || 'Han Ni',
+    isToday: v === 'today', isSubjects: v === 'subjects', isSubject: v === 'subject',
+    isRound: v === 'round', isReport: v === 'report', isCalendar: v === 'calendar', isStats: v === 'stats',
+    goToday: function () { setState({ view: 'today' }); },
+    goSubjects: function () { setState({ view: 'subjects' }); },
+    goCalendar: function () { setState({ view: 'calendar' }); },
+    goStats: function () { setState({ view: 'stats' }); },
+    nav: {
+      a: v === 'today' ? navOn : navOff,
+      b: (v === 'subjects' || v === 'subject') ? navOn : navOff,
+      c: v === 'calendar' ? navOn : navOff,
+      d: v === 'stats' ? navOn : navOff
+    },
+    daysLeft: daysLeft, weeksLeft: weeksLeft, timePct: timePct,
+    startLabel: start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    examLabel: exam.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }),
+    examShort: exam.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    todayLabel: new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
+    overallPct: overallPct,
+    topicsDoneLabel: tDone + ' of ' + tAll + ' topics',
+    streak: streak, streakLabel: streak === 1 ? 'day in a row' : 'days in a row',
+    accuracyLabel: tot.acc === null ? '—' : tot.acc + '%',
+    roundsLabel: tot.n + (tot.n === 1 ? ' round' : ' rounds'),
+    activeCards: active.map(card),
+    lockedCards: locked.map(function (s) {
+      return {
+        name: s.name, section: s.section,
+        meta: s.topicCount + ' topics mapped · unlocks with ' + (s.course || 'the course'),
+        open: function () { setState({ view: 'subject', subjectId: s.id }); }
+      };
+    }),
+    showLockedRow: CONFIG.showLocked !== false,
+    continueCards: active.slice().sort(function (a, b) { return subjStats(a).pct - subjStats(b).pct; }).slice(0, 3).map(card),
+    upNext: active.slice().sort(function (a, b) {
+      var A0 = subjStats(a), B0 = subjStats(b);
+      return ((A0.acc === null ? 55 : A0.acc) - (B0.acc === null ? 55 : B0.acc)) || (A0.rounds - B0.rounds);
+    }).slice(0, 3).map(function (s) {
+      var nt = nextTopicFor(s), A = acc(s.id), st0 = subjStats(s);
+      return {
+        initials: s.short, topic: nt.topic.name, cta: 'Round ' + nt.round, acc: A.a, soft: A.soft,
+        meta: s.name + ' · round ' + nt.round + ' of 5 · ' + (st0.acc === null ? 'not tested yet' : st0.acc + '% so far'),
+        start: function () { startRound(s.id, nt.topic.id, nt.topic.name, nt.round); }
+      };
+    }),
+    planBar: {
+      line: plan.h + ' hrs/week ≈ ' + capacity + ' rounds. Finishing every topic by ' +
+            exam.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) + ' needs ' + roundsNeeded + '/week — ' +
+            (capacity >= roundsNeeded ? 'on pace.' : 'behind pace: add hours or focus weakest topics.'),
+      week: 'This week: ' + wkDone + ' of ' + wkTarget,
+      color: capacity >= roundsNeeded ? '#3F7F63' : '#C33F68',
+      note: 'Biochem, O-Chem, Physics and Sociology join the plan when their courses start.'
+    }
+  };
+
+  // daily habits
+  (function () {
+    var tk = dateKey(new Date());
+    var cl = sv.carsLog || {};
+    var carsDone = !!cl[tk];
+    var cs = 0;
+    var d2 = new Date();
+    if (!cl[dateKey(d2)]) d2.setDate(d2.getDate() - 1);
+    while (cl[dateKey(d2)]) { cs++; d2.setDate(d2.getDate() - 1); }
+    var missItems = Object.keys(sv.misses || {}).map(function (k) { return assign({ k: k }, sv.misses[k]); });
+    var due = missItems.filter(function (m) { return isDue(m, tk); }).length;
+    vals.habits = {
+      carsLabel: carsDone ? 'Done today ✓' : '3 questions · ~5 min',
+      carsStreak: cs + (cs === 1 ? ' day' : ' days'),
+      carsBg: carsDone ? '#F4FAF7' : '#FFFFFF',
+      startCars: function () { startSpecial('carsdaily'); },
+      reviewLabel: due === 0 ? (missItems.length === 0 ? 'No misses yet' : 'All caught up ✓') : Math.min(due, 10) + ' due today',
+      reviewTotal: missItems.length + ' in the error log',
+      startReview: function () { startSpecial('review'); }
+    };
+  })();
+
+  // ---- subject detail ----
+  var s = subject(S.subjectId);
+  if (s) {
+    var st = subjStats(s);
+    var bankSize = ((window.MCAT_BANK || {})[s.id] || []).length;
+    var A = acc(s.id);
+    vals.subj = {
+      name: s.name, section: s.section, blurb: s.blurb, pct: st.pct,
+      locked: s.status === 'locked', acc: A.a, soft: A.soft, bd: A.bd,
+      topicsLabel: st.done + ' of ' + st.total + ' topics marked ready',
+      lockNote: 'Practice for ' + s.name + ' unlocks when she starts ' + (s.course || 'the course') +
+                '. The topic list is here so the syllabus stays complete — she can still tick off anything she has already covered.',
+      examReady: s.status === 'active' && bankSize > 0,
+      examTitle: s.name + ' subject exam',
+      examNote: 'Mixed questions drawn across every topic in this subject, at test difficulty. Sit it after the five rounds of a section are done.',
+      startExam: function () { startRound(s.id, s.id + '#exam', s.name + ' subject exam', 1); },
+      groups: s.groups.map(function (g) {
+        return {
+          concept: g.concept,
+          count: (g.items || []).filter(function (t) { return sv.done[t.id]; }).length + '/' + (g.items || []).length,
+          topics: (g.items || []).map(function (t) {
+            var tr = topicRounds(t.id);
+            var isDone = !!sv.done[t.id];
+            return {
+              name: t.name, mark: isDone ? '✓' : '',
+              nameColor: isDone ? '#8A7280' : '#2A1622',
+              boxBg: isDone ? A.a : '#FFFFFF', boxBd: isDone ? A.a : '#E4D6DC', boxFg: '#FFFFFF',
+              meta: tr.n === 0 ? (s.status === 'locked' ? 'practice locked' : 'no rounds yet') : tr.n + ' of 5 rounds · best ' + tr.best + '%',
+              toggle: function () { toggleTopic(t.id); },
+              pips: [1, 2, 3, 4, 5].map(function (r) {
+                var rec = roundRec(t.id, r);
+                var pctv = rec ? Math.round(rec.c / rec.t * 100) : null;
+                var passed = pctv !== null && pctv >= passMark();
+                var lockedPip = s.status === 'locked' || bankSize === 0;
+                return {
+                  label: r,
+                  bg: lockedPip ? '#F6F2F4' : passed ? A.a : rec ? A.soft : '#FFFFFF',
+                  fg: lockedPip ? '#C6BAC0' : passed ? '#FFFFFF' : rec ? A.deep : '#A2909C',
+                  bd: lockedPip ? '#EFE9EC' : passed ? A.a : rec ? A.bd : '#E9DFE4',
+                  title: lockedPip ? 'Locked' : rec ? 'Round ' + r + ' · ' + pctv + '%' : 'Start round ' + r,
+                  start: function () { if (!lockedPip) startRound(s.id, t.id, t.name, r); }
+                };
+              })
+            };
+          })
+        };
+      })
+    };
+  }
+
+  // ---- round player ----
+  var sess = S.session;
+  if (sess) {
+    var q = sess.qs[sess.i] || {};
+    var pick = sess.picks[sess.i];
+    var pas = (window.MCAT_PASSAGES || {})[q.passage];
+    var right = pick === q.answer;
+    var elim = sess.elim[sess.i] || {};
+    var flagged = !!sess.flags[sess.i];
+    var specialLabel = SPECIAL[sess.subjId];
+    vals.q = {
+      counter: 'Question ' + (sess.i + 1) + ' of ' + sess.qs.length,
+      crumb: specialLabel
+        ? (specialLabel === sess.topicName ? sess.topicName : specialLabel + ' · ' + sess.topicName)
+        : (subject(sess.subjId).name + ' · ' + sess.topicName + (sess.topicId.indexOf('#exam') > -1 ? '' : ' · Round ' + sess.round)),
+      stem: q.stem || '', why: q.why || '',
+      hasPassage: !!pas, passageTitle: pas ? pas.title : '', passageText: pas ? pas.text : '',
+      cols: pas ? '0.95fr 1fr' : 'minmax(0,1fr)',
+      dots: sess.qs.map(function (x, i) { return { bg: i < sess.i ? '#D4436B' : i === sess.i ? '#4E2140' : '#F0E4E9' }; }),
+      revealed: sess.revealed,
+      isTimed: !!sess.timed,
+      clock: sess.timed ? Math.floor(sess.remaining / 60) + ':' + String(sess.remaining % 60).padStart(2, '0') : '',
+      clockBg: sess.remaining <= 15 ? '#FDF2F5' : '#F7F1F4',
+      clockFg: sess.remaining <= 15 ? '#C33F68' : '#6E5266',
+      flagLabel: flagged ? '⚑ Flagged' : '⚑ Flag',
+      flagBg: flagged ? '#FBEEF3' : 'transparent',
+      flagFg: flagged ? '#B03A5E' : '#8A7280',
+      flag: toggleFlag,
+      verdict: right ? 'Correct' : 'Not quite',
+      whyBg: sess.revealed ? (right ? '#F1F8F3' : '#FDF2F5') : '#FFFFFF',
+      whyBd: sess.revealed ? (right ? '#D8EADE' : '#F7D9E2') : '#EFE6EA',
+      whyFg: right ? '#3F7F63' : '#C33F68',
+      primaryLabel: sess.timed
+        ? (sess.i + 1 < sess.qs.length ? 'Next question' : 'Finish & score')
+        : (!sess.revealed ? 'Check answer' : (sess.i + 1 < sess.qs.length ? 'Next question' : 'See score report')),
+      primaryOpacity: (!sess.timed && !sess.revealed && pick === undefined) ? 0.45 : 1,
+      hint: sess.timed
+        ? 'Answers lock when you advance — no going back, just like test day.'
+        : (!sess.revealed ? (pick === undefined ? 'Pick an answer to check it.' : 'No penalty for guessing on the real thing.') : ''),
+      primary: primary,
+      exit: exitRound,
+      options: (q.options || []).map(function (text, i) {
+        var sel = pick === i, isAns = i === q.answer, dead = !!elim[i];
+        var bg = '#FFFFFF', bd = '#EFE6EA', fg = '#2A1622', badgeBg = '#F7F1F4', badgeFg = '#8A7280';
+        if (!sess.revealed && sel) { bg = '#FDF4F7'; bd = '#D4436B'; badgeBg = '#D4436B'; badgeFg = '#FFFFFF'; }
+        if (sess.revealed && isAns) { bg = '#F1F8F3'; bd = '#3F7F63'; badgeBg = '#3F7F63'; badgeFg = '#FFFFFF'; }
+        if (sess.revealed && sel && !isAns) { bg = '#FDF2F5'; bd = '#C33F68'; badgeBg = '#C33F68'; badgeFg = '#FFFFFF'; fg = '#7A5468'; }
+        return {
+          letter: sess.revealed ? (isAns ? '✓' : sel ? '✕' : 'ABCD'[i]) : 'ABCD'[i],
+          text: text, bg: bg, bd: bd, fg: fg, badgeBg: badgeBg, badgeFg: badgeFg,
+          deco: dead && !sess.revealed ? 'line-through' : 'none',
+          dim: dead && !sess.revealed ? 0.45 : 1,
+          note: sess.revealed && q.whys && q.whys[i] ? q.whys[i] : '',
+          noteColor: isAns ? '#3F7F63' : '#8A7280',
+          exLabel: dead ? '↺' : '✕', exTitle: dead ? 'Restore option' : 'Rule out',
+          elim: function () { toggleElim(i); },
+          pick: function () { choose(i); }
+        };
+      })
+    };
+  }
+
+  // ---- score report ----
+  var rep = S.report;
+  if (rep) {
+    var rs = rep.session, n = rs.qs.length, pct = Math.round(rep.correct / n * 100);
+    var passed = pct >= passMark();
+    var nextRound = Math.min(5, rs.round + 1);
+    vals.rep = {
+      crumb: isSpecial(rs.subjId)
+        ? (SPECIAL[rs.subjId] === rs.topicName ? rs.topicName : SPECIAL[rs.subjId] + ' · ' + rs.topicName)
+        : (subject(rs.subjId).name + ' · ' + rs.topicName),
+      headline: passed ? 'That one is in the bank.' : 'Worth another pass.',
+      pct: pct, scoreLabel: rep.correct + '/' + n,
+      ringColor: passed ? '#3F7F63' : '#D4436B',
+      ringOffset: Math.round(326.7 * (1 - pct / 100)),
+      verdict: passed ? 'Round ' + rs.round + ' passed' : 'Below the ' + passMark() + '% bar',
+      note: passed
+        ? 'Read the explanations for anything you guessed, then move on to round ' + nextRound + '. Spacing the rounds a few days apart is what makes them stick.'
+        : 'Read every explanation below before retaking. Missing the same reasoning twice is the pattern worth breaking.',
+      nextLabel: rs.subjId === 'final'
+        ? (rs.round < 5 ? 'Start final exam ' + nextRound : 'Back to subjects')
+        : isSpecial(rs.subjId) ? 'Done — back home' : (rs.round < 5 ? 'Start round ' + nextRound : 'Back to subject'),
+      next: function () {
+        if (rs.subjId === 'final') {
+          if (rs.round < 5) startFinal(nextRound);
+          else setState({ view: 'subjects', report: null, session: null });
+        } else if (isSpecial(rs.subjId)) setState({ view: 'today', report: null, session: null });
+        else if (rs.round < 5) startRound(rs.subjId, rs.topicId, rs.topicName, nextRound);
+        else setState({ view: 'subject', subjectId: rs.subjId, report: null, session: null });
+      },
+      retake: function () {
+        if (rs.subjId === 'final') startFinal(rs.round);
+        else if (isSpecial(rs.subjId)) startSpecial(rs.subjId);
+        else startRound(rs.subjId, rs.topicId, rs.topicName, rs.round);
+      },
+      back: function () {
+        setState({
+          view: isSpecial(rs.subjId) ? homeOf(rs.subjId) : 'subject',
+          subjectId: isSpecial(rs.subjId) ? null : rs.subjId,
+          report: null, session: null
+        });
+      },
+      items: rs.qs.map(function (q2, i) {
+        var ok = rs.picks[i] === q2.answer;
+        var yourNote = !ok && q2.whys && rs.picks[i] !== undefined && q2.whys[rs.picks[i]] ? ' — ' + q2.whys[rs.picks[i]] : '';
+        return {
+          mark: ok ? '✓' : '✕', markBg: ok ? '#F1F8F3' : '#FDF2F5', markFg: ok ? '#3F7F63' : '#C33F68',
+          topic: (rs.flags && rs.flags[i] ? '⚑ ' : '') + (q2.topic || ''),
+          stem: q2.stem, correct: q2.options[q2.answer],
+          yours: ok ? 'You had it.' : 'You chose: ' + (rs.picks[i] === undefined ? 'nothing (time ran out)' : q2.options[rs.picks[i]]) + yourNote,
+          why: q2.why
+        };
+      })
+    };
+  }
+
+  // ---- calendar ----
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  var todayKey = dateKey(today);
+  var mon = new Date(today); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
+  var evs = sv.events || {};
+  var byDay = {};
+  Object.keys(evs).forEach(function (id) { var e = evs[id]; (byDay[e.d] = byDay[e.d] || []).push(assign({ id: id }, e)); });
+  Object.keys(byDay).forEach(function (k) {
+    byDay[k].sort(function (a, b) { return (a.time === 'all' ? -1 : parseInt(a.time, 10)) - (b.time === 'all' ? -1 : parseInt(b.time, 10)); });
+  });
+  var cursor = calCursorDate();
+  var isMonth = S.calView !== 'week';
+  var planTopics = [];
+  active.forEach(function (sub) {
+    if (planTopics.length >= 5) return;
+    var nt = nextTopicFor(sub);
+    planTopics.push({ subject: sub.name, short: sub.short, topic: nt.topic.name, round: nt.round, sid: sub.id, tid: nt.topic.id });
+  });
+  var calLabel = '', cells = [], wk = { days: [], hours: [] };
+
+  if (isMonth) {
+    calLabel = cursor.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    var first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+    var gs = new Date(first); gs.setDate(gs.getDate() - ((gs.getDay() + 6) % 7));
+    for (var ci = 0; ci < 42; ci++) {
+      (function (ci) {
+        var d = new Date(gs); d.setDate(gs.getDate() + ci);
+        var k = dateKey(d);
+        var inMonth = d.getMonth() === cursor.getMonth();
+        var isT = k === todayKey;
+        var list = byDay[k] || [];
+        var cnt = sv.log[k] || 0;
+        cells.push({
+          num: d.getDate(),
+          fg: isT ? '#FFFFFF' : inMonth ? '#2A1622' : '#C9BCC3',
+          fw: isT ? 700 : 500,
+          numBg: isT ? '#D4436B' : 'transparent',
+          bg: inMonth ? '#FFFFFF' : '#FBF8F9',
+          add: function () { openEditor(k, 'all'); },
+          events: list.slice(0, 3).map(function (e) {
+            var A2 = acc(e.subjId);
+            return {
+              title: (e.time === 'all' ? '' : fmtTime(e.time) + ' · ') + e.title,
+              bg: A2.soft, fg: A2.deep, bar: A2.a,
+              open: function (ev) { ev.stopPropagation(); openEditor(e.d, String(e.time), e.id); }
+            };
+          }),
+          more: list.length > 3 ? '+' + (list.length - 3) + ' more' : '',
+          chip: cnt ? '✓ ' + cnt + (cnt === 1 ? ' round' : ' rounds') : ''
+        });
+      })(ci);
+    }
+  } else {
+    var wm = new Date(cursor); wm.setDate(wm.getDate() - ((wm.getDay() + 6) % 7));
+    var we = new Date(wm); we.setDate(wm.getDate() + 6);
+    calLabel = wm.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' – ' +
+               we.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    for (var hh = 7; hh <= 21; hh++) wk.hours.push({ label: fmtTime(hh * 60) });
+    for (var di = 0; di < 7; di++) {
+      (function (di) {
+        var d = new Date(wm); d.setDate(wm.getDate() + di);
+        var k = dateKey(d);
+        var isT = k === todayKey;
+        var list = byDay[k] || [];
+        var cnt = sv.log[k] || 0;
+        var slots = [];
+        for (var sh = 7; sh <= 21; sh++) {
+          (function (t) { slots.push({ add: function () { openEditor(k, String(t)); } }); })(sh * 60);
+        }
+        wk.days.push({
+          dow: d.toLocaleDateString('en-US', { weekday: 'short' }), num: d.getDate(),
+          headFg: isT ? '#D4436B' : '#2A1622', headBg: isT ? '#FBEEF3' : 'transparent',
+          allday: list.filter(function (e) { return e.time === 'all'; }).map(function (e) {
+            var A2 = acc(e.subjId);
+            return { title: e.title, bg: A2.soft, fg: A2.deep, open: function () { openEditor(e.d, 'all', e.id); } };
+          }),
+          chip: cnt ? '✓ ' + cnt : '',
+          slots: slots,
+          events: list.filter(function (e) { return e.time !== 'all'; }).map(function (e) {
+            var A2 = acc(e.subjId), t = parseInt(e.time, 10), dur = e.dur || 60;
+            var top = Math.max(0, Math.min(636, (t - 420) / 60 * 44));
+            var height = Math.max(24, Math.min(660 - top, dur / 60 * 44 - 3));
+            return {
+              title: e.title, time: fmtTime(t), top: top, h: height,
+              bg: A2.soft, bar: A2.a, fg: A2.deep,
+              open: function () { openEditor(e.d, String(e.time), e.id); }
+            };
+          })
+        });
+      })(di);
+    }
+  }
+
+  var agList = (byDay[todayKey] || []).map(function (e) {
+    var A2 = acc(e.subjId);
+    return { time: e.time === 'all' ? 'All day' : fmtTime(e.time), title: e.title, color: A2.a,
+      open: function () { openEditor(e.d, String(e.time), e.id); } };
+  });
+
+  vals.cal = {
+    label: calLabel, isMonth: isMonth, isWeek: !isMonth,
+    prev: function () { calGo(-1); }, next: function () { calGo(1); },
+    todayBtn: function () { setState({ calCursor: 0 }); },
+    setM: function () { setState({ calView: 'month' }); }, setW: function () { setState({ calView: 'week' }); },
+    mBg: isMonth ? '#4E2140' : '#FFFFFF', mFg: isMonth ? '#FFF6F9' : '#6E5266',
+    wBg: !isMonth ? '#4E2140' : '#FFFFFF', wFg: !isMonth ? '#FFF6F9' : '#6E5266',
+    newEvent: function () { openEditor(todayKey, 'all'); },
+    paceNote: perWeek + ' topics a week for the next ' + weeksLeft + ' weeks covers the whole syllabus before ' +
+              exam.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) + '.',
+    cells: cells, week: wk,
+    planH: plan.h + ' hrs',
+    hUp: function () { setPlan(Math.min(40, plan.h + 1), plan.days); },
+    hDown: function () { setPlan(Math.max(3, plan.h - 1), plan.days); },
+    dayChips: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map(function (nm, i) {
+      return {
+        label: nm,
+        bg: plan.days[i] ? '#4E2140' : '#FFFFFF',
+        fg: plan.days[i] ? '#FFF6F9' : '#8A7280',
+        bd: plan.days[i] ? '#4E2140' : '#E9DFE4',
+        toggle: function () { var d2 = plan.days.slice(); d2[i] = d2[i] ? 0 : 1; setPlan(plan.h, d2); }
+      };
+    }),
+    agToday: agList, agEmpty: agList.length === 0,
+    plan: planTopics.map(function (p) {
+      var A2 = acc(p.sid);
+      return { short: p.short, acc: A2.a, soft: A2.soft, topic: p.topic, subject: p.subject + ' · round ' + p.round,
+        start: function () { startRound(p.sid, p.tid, p.topic, p.round); } };
+    })
+  };
+
+  // ---- session editor ----
+  var edd = S.ed;
+  vals.ed = edd ? {
+    open: true,
+    heading: edd.id ? 'Edit session' : 'New study session',
+    saveLabel: edd.id ? 'Save changes' : 'Add to calendar',
+    dateLabel: parseDate(edd.dateKey).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
+    title: edd.title,
+    time: edd.time,
+    dur: String(edd.dur),
+    // typing must not repaint the app, or the caret jumps out of the field
+    setTitle: function (e) { edd.title = e.target.value; },
+    setTime: function (e) { edd.time = e.target.value; },
+    setDur: function (e) { edd.dur = parseInt(e.target.value, 10); },
+    timeOptions: [{ value: 'all', label: 'All day' }].concat(
+      Array.from({ length: 30 }, function (x, i) { var t = 420 + i * 30; return { value: String(t), label: fmtTime(t) }; })),
+    durOptions: [{ value: '30', label: '30 min' }, { value: '60', label: '1 hour' }, { value: '90', label: '1.5 hours' }, { value: '120', label: '2 hours' }],
+    subjects: [{ id: '', name: 'General' }].concat(active.map(function (x) { return { id: x.id, name: x.name }; })).map(function (o) {
+      var on = (edd.subjId || '') === o.id, A2 = acc(o.id);
+      return {
+        name: o.name, bg: on ? A2.a : '#FFFFFF', fg: on ? '#FFFFFF' : '#6E5266', bd: on ? A2.a : '#E9DFE4',
+        pick: function () { setState({ ed: assign(edd, { subjId: o.id }) }); }
+      };
+    }),
+    isEdit: !!edd.id,
+    stop: function (e) { e.stopPropagation(); },
+    save: saveEvent, cancel: function () { setState({ ed: null }); }, del: deleteEvent
+  } : { open: false };
+
+  // ---- progress ----
+  var heat = [];
+  for (var w = 11; w >= 0; w--) {
+    var hcells = [];
+    for (var dd = 0; dd < 7; dd++) {
+      var d3 = new Date(mon); d3.setDate(mon.getDate() - w * 7 + dd);
+      var cnt3 = sv.log[dateKey(d3)] || 0;
+      hcells.push({
+        bg: cnt3 >= 3 ? '#B03A5E' : cnt3 === 2 ? '#D4436B' : cnt3 === 1 ? '#F2AEC4' : '#F6F0F3',
+        title: d3.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' + cnt3 + ' rounds'
+      });
+    }
+    heat.push({ cells: hcells });
+  }
+  vals.st = {
+    rounds: tot.n, roundsNote: 'of ' + (tAll * 5) + ' planned',
+    questions: tot.t, correctNote: tot.c + ' correct',
+    accNote: tot.acc === null ? 'after the first round' : tot.acc >= passMark() ? 'above her ' + passMark() + '% bar' : 'below her ' + passMark() + '% bar',
+    bars: active.map(function (sub) {
+      var stt = subjStats(sub);
+      return {
+        name: sub.name, pct: stt.acc === null ? 0 : stt.acc,
+        label: stt.acc === null ? '—' : stt.acc + '%',
+        color: stt.acc === null ? '#F0E4E9' : acc(sub.id).a,
+        labelColor: stt.acc === null ? '#A2909C' : '#40293A'
+      };
+    }),
+    heat: heat
+  };
+  var hist = (sv.history || []).slice(-20);
+  var pts = hist.map(function (h2, i) {
+    var x = hist.length === 1 ? 280 : 8 + i * (544 / (hist.length - 1));
+    var y = 8 + (100 - h2.p) * (94 / 100);
+    return {
+      x: Math.round(x), y: Math.round(y),
+      fill: acc(isSpecial(h2.s) ? '' : h2.s).a,
+      title: h2.d + ' · ' + (SPECIAL[h2.s] || (subject(h2.s) || { name: h2.s }).name) + ' · ' + h2.p + '%'
+    };
+  });
+  vals.st.trendPts = pts.map(function (p) { return p.x + ',' + p.y; }).join(' ');
+  vals.st.trendDots = pts;
+  vals.st.hasTrend = pts.length > 1;
+  vals.st.trendNote = hist.length ? 'Last ' + hist.length + ' scored sessions — every round, exam and drill.' : 'Scores plot here after her first round.';
+
+  var wt = Object.keys(sv.topicStats || {}).map(function (k2) {
+    var v2 = sv.topicStats[k2], sp = k2.split('|');
+    return { subj: sp[0], topic: sp[1], a2: Math.round(v2.c / v2.t * 100), t: v2.t };
+  }).filter(function (w2) { return w2.t >= 3; }).sort(function (a2, b2) { return a2.a2 - b2.a2; }).slice(0, 6);
+  vals.st.weak = wt.map(function (w2) {
+    var A2 = acc(w2.subj);
+    return { topic: w2.topic, label: w2.a2 + '%', pct: w2.a2, acc: A2.a,
+      meta: (subject(w2.subj) || { name: 'Mixed' }).name + ' · ' + w2.t + ' answered' };
+  });
+  vals.st.hasWeak = wt.length > 0;
+  vals.st.noWeak = wt.length === 0;
+
+  var missItems2 = Object.keys(sv.misses || {}).map(function (k3) { return assign({ k: k3 }, sv.misses[k3]); });
+  missItems2.sort(function (a3, b3) { return (b3.count || 0) - (a3.count || 0); });
+  vals.st.missCount = missItems2.length + (missItems2.length === 1 ? ' question' : ' questions');
+  vals.st.hasMisses = missItems2.length > 0;
+  vals.st.noMisses = missItems2.length === 0;
+  vals.st.missList = missItems2.slice(0, 8).map(function (m3) {
+    var A3 = acc(m3.subj);
+    var q3 = bankOf(m3.subj)[parseInt(m3.k.split('#')[1], 10)] || {};
+    return {
+      stem: (q3.stem || '').slice(0, 110) + ((q3.stem || '').length > 110 ? '…' : ''),
+      topic: m3.topic || 'General', meta: 'missed ' + m3.count + '×', acc: A3.a, soft: A3.soft
+    };
+  });
+  vals.st.redoMisses = function () { startSpecial('misses'); };
+
+  var fRecs = [1, 2, 3, 4, 5].map(function (r) { return sv.rounds['final#' + r]; });
+  var fBest = fRecs.reduce(function (m, r) { return r ? Math.max(m, Math.round(r.c / r.t * 100)) : m; }, 0);
+  var fN = fRecs.filter(Boolean).length;
+  vals.finals = {
+    meta: fN === 0 ? 'None attempted yet.' : fN + ' of 5 attempted · best ' + fBest + '%.',
+    pips: [1, 2, 3, 4, 5].map(function (r) {
+      var rec = fRecs[r - 1];
+      var pctv = rec ? Math.round(rec.c / rec.t * 100) : null;
+      var passed2 = pctv !== null && pctv >= passMark();
+      return {
+        label: r,
+        bg: passed2 ? '#FFFFFF' : rec ? '#FFD9E4' : 'rgba(255,255,255,.12)',
+        fg: passed2 ? '#6E2449' : rec ? '#7A2A50' : '#FFF6F9',
+        bd: passed2 ? '#FFFFFF' : rec ? '#FFD9E4' : 'rgba(255,255,255,.35)',
+        title: rec ? 'Exam ' + r + ' · ' + pctv + '%' : 'Start final exam ' + r,
+        start: function () { startFinal(r); }
+      };
+    })
+  };
+
+  return vals;
+}
+
+/* ------------------------------------------------------------------
+   Markup
+   Inline styles are carried over from the design as-is; hover states move
+   to the .hv-* classes in the stylesheet.
+   ------------------------------------------------------------------ */
+
+var handlers = [], inputs = [], changes = [];
+var ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ESCAPES[c]; }); }
+function h(fn) { handlers.push(fn); return 'data-h="' + (handlers.length - 1) + '"'; }
+function onInput(fn) { inputs.push(fn); return 'data-in="' + (inputs.length - 1) + '"'; }
+function onChange(fn) { changes.push(fn); return 'data-ch="' + (changes.length - 1) + '"'; }
+function map(list, fn) { return (list || []).map(fn).join(''); }
+
+function viewSidebar(V) {
+  return '' +
+  '<aside style="border-right:1px solid #EFE6EA;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);padding:30px 20px 24px;display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh">' +
+    '<div style="display:flex;flex-direction:column;gap:3px;padding:0 8px">' +
+      '<div style="font-family:\'Bricolage Grotesque\',serif;font-weight:700;font-size:19px;letter-spacing:-0.03em;line-height:1.1">' + esc(V.learnerName) + '</div>' +
+      '<div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#D4436B"><span style="animation:twinkle 2.8s ease-in-out infinite">✦</span>MCAT 2027</div>' +
+    '</div>' +
+    '<nav style="display:flex;flex-direction:column;gap:2px">' +
+      navBtn(V.goToday, V.nav.a, 'Today') +
+      navBtn(V.goSubjects, V.nav.b, 'Subjects') +
+      navBtn(V.goCalendar, V.nav.c, 'Calendar') +
+      navBtn(V.goStats, V.nav.d, 'Progress') +
+    '</nav>' +
+    '<div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:14px;background:linear-gradient(160deg,#FBEEF3,#F1EDFA)">' +
+      '<div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#B03A5E">Test day</div>' +
+      '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:15px;font-weight:600;letter-spacing:-0.02em;line-height:1.25">' + esc(V.examLabel) + '</div>' +
+      '<div style="height:1px;background:#F3D3DF"></div>' +
+      '<div style="font-size:12.5px;color:#7A5468;line-height:1.45">' + V.daysLeft + ' days left · ' + V.weeksLeft + ' weeks of prep</div>' +
+    '</div>' +
+  '</aside>';
+}
+function navBtn(fn, n, label) {
+  return '<button ' + h(fn) + ' class="hv-pink" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:0;border-radius:10px;font-size:14px;letter-spacing:-0.01em;text-align:left;transition:background .15s;background:' + n.bg + ';color:' + n.fg + ';font-weight:' + n.fw + '">' + label + '</button>';
+}
+
+function viewToday(V) {
+  return '' +
+  '<section style="padding:52px 60px 88px;max-width:1120px;animation:rise .4s ease">' +
+    '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ ' + esc(V.todayLabel) + '</div>' +
+    '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:40px;font-weight:600;letter-spacing:-0.035em;line-height:1.08;margin:12px 0 0">Let\'s keep the <em style="font-family:\'Instrument Serif\',serif;font-style:italic;font-weight:400;color:#D4436B">streak</em> going.</h1>' +
+
+    '<div style="display:grid;grid-template-columns:1.15fr 1fr;gap:20px;margin-top:34px">' +
+      '<div style="position:relative;overflow:hidden;border-radius:24px;padding:36px 38px;background:linear-gradient(150deg,#3E1834 0%,#6E2449 52%,#C33F68 100%);color:#FFF6F9">' +
+        '<div style="position:absolute;top:-70px;right:-50px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,169,196,.5),transparent 65%);filter:blur(10px);animation:floaty 7s ease-in-out infinite"></div>' +
+        '<div style="position:absolute;bottom:-90px;left:30%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(151,89,181,.45),transparent 65%);filter:blur(14px);animation:floaty 9s ease-in-out infinite reverse"></div>' +
+        '<div style="position:absolute;top:26px;right:34px;font-size:15px;color:#FFD9E4;animation:twinkle 2.6s ease-in-out infinite">✦</div>' +
+        '<div style="position:absolute;top:52px;right:62px;font-size:9px;color:#FFD9E4;animation:twinkle 2.6s ease-in-out .9s infinite">✦</div>' +
+        '<div style="position:relative">' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;opacity:.75">Countdown to test day</div>' +
+          '<div style="display:flex;align-items:baseline;gap:16px;margin-top:12px">' +
+            '<div style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:118px;font-weight:400;letter-spacing:-0.04em;line-height:0.82">' + V.daysLeft + '</div>' +
+            '<div style="font-size:15px;font-weight:500;opacity:.85;padding-bottom:12px">days to go, <span style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:17px">future Dr. Oo</span></div>' +
+          '</div>' +
+          '<div style="margin-top:24px;height:5px;border-radius:99px;background:rgba(255,255,255,.22)">' +
+            '<div style="height:5px;border-radius:99px;background:linear-gradient(90deg,#FFD9E4,#FFB1C9);width:' + V.timePct + '%;transition:width .5s"></div>' +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;margin-top:10px;font-size:12px;opacity:.75">' +
+            '<span>' + esc(V.startLabel) + '</span><span>' + esc(V.examShort) + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div style="display:grid;grid-template-rows:1fr 1fr;gap:20px">' +
+        '<div style="border:1px solid #EFE6EA;border-radius:22px;background:#FFFFFF;padding:26px 28px">' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#A2909C">Syllabus marked ready</div>' +
+          '<div style="display:flex;align-items:baseline;gap:10px;margin-top:10px">' +
+            '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:38px;font-weight:600;letter-spacing:-0.04em;line-height:1">' + V.overallPct + '%</div>' +
+            '<div style="font-size:13px;color:#6E5266">' + esc(V.topicsDoneLabel) + '</div>' +
+          '</div>' +
+          '<div style="margin-top:16px;height:6px;border-radius:99px;background:#F5EBEF">' +
+            '<div style="height:6px;border-radius:99px;background:linear-gradient(90deg,#D4436B,#7C6BD6);width:' + V.overallPct + '%;transition:width .5s"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">' +
+          statCard('Streak', V.streak, V.streakLabel) +
+          statCard('Accuracy', V.accuracyLabel, V.roundsLabel) +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div style="display:flex;align-items:center;gap:14px;margin-top:20px;border:1px solid #EFE6EA;border-radius:16px;background:#FFFFFF;padding:15px 20px">' +
+      '<span style="width:9px;height:9px;border-radius:50%;flex:0 0 9px;background:' + V.planBar.color + '"></span>' +
+      '<div style="flex:1;font-size:13px;color:#40293A;line-height:1.55">' + esc(V.planBar.line) + ' <span style="color:#A2909C">' + esc(V.planBar.note) + '</span></div>' +
+      '<div style="font-size:12.5px;font-weight:700;white-space:nowrap;color:' + V.planBar.color + '">' + esc(V.planBar.week) + '</div>' +
+    '</div>' +
+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">' +
+      '<div style="display:flex;align-items:center;gap:16px;border:1px solid #EFE6EA;border-radius:16px;padding:18px 20px;background:' + V.habits.carsBg + '">' +
+        '<div style="width:38px;height:38px;border-radius:11px;background:#EDF6F2;display:flex;align-items:center;justify-content:center;font-size:14px;color:#3F8F7B;font-weight:700">✦</div>' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:14px;font-weight:600;letter-spacing:-0.01em">Daily CARS</div>' +
+          '<div style="font-size:12px;color:#8A7280;margin-top:2px">' + esc(V.habits.carsLabel) + ' · streak ' + esc(V.habits.carsStreak) + '</div>' +
+        '</div>' +
+        '<button ' + h(V.habits.startCars) + ' class="hv-b92" style="border:0;border-radius:10px;background:#3F8F7B;color:#FFF;font-size:12.5px;font-weight:600;padding:9px 16px;transition:filter .15s;white-space:nowrap">Start</button>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:16px;border:1px solid #EFE6EA;border-radius:16px;background:#FFFFFF;padding:18px 20px">' +
+        '<div style="width:38px;height:38px;border-radius:11px;background:#FBEEF3;display:flex;align-items:center;justify-content:center;font-size:15px;color:#C33F68;font-weight:700">↻</div>' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:14px;font-weight:600;letter-spacing:-0.01em">Review queue</div>' +
+          '<div style="font-size:12px;color:#8A7280;margin-top:2px">' + esc(V.habits.reviewLabel) + ' · ' + esc(V.habits.reviewTotal) + '</div>' +
+        '</div>' +
+        '<button ' + h(V.habits.startReview) + ' class="hv-b92" style="border:0;border-radius:10px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:12.5px;font-weight:600;padding:9px 16px;transition:filter .15s;white-space:nowrap">Review</button>' +
+      '</div>' +
+    '</div>' +
+
+    '<div style="display:flex;align-items:flex-end;justify-content:space-between;margin:42px 0 18px">' +
+      '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:22px;font-weight:600;letter-spacing:-0.03em;margin:0">Up next — weakest first</h2>' +
+      '<div style="font-size:12.5px;color:#A2909C">Ordered by accuracy, then progress</div>' +
+    '</div>' +
+
+    '<div style="display:flex;flex-direction:column;gap:12px">' +
+      map(V.upNext, function (u) {
+        return '<div class="hv-edge" style="display:flex;align-items:center;gap:20px;border:1px solid #EFE6EA;border-radius:16px;background:#FFFFFF;padding:18px 22px">' +
+          '<div style="width:40px;height:40px;border-radius:12px;background:' + u.soft + ';display:flex;align-items:center;justify-content:center;font-family:\'Bricolage Grotesque\',serif;font-size:12.5px;font-weight:700;color:' + u.acc + '">' + esc(u.initials) + '</div>' +
+          '<div style="min-width:0;flex:1">' +
+            '<div style="font-size:15px;font-weight:600;letter-spacing:-0.015em">' + esc(u.topic) + '</div>' +
+            '<div style="font-size:12.5px;color:#8A7280;margin-top:3px">' + esc(u.meta) + '</div>' +
+          '</div>' +
+          '<button ' + h(u.start) + ' class="hv-b92" style="border:0;border-radius:10px;background:' + u.acc + ';color:#FFF;font-size:13px;font-weight:600;padding:10px 18px;letter-spacing:-0.01em;transition:filter .15s;white-space:nowrap">' + esc(u.cta) + '</button>' +
+        '</div>';
+      }) +
+    '</div>' +
+
+    '<div style="display:flex;align-items:flex-end;justify-content:space-between;margin:46px 0 18px">' +
+      '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:22px;font-weight:600;letter-spacing:-0.03em;margin:0">Pick up where you left off</h2>' +
+      '<button ' + h(V.goSubjects) + ' style="border:0;background:none;color:#D4436B;font-size:13px;font-weight:600;padding:0">All subjects →</button>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">' +
+      map(V.continueCards, function (c) {
+        return '<button ' + h(c.open) + ' class="hv-lift" style="text-align:left;border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:22px;display:flex;flex-direction:column;gap:16px;transition:border-color .16s,transform .16s">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">' +
+            '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:17px;font-weight:600;letter-spacing:-0.025em">' + esc(c.name) + '</div>' +
+            '<div style="font-size:11px;font-weight:600;color:' + c.acc + ';background:' + c.soft + ';padding:4px 8px;border-radius:6px;white-space:nowrap">' + c.pct + '%</div>' +
+          '</div>' +
+          '<div style="height:6px;border-radius:99px;background:#F5EBEF">' +
+            '<div style="height:6px;border-radius:99px;background:' + c.acc + ';width:' + c.pct + '%;transition:width .5s"></div>' +
+          '</div>' +
+          '<div style="font-size:12.5px;color:#8A7280;line-height:1.5">' + esc(c.meta) + '</div>' +
+        '</button>';
+      }) +
+    '</div>' +
+  '</section>';
+}
+function statCard(label, big, sub) {
+  return '<div style="border:1px solid #EFE6EA;border-radius:22px;background:#FFFFFF;padding:24px">' +
+    '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#A2909C">' + label + '</div>' +
+    '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:32px;font-weight:600;letter-spacing:-0.04em;margin-top:8px">' + esc(big) + '</div>' +
+    '<div style="font-size:12.5px;color:#6E5266">' + esc(sub) + '</div>' +
+  '</div>';
+}
+
+function viewSubjects(V) {
+  return '' +
+  '<section style="padding:52px 60px 88px;max-width:1120px;animation:rise .4s ease">' +
+    '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ The full map</div>' +
+    '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:40px;font-weight:600;letter-spacing:-0.035em;line-height:1.08;margin:12px 0 8px">Subjects</h1>' +
+    '<p style="font-size:15px;color:#6E5266;max-width:620px;line-height:1.6;margin:0">Every content category the AAMC tests, split by the coursework you\'ve finished. Five practice rounds per topic, then a subject exam.</p>' +
+
+    '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:34px">' +
+      map(V.activeCards, function (c) {
+        return '<button ' + h(c.open) + ' class="hv-lift" style="text-align:left;border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:26px 28px;display:flex;flex-direction:column;gap:18px;transition:border-color .16s,transform .16s">' +
+          '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">' +
+            '<div>' +
+              '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:21px;font-weight:600;letter-spacing:-0.03em">' + esc(c.name) + '</div>' +
+              '<div style="font-size:12.5px;color:#8A7280;margin-top:4px">' + esc(c.section) + '</div>' +
+            '</div>' +
+            '<div style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:30px;font-weight:400;letter-spacing:-0.02em;color:' + c.acc + '">' + c.pct + '%</div>' +
+          '</div>' +
+          '<div style="height:6px;border-radius:99px;background:#F5EBEF">' +
+            '<div style="height:6px;border-radius:99px;background:' + c.acc + ';width:' + c.pct + '%;transition:width .5s"></div>' +
+          '</div>' +
+          '<div style="display:flex;gap:22px;font-size:12.5px;color:#6E5266">' +
+            '<span>' + esc(c.topicsLabel) + '</span><span>' + esc(c.roundsLabel) + '</span><span>' + esc(c.accLabel) + '</span>' +
+          '</div>' +
+        '</button>';
+      }) +
+    '</div>' +
+
+    '<div style="margin-top:18px;position:relative;overflow:hidden;border-radius:20px;padding:26px 30px;background:linear-gradient(140deg,#3E1834,#6E2449);color:#FFF6F9;display:flex;align-items:center;gap:26px;flex-wrap:wrap">' +
+      '<div style="position:absolute;top:-60px;right:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,169,196,.4),transparent 65%);filter:blur(12px)"></div>' +
+      '<div style="flex:1;min-width:280px;position:relative">' +
+        '<div style="font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#FFD9E4">✦ The real rehearsal</div>' +
+        '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:22px;font-weight:600;letter-spacing:-0.025em;margin-top:8px">Final exams</div>' +
+        '<div style="font-size:13px;opacity:.85;line-height:1.55;margin-top:6px">Five mixed exams, 20 questions each, drawn from every active subject — CARS passages included. ' + esc(V.finals.meta) + '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;position:relative">' +
+        map(V.finals.pips, function (f) {
+          return '<button ' + h(f.start) + ' class="hv-pop2" title="' + esc(f.title) + '" style="width:44px;height:44px;border-radius:13px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:transform .14s;border:1px solid ' + f.bd + ';background:' + f.bg + ';color:' + f.fg + '">' + f.label + '</button>';
+        }) +
+      '</div>' +
+    '</div>' +
+
+    (V.showLockedRow ?
+      '<div>' +
+        '<div style="display:flex;align-items:baseline;gap:12px;margin:46px 0 6px">' +
+          '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:22px;font-weight:600;letter-spacing:-0.03em;margin:0">Not in her coursework yet</h2>' +
+        '</div>' +
+        '<p style="font-size:14px;color:#8A7280;max-width:620px;line-height:1.6;margin:0 0 20px">Listed so nothing goes missing. Topics are visible; practice unlocks when the course starts.</p>' +
+        '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px">' +
+          map(V.lockedCards, function (c) {
+            return '<button ' + h(c.open) + ' class="hv-edge2" style="text-align:left;border:1px dashed #E4DBE0;border-radius:20px;background:#FBF8F9;padding:24px 26px;display:flex;flex-direction:column;gap:12px;transition:border-color .16s">' +
+              '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">' +
+                '<div>' +
+                  '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:19px;font-weight:600;letter-spacing:-0.03em;color:#7A6B74">' + esc(c.name) + '</div>' +
+                  '<div style="font-size:12.5px;color:#A2909C;margin-top:4px">' + esc(c.section) + '</div>' +
+                '</div>' +
+                '<div style="font-size:11px;font-weight:600;color:#8A7280;background:#F2EBEE;padding:4px 9px;border-radius:6px;white-space:nowrap">Locked</div>' +
+              '</div>' +
+              '<div style="font-size:12.5px;color:#8A7280;line-height:1.5">' + esc(c.meta) + '</div>' +
+            '</button>';
+          }) +
+        '</div>' +
+      '</div>' : '') +
+  '</section>';
+}
+
+function viewSubject(V) {
+  var s = V.subj;
+  return '' +
+  '<section style="padding:52px 60px 88px;max-width:1060px;animation:rise .35s ease">' +
+    '<button ' + h(V.goSubjects) + ' class="hv-link" style="border:0;background:none;color:#8A7280;font-size:13px;font-weight:500;padding:0;margin-bottom:20px">← Subjects</button>' +
+    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:32px">' +
+      '<div style="min-width:0">' +
+        '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">' + esc(s.section) + '</div>' +
+        '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:38px;font-weight:600;letter-spacing:-0.035em;line-height:1.1;margin:10px 0 10px">' + esc(s.name) + '</h1>' +
+        '<p style="font-size:14.5px;color:#6E5266;max-width:600px;line-height:1.6;margin:0">' + esc(s.blurb) + '</p>' +
+      '</div>' +
+      '<div style="text-align:right;white-space:nowrap">' +
+        '<div style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:52px;font-weight:400;letter-spacing:-0.03em;line-height:1;color:' + s.acc + '">' + s.pct + '%</div>' +
+        '<div style="font-size:12.5px;color:#8A7280;margin-top:6px">' + esc(s.topicsLabel) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="margin-top:26px;height:6px;border-radius:99px;background:#F5EBEF">' +
+      '<div style="height:6px;border-radius:99px;background:' + s.acc + ';width:' + s.pct + '%;transition:width .5s"></div>' +
+    '</div>' +
+    (s.locked ? '<div style="margin-top:26px;border:1px dashed #E4DBE0;border-radius:16px;background:#FBF8F9;padding:18px 22px;font-size:13.5px;color:#7A6B74;line-height:1.6">' + esc(s.lockNote) + '</div>' : '') +
+
+    '<div style="display:flex;flex-direction:column;gap:34px;margin-top:38px">' +
+      map(s.groups, function (g) {
+        return '<div>' +
+          '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid #EFE6EA">' +
+            '<h2 style="display:flex;align-items:center;gap:8px;font-family:\'Bricolage Grotesque\',serif;font-size:17px;font-weight:600;letter-spacing:-0.02em;margin:0"><span style="color:' + s.acc + ';font-size:11px">✦</span>' + esc(g.concept) + '</h2>' +
+            '<div style="font-size:12px;color:#A2909C">' + esc(g.count) + '</div>' +
+          '</div>' +
+          '<div style="display:flex;flex-direction:column">' +
+            map(g.topics, function (t) {
+              return '<div class="hv-mist" style="display:flex;align-items:center;gap:16px;padding:14px 4px;border-bottom:1px solid #F6F0F3">' +
+                '<button ' + h(t.toggle) + ' style="width:22px;height:22px;flex:0 0 22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .15s;border:1.5px solid ' + t.boxBd + ';background:' + t.boxBg + ';color:' + t.boxFg + '">' + t.mark + '</button>' +
+                '<div style="flex:1;min-width:0">' +
+                  '<div style="font-size:14.5px;letter-spacing:-0.01em;line-height:1.35;color:' + t.nameColor + '">' + esc(t.name) + '</div>' +
+                  '<div style="font-size:11.5px;color:#A2909C;margin-top:2px">' + esc(t.meta) + '</div>' +
+                '</div>' +
+                '<div style="display:flex;gap:5px">' +
+                  map(t.pips, function (p) {
+                    return '<button ' + h(p.start) + ' class="hv-pop" title="' + esc(p.title) + '" style="width:26px;height:26px;border-radius:8px;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:transform .14s;border:1px solid ' + p.bd + ';background:' + p.bg + ';color:' + p.fg + '">' + p.label + '</button>';
+                  }) +
+                '</div>' +
+              '</div>';
+            }) +
+          '</div>' +
+        '</div>';
+      }) +
+    '</div>' +
+
+    (s.examReady ?
+      '<div style="margin-top:42px;display:flex;align-items:center;gap:24px;border-radius:20px;padding:28px 32px;border:1px solid ' + s.bd + ';background:linear-gradient(135deg,' + s.soft + ',#FFFFFF)">' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.025em">' + esc(s.examTitle) + '</div>' +
+          '<div style="font-size:13.5px;color:#7A5468;margin-top:6px;line-height:1.55">' + esc(s.examNote) + '</div>' +
+        '</div>' +
+        '<button ' + h(s.startExam) + ' class="hv-plum" style="border:0;border-radius:11px;background:#4E2140;color:#FFF6F9;font-size:13.5px;font-weight:600;padding:13px 22px;letter-spacing:-0.01em;transition:background .15s;white-space:nowrap">Start subject exam</button>' +
+      '</div>' : '') +
+  '</section>';
+}
+
+function viewRound(V) {
+  var q = V.q;
+  return '' +
+  '<section style="animation:rise .3s ease">' +
+    '<div style="position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:22px;padding:18px 44px;background:rgba(252,250,249,.9);backdrop-filter:blur(12px);border-bottom:1px solid #EFE6EA">' +
+      '<button ' + h(q.exit) + ' class="hv-link" style="border:0;background:none;color:#8A7280;font-size:13px;font-weight:500;padding:0">← Leave round</button>' +
+      '<div style="flex:1;min-width:0;display:flex;align-items:center;gap:10px;justify-content:center">' +
+        map(q.dots, function (d) { return '<div style="width:22px;height:4px;border-radius:99px;transition:background .2s;background:' + d.bg + '"></div>'; }) +
+      '</div>' +
+      '<button ' + h(q.flag) + ' class="hv-pink" style="border:0;border-radius:9px;font-size:12px;font-weight:600;padding:7px 12px;transition:background .15s;background:' + q.flagBg + ';color:' + q.flagFg + '">' + q.flagLabel + '</button>' +
+      (q.isTimed ? '<div id="dc-clock" style="font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;border-radius:9px;padding:7px 12px;background:' + q.clockBg + ';color:' + q.clockFg + '">' + q.clock + '</div>' : '') +
+      '<div style="font-size:12.5px;color:#8A7280;white-space:nowrap">' + esc(q.counter) + '</div>' +
+    '</div>' +
+
+    '<div style="display:grid;grid-template-columns:' + q.cols + ';gap:44px;padding:40px 44px 90px;max-width:1180px">' +
+      (q.hasPassage ?
+        '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:28px 30px;align-self:start;position:sticky;top:96px;max-height:calc(100vh - 140px);overflow:auto">' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">' + esc(q.passageTitle) + '</div>' +
+          '<div style="font-size:14.5px;line-height:1.75;color:#40293A;margin-top:16px;white-space:pre-wrap">' + esc(q.passageText) + '</div>' +
+        '</div>' : '') +
+
+      '<div style="min-width:0">' +
+        '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#A2909C">' + esc(q.crumb) + '</div>' +
+        '<h1 style="font-family:\'Public Sans\',sans-serif;font-size:20px;font-weight:500;letter-spacing:-0.015em;line-height:1.55;margin:14px 0 28px;max-width:660px">' + esc(q.stem) + '</h1>' +
+
+        '<div style="display:flex;flex-direction:column;gap:10px;max-width:660px">' +
+          map(q.options, function (o) {
+            return '<div style="display:flex;align-items:stretch;gap:8px;opacity:' + o.dim + '">' +
+              '<button ' + h(o.pick) + ' class="hv-edge" style="flex:1;min-width:0;display:flex;align-items:flex-start;gap:14px;text-align:left;padding:16px 18px;border-radius:14px;font-size:14.5px;line-height:1.5;letter-spacing:-0.01em;transition:all .14s;border:1.5px solid ' + o.bd + ';background:' + o.bg + ';color:' + o.fg + '">' +
+                '<span style="width:24px;height:24px;flex:0 0 24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:' + o.badgeBg + ';color:' + o.badgeFg + '">' + o.letter + '</span>' +
+                '<span style="padding-top:2px;text-decoration:' + o.deco + '">' + esc(o.text) +
+                  (o.note ? '<span style="display:block;font-size:12px;line-height:1.5;margin-top:6px;font-weight:500;text-decoration:none;color:' + o.noteColor + '">' + esc(o.note) + '</span>' : '') +
+                '</span>' +
+              '</button>' +
+              '<button ' + h(o.elim) + ' class="hv-outline" title="' + esc(o.exTitle) + '" style="width:34px;flex:0 0 34px;border:1.5px solid #EFE6EA;border-radius:12px;background:#FFFFFF;color:#C6BAC0;font-size:12px;font-weight:700;transition:all .14s">' + o.exLabel + '</button>' +
+            '</div>';
+          }) +
+        '</div>' +
+
+        (q.revealed ?
+          '<div style="margin-top:24px;max-width:660px;border-radius:16px;padding:22px 24px;background:' + q.whyBg + ';border:1px solid ' + q.whyBd + '">' +
+            '<div style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:' + q.whyFg + '">' + q.verdict + '</div>' +
+            '<div style="font-size:14.5px;line-height:1.65;color:#40293A;margin-top:10px">' + esc(q.why) + '</div>' +
+          '</div>' : '') +
+
+        '<div style="display:flex;align-items:center;gap:16px;margin-top:28px;max-width:660px">' +
+          '<button ' + h(q.primary) + ' class="hv-b93" style="border:0;border-radius:11px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:14px;font-weight:600;padding:14px 26px;letter-spacing:-0.01em;transition:filter .15s,opacity .15s;opacity:' + q.primaryOpacity + '">' + esc(q.primaryLabel) + '</button>' +
+          '<div style="font-size:12.5px;color:#A2909C">' + esc(q.hint) + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</section>';
+}
+
+function viewReport(V) {
+  var r = V.rep;
+  return '' +
+  '<section style="padding:52px 60px 90px;max-width:920px;animation:rise .4s ease">' +
+    '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ ' + esc(r.crumb) + '</div>' +
+    '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:38px;font-weight:600;letter-spacing:-0.035em;line-height:1.1;margin:12px 0 0">' + esc(r.headline) + '</h1>' +
+
+    '<div style="display:flex;align-items:center;gap:36px;margin-top:32px;border:1px solid #EFE6EA;border-radius:22px;background:#FFFFFF;padding:32px 34px">' +
+      '<div style="position:relative;width:124px;height:124px;flex:0 0 124px">' +
+        '<svg viewBox="0 0 120 120" style="width:124px;height:124px;transform:rotate(-90deg)">' +
+          '<circle cx="60" cy="60" r="52" fill="none" stroke="#F5EBEF" stroke-width="12"></circle>' +
+          '<circle cx="60" cy="60" r="52" fill="none" stroke="' + r.ringColor + '" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="' + r.ringOffset + '"></circle>' +
+        '</svg>' +
+        '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+          '<div style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:32px;font-weight:400;letter-spacing:-0.02em;line-height:1">' + r.pct + '%</div>' +
+          '<div style="font-size:11.5px;color:#8A7280;margin-top:2px">' + esc(r.scoreLabel) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.025em">' + esc(r.verdict) + '</div>' +
+        '<div style="font-size:14px;color:#6E5266;line-height:1.6;margin-top:8px">' + esc(r.note) + '</div>' +
+        '<div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">' +
+          '<button ' + h(r.next) + ' class="hv-deep" style="border:0;border-radius:11px;background:#D4436B;color:#FFF;font-size:13.5px;font-weight:600;padding:12px 22px;transition:background .15s">' + esc(r.nextLabel) + '</button>' +
+          '<button ' + h(r.retake) + ' class="hv-outline" style="border:1.5px solid #EFE6EA;border-radius:11px;background:#FFF;color:#4E2140;font-size:13.5px;font-weight:600;padding:12px 22px;transition:all .15s">Retake this round</button>' +
+          '<button ' + h(r.back) + ' class="hv-link" style="border:0;background:none;color:#8A7280;font-size:13.5px;font-weight:500;padding:12px 4px;transition:color .15s">Back to subject</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 16px">Question review</h2>' +
+    '<div style="display:flex;flex-direction:column;gap:10px">' +
+      map(r.items, function (it) {
+        return '<div style="border:1px solid #EFE6EA;border-radius:16px;background:#FFFFFF;padding:20px 22px;display:flex;gap:16px">' +
+          '<div style="width:26px;height:26px;flex:0 0 26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:' + it.markBg + ';color:' + it.markFg + '">' + it.mark + '</div>' +
+          '<div style="min-width:0">' +
+            '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#A2909C">' + esc(it.topic) + '</div>' +
+            '<div style="font-size:14.5px;line-height:1.55;margin-top:7px;letter-spacing:-0.01em">' + esc(it.stem) + '</div>' +
+            '<div style="font-size:13px;color:#6E5266;margin-top:10px;line-height:1.6"><span style="color:#A2909C">Correct: </span>' + esc(it.correct) + '</div>' +
+            '<div style="font-size:13px;color:#8A7280;margin-top:4px;line-height:1.6">' + esc(it.yours) + '</div>' +
+            '<div style="font-size:13.5px;color:#40293A;margin-top:12px;line-height:1.65;padding-top:12px;border-top:1px solid #F6F0F3">' + esc(it.why) + '</div>' +
+          '</div>' +
+        '</div>';
+      }) +
+    '</div>' +
+  '</section>';
+}
+
+var DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+function viewCalendar(V) {
+  var c = V.cal;
+  return '' +
+  '<section style="padding:44px 48px 88px;max-width:1320px;animation:rise .4s ease">' +
+    '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap">' +
+      '<div>' +
+        '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ Study calendar</div>' +
+        '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:34px;font-weight:600;letter-spacing:-0.035em;line-height:1.08;margin:10px 0 0">' + esc(c.label) + '</h1>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+        '<button ' + h(c.todayBtn) + ' class="hv-outline" style="border:1.5px solid #E9DFE4;border-radius:10px;background:#FFFFFF;color:#4E2140;font-size:13px;font-weight:600;padding:9px 16px;transition:all .15s">Today</button>' +
+        '<div style="display:flex;gap:4px">' +
+          '<button ' + h(c.prev) + ' class="hv-pink" style="width:36px;height:36px;border:1.5px solid #E9DFE4;border-radius:10px;background:#FFFFFF;color:#6E5266;font-size:17px;display:flex;align-items:center;justify-content:center;padding:0 0 2px;transition:background .15s">‹</button>' +
+          '<button ' + h(c.next) + ' class="hv-pink" style="width:36px;height:36px;border:1.5px solid #E9DFE4;border-radius:10px;background:#FFFFFF;color:#6E5266;font-size:17px;display:flex;align-items:center;justify-content:center;padding:0 0 2px;transition:background .15s">›</button>' +
+        '</div>' +
+        '<div style="display:flex;border:1.5px solid #E9DFE4;border-radius:11px;background:#FFFFFF;padding:3px;gap:3px">' +
+          '<button ' + h(c.setM) + ' style="border:0;border-radius:8px;font-size:12.5px;font-weight:600;padding:7px 14px;transition:all .15s;background:' + c.mBg + ';color:' + c.mFg + '">Month</button>' +
+          '<button ' + h(c.setW) + ' style="border:0;border-radius:8px;font-size:12.5px;font-weight:600;padding:7px 14px;transition:all .15s;background:' + c.wBg + ';color:' + c.wFg + '">Week</button>' +
+        '</div>' +
+        '<button ' + h(c.newEvent) + ' class="hv-b93" style="border:0;border-radius:10px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:13px;font-weight:600;padding:10px 18px;transition:filter .15s">+ New session</button>' +
+      '</div>' +
+    '</div>' +
+    '<p style="font-size:13.5px;color:#8A7280;line-height:1.6;margin:10px 0 0">' + esc(c.paceNote) + ' Click any day or time slot to schedule a session.</p>' +
+
+    '<div style="display:grid;grid-template-columns:minmax(0,1fr) 292px;gap:18px;margin-top:22px;align-items:start">' +
+      '<div style="min-width:0">' + (c.isMonth ? monthGrid(c) : weekGrid(c)) + '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:16px">' +
+        '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:20px">' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A2909C">Weekly plan</div>' +
+          '<div style="display:flex;align-items:center;gap:10px;margin-top:12px">' +
+            '<button ' + h(c.hDown) + ' class="hv-pink" style="width:28px;height:28px;border:1.5px solid #E9DFE4;border-radius:8px;background:#FFF;color:#6E5266;font-size:14px;transition:background .15s;padding:0">−</button>' +
+            '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:17px;font-weight:600;min-width:62px;text-align:center">' + esc(c.planH) + '</div>' +
+            '<button ' + h(c.hUp) + ' class="hv-pink" style="width:28px;height:28px;border:1.5px solid #E9DFE4;border-radius:8px;background:#FFF;color:#6E5266;font-size:14px;transition:background .15s;padding:0">+</button>' +
+            '<span style="font-size:11.5px;color:#A2909C">per week</span>' +
+          '</div>' +
+          '<div style="display:flex;gap:4px;margin-top:12px">' +
+            map(c.dayChips, function (d) {
+              return '<button ' + h(d.toggle) + ' style="flex:1;border-radius:8px;font-size:10.5px;font-weight:700;padding:6px 0;transition:all .13s;border:1.5px solid ' + d.bd + ';background:' + d.bg + ';color:' + d.fg + '">' + d.label + '</button>';
+            }) +
+          '</div>' +
+          '<div style="font-size:11.5px;color:#8A7280;line-height:1.55;margin-top:12px">' + esc(V.planBar.line) + '</div>' +
+        '</div>' +
+        '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:20px">' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A2909C">Today</div>' +
+          (c.agEmpty ? '<div style="font-size:12.5px;color:#A2909C;line-height:1.6;margin-top:10px">Nothing scheduled yet — click a day or time slot to add a session.</div>' : '') +
+          '<div style="display:flex;flex-direction:column;gap:4px;margin-top:10px">' +
+            map(c.agToday, function (a) {
+              return '<button ' + h(a.open) + ' class="hv-blush" style="display:flex;align-items:center;gap:10px;border:0;border-radius:10px;background:transparent;padding:7px 8px;text-align:left;transition:background .12s">' +
+                '<span style="width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:' + a.color + '"></span>' +
+                '<span style="font-size:11px;font-weight:700;color:#8A7280;width:58px;flex:0 0 58px">' + esc(a.time) + '</span>' +
+                '<span style="font-size:12.5px;font-weight:600;color:#40293A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(a.title) + '</span>' +
+              '</button>';
+            }) +
+          '</div>' +
+        '</div>' +
+        '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:20px">' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A2909C">Suggested next</div>' +
+          '<div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">' +
+            map(c.plan, function (p) {
+              return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #F8F3F5">' +
+                '<span style="font-size:10px;font-weight:700;padding:4px 7px;border-radius:6px;white-space:nowrap;color:' + p.acc + ';background:' + p.soft + '">' + esc(p.short) + '</span>' +
+                '<div style="flex:1;min-width:0">' +
+                  '<div style="font-size:12px;font-weight:600;color:#40293A;line-height:1.35">' + esc(p.topic) + '</div>' +
+                  '<div style="font-size:10.5px;color:#A2909C;margin-top:1px">' + esc(p.subject) + '</div>' +
+                '</div>' +
+                '<button ' + h(p.start) + ' class="hv-link2" style="border:0;background:none;color:#D4436B;font-size:11.5px;font-weight:700;padding:0;white-space:nowrap;transition:color .15s">Start →</button>' +
+              '</div>';
+            }) +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    (V.ed.open ? editorModal(V.ed) : '') +
+  '</section>';
+}
+
+function monthGrid(c) {
+  return '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;overflow:hidden">' +
+    '<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #F1EAED">' +
+      DOW.map(function (d) { return '<div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#A2909C;text-align:center;padding:11px 0">' + d + '</div>'; }).join('') +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(7,1fr)">' +
+      map(c.cells, function (d) {
+        return '<div ' + h(d.add) + ' class="hv-blush" style="min-height:106px;border-right:1px solid #F6F0F3;border-bottom:1px solid #F6F0F3;padding:7px;display:flex;flex-direction:column;gap:3px;cursor:pointer;transition:background .12s;background:' + d.bg + '">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:4px">' +
+            '<span style="width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:' + d.fw + ';color:' + d.fg + ';background:' + d.numBg + '">' + d.num + '</span>' +
+            '<span style="font-size:10px;font-weight:700;color:#3F8F7B;white-space:nowrap">' + esc(d.chip) + '</span>' +
+          '</div>' +
+          map(d.events, function (e) {
+            return '<button ' + h(e.open) + ' class="hv-b96" style="display:flex;align-items:center;gap:5px;border:0;border-radius:6px;font-size:10.5px;font-weight:600;padding:3px 6px;text-align:left;white-space:nowrap;overflow:hidden;background:' + e.bg + ';color:' + e.fg + '">' +
+              '<span style="width:3px;height:11px;flex:0 0 3px;border-radius:2px;background:' + e.bar + '"></span>' +
+              '<span style="overflow:hidden;text-overflow:ellipsis">' + esc(e.title) + '</span>' +
+            '</button>';
+          }) +
+          '<div style="font-size:10px;font-weight:600;color:#A2909C">' + esc(d.more) + '</div>' +
+        '</div>';
+      }) +
+    '</div>' +
+  '</div>';
+}
+
+function weekGrid(c) {
+  var days = c.week.days;
+  return '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;overflow:hidden">' +
+    '<div style="display:grid;grid-template-columns:58px repeat(7,1fr);border-bottom:1px solid #F1EAED">' +
+      '<div></div>' +
+      map(days, function (d) {
+        return '<div style="display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 0;border-left:1px solid #F6F0F3;background:' + d.headBg + '">' +
+          '<span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#A2909C">' + esc(d.dow) + '</span>' +
+          '<span style="font-size:14px;font-weight:700;color:' + d.headFg + '">' + d.num + '</span>' +
+        '</div>';
+      }) +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:58px repeat(7,1fr);border-bottom:1px solid #F1EAED">' +
+      '<div style="font-size:10px;font-weight:600;color:#A2909C;padding:8px;text-align:right">all day</div>' +
+      map(days, function (d) {
+        return '<div style="border-left:1px solid #F6F0F3;padding:5px;display:flex;flex-direction:column;gap:3px;min-height:34px">' +
+          map(d.allday, function (e) {
+            return '<button ' + h(e.open) + ' class="hv-b96" style="border:0;border-radius:6px;font-size:10.5px;font-weight:600;padding:3px 7px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:' + e.bg + ';color:' + e.fg + '">' + esc(e.title) + '</button>';
+          }) +
+          '<span style="font-size:10px;font-weight:700;color:#3F8F7B">' + esc(d.chip) + '</span>' +
+        '</div>';
+      }) +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:58px repeat(7,1fr)">' +
+      '<div>' + map(c.week.hours, function (hr) { return '<div style="height:44px;font-size:10px;color:#A2909C;text-align:right;padding:2px 8px 0 0">' + esc(hr.label) + '</div>'; }) + '</div>' +
+      map(days, function (d) {
+        return '<div style="position:relative;border-left:1px solid #F6F0F3;height:660px">' +
+          map(d.slots, function (s) {
+            return '<button ' + h(s.add) + ' class="hv-blush" style="display:block;width:100%;height:44px;border:0;border-bottom:1px solid #F8F3F5;background:transparent;cursor:pointer;padding:0;transition:background .12s"></button>';
+          }) +
+          map(d.events, function (e) {
+            return '<button ' + h(e.open) + ' class="hv-b97" style="position:absolute;left:3px;right:3px;z-index:2;border:0;border-left:3px solid ' + e.bar + ';border-radius:7px;text-align:left;padding:4px 8px;overflow:hidden;background:' + e.bg + ';top:' + e.top + 'px;height:' + e.h + 'px">' +
+              '<div style="font-size:10px;font-weight:700;color:' + e.fg + '">' + esc(e.time) + '</div>' +
+              '<div style="font-size:11px;font-weight:600;color:#40293A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(e.title) + '</div>' +
+            '</button>';
+          }) +
+        '</div>';
+      }) +
+    '</div>' +
+  '</div>';
+}
+
+function selectEl(bind, value, options) {
+  return '<select ' + bind + ' style="width:100%;border:1.5px solid #E9DFE4;border-radius:10px;padding:10px 11px;font:inherit;font-size:13.5px;color:#2A1622;background:#FFFFFF">' +
+    options.map(function (o) {
+      return '<option value="' + esc(o.value) + '"' + (String(o.value) === String(value) ? ' selected' : '') + '>' + esc(o.label) + '</option>';
+    }).join('') +
+  '</select>';
+}
+
+function editorModal(ed) {
+  return '<div ' + h(ed.cancel) + ' style="position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(42,22,34,.38);backdrop-filter:blur(3px);animation:rise .2s ease">' +
+    '<div ' + h(ed.stop) + ' style="width:440px;max-width:calc(100vw - 48px);border-radius:20px;background:#FFFFFF;box-shadow:0 30px 80px rgba(42,22,34,.25);padding:26px 28px">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">' +
+        '<div>' +
+          '<div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#C33F68">' + esc(ed.heading) + '</div>' +
+          '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:19px;font-weight:600;letter-spacing:-0.02em;margin-top:5px">' + esc(ed.dateLabel) + '</div>' +
+        '</div>' +
+        '<button ' + h(ed.cancel) + ' class="hv-pink" style="width:30px;height:30px;border:0;border-radius:9px;background:#F7F1F4;color:#8A7280;font-size:13px;transition:background .15s">✕</button>' +
+      '</div>' +
+      '<div style="margin-top:20px">' +
+        '<div style="font-size:11.5px;font-weight:600;color:#6E5266;margin-bottom:7px">Title</div>' +
+        '<input ' + onInput(ed.setTitle) + ' value="' + esc(ed.title) + '" placeholder="e.g. Amino acid flashcards" style="width:100%;border:1.5px solid #E9DFE4;border-radius:10px;padding:11px 13px;font:inherit;font-size:14px;color:#2A1622;outline:none;background:#FFFFFF" />' +
+      '</div>' +
+      '<div style="margin-top:16px">' +
+        '<div style="font-size:11.5px;font-weight:600;color:#6E5266;margin-bottom:7px">Subject</div>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:6px">' +
+          map(ed.subjects, function (s) {
+            return '<button ' + h(s.pick) + ' style="border-radius:99px;font-size:12px;font-weight:600;padding:7px 13px;transition:all .13s;border:1.5px solid ' + s.bd + ';background:' + s.bg + ';color:' + s.fg + '">' + esc(s.name) + '</button>';
+          }) +
+        '</div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">' +
+        '<div>' +
+          '<div style="font-size:11.5px;font-weight:600;color:#6E5266;margin-bottom:7px">Time</div>' +
+          selectEl(onChange(ed.setTime), ed.time, ed.timeOptions) +
+        '</div>' +
+        '<div>' +
+          '<div style="font-size:11.5px;font-weight:600;color:#6E5266;margin-bottom:7px">Duration</div>' +
+          selectEl(onChange(ed.setDur), ed.dur, ed.durOptions) +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-top:24px">' +
+        (ed.isEdit ? '<button ' + h(ed.del) + ' class="hv-rose" style="border:0;border-radius:9px;background:none;color:#C33F68;font-size:13px;font-weight:600;padding:10px 12px;transition:background .15s">Delete</button>' : '') +
+        '<div style="flex:1"></div>' +
+        '<button ' + h(ed.cancel) + ' class="hv-outline" style="border:1.5px solid #E9DFE4;border-radius:10px;background:#FFFFFF;color:#6E5266;font-size:13px;font-weight:600;padding:10px 18px;transition:all .15s">Cancel</button>' +
+        '<button ' + h(ed.save) + ' class="hv-b93" style="border:0;border-radius:10px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:13px;font-weight:600;padding:10px 20px;transition:filter .15s">' + esc(ed.saveLabel) + '</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function viewStats(V) {
+  var st = V.st;
+  return '' +
+  '<section style="padding:52px 60px 88px;max-width:1060px;animation:rise .4s ease">' +
+    '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ Since August 2026</div>' +
+    '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:40px;font-weight:600;letter-spacing:-0.035em;line-height:1.08;margin:12px 0 0">Progress</h1>' +
+
+    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px">' +
+      tile('Streak', V.streak, V.streakLabel) +
+      tile('Rounds', st.rounds, st.roundsNote) +
+      tile('Questions', st.questions, st.correctNote) +
+      tile('Accuracy', V.accuracyLabel, st.accNote) +
+    '</div>' +
+
+    '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 18px">Accuracy by subject</h2>' +
+    '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:28px 30px;display:flex;flex-direction:column;gap:18px">' +
+      map(st.bars, function (b) {
+        return '<div style="display:grid;grid-template-columns:190px 1fr 58px;align-items:center;gap:18px">' +
+          '<div style="font-size:13.5px;letter-spacing:-0.01em;color:#40293A">' + esc(b.name) + '</div>' +
+          '<div style="height:8px;border-radius:99px;background:#F5EBEF">' +
+            '<div style="height:8px;border-radius:99px;transition:width .5s;background:' + b.color + ';width:' + b.pct + '%"></div>' +
+          '</div>' +
+          '<div style="font-size:13px;font-weight:600;text-align:right;color:' + b.labelColor + '">' + esc(b.label) + '</div>' +
+        '</div>';
+      }) +
+    '</div>' +
+
+    '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 18px">Score trend</h2>' +
+    '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:24px 26px">' +
+      '<div style="font-size:12px;color:#A2909C;margin-bottom:12px">' + esc(st.trendNote) + '</div>' +
+      '<svg viewBox="0 0 560 110" style="width:100%;height:auto;display:block">' +
+        '<line x1="8" y1="8" x2="552" y2="8" stroke="#F6F0F3" stroke-width="1"></line>' +
+        '<line x1="8" y1="55" x2="552" y2="55" stroke="#F6F0F3" stroke-width="1"></line>' +
+        '<line x1="8" y1="102" x2="552" y2="102" stroke="#F6F0F3" stroke-width="1"></line>' +
+        (st.hasTrend ? '<polyline points="' + st.trendPts + '" fill="none" stroke="#4E2140" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.45"></polyline>' : '') +
+        map(st.trendDots, function (p) {
+          return '<circle cx="' + p.x + '" cy="' + p.y + '" r="4" fill="' + p.fill + '"><title>' + esc(p.title) + '</title></circle>';
+        }) +
+      '</svg>' +
+    '</div>' +
+
+    '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 18px">Weakest topics</h2>' +
+    (st.hasWeak ?
+      '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:22px 26px;display:flex;flex-direction:column;gap:14px">' +
+        map(st.weak, function (w) {
+          return '<div style="display:grid;grid-template-columns:minmax(0,1fr) 130px 52px;align-items:center;gap:16px">' +
+            '<div style="min-width:0">' +
+              '<div style="font-size:13.5px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(w.topic) + '</div>' +
+              '<div style="font-size:11.5px;color:#A2909C;margin-top:2px">' + esc(w.meta) + '</div>' +
+            '</div>' +
+            '<div style="height:7px;border-radius:99px;background:#F5EBEF"><div style="height:7px;border-radius:99px;background:' + w.acc + ';width:' + w.pct + '%"></div></div>' +
+            '<div style="font-size:13px;font-weight:700;text-align:right;color:' + w.acc + '">' + esc(w.label) + '</div>' +
+          '</div>';
+        }) +
+      '</div>' : '') +
+    (st.noWeak ? '<div style="border:1px dashed #E4DBE0;border-radius:16px;padding:18px 22px;font-size:13px;color:#8A7280;background:#FBF8F9">Shows once a topic has 3+ answered questions — the six lowest-accuracy topics land here.</div>' : '') +
+
+    '<div style="display:flex;align-items:flex-end;justify-content:space-between;margin:44px 0 18px">' +
+      '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:0">Error log <span style="font-size:13px;font-weight:500;color:#A2909C">· ' + esc(st.missCount) + '</span></h2>' +
+      (st.hasMisses ? '<button ' + h(st.redoMisses) + ' class="hv-b93" style="border:0;border-radius:10px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:12.5px;font-weight:600;padding:9px 16px;transition:filter .15s">Redo my misses</button>' : '') +
+    '</div>' +
+    (st.hasMisses ?
+      '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:6px 26px">' +
+        map(st.missList, function (m) {
+          return '<div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #F8F3F5">' +
+            '<span style="font-size:10px;font-weight:700;padding:4px 8px;border-radius:6px;white-space:nowrap;color:' + m.acc + ';background:' + m.soft + '">' + esc(m.topic) + '</span>' +
+            '<div style="flex:1;min-width:0;font-size:13px;color:#40293A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(m.stem) + '</div>' +
+            '<span style="font-size:11.5px;font-weight:600;color:#C33F68;white-space:nowrap">' + esc(m.meta) + '</span>' +
+          '</div>';
+        }) +
+      '</div>' : '') +
+    (st.noMisses ? '<div style="border:1px dashed #E4DBE0;border-radius:16px;padding:18px 22px;font-size:13px;color:#8A7280;background:#FBF8F9">Missed questions land here, then resurface in the review queue at 1, 3, 7, 14 and 28-day intervals until she answers them right twice.</div>' : '') +
+
+    '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 18px">Study history</h2>' +
+    '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:28px 30px">' +
+      '<div style="display:grid;grid-template-columns:repeat(12,1fr);gap:6px">' +
+        map(st.heat, function (w) {
+          return '<div style="display:flex;flex-direction:column;gap:6px">' +
+            map(w.cells, function (c) { return '<div title="' + esc(c.title) + '" style="height:14px;border-radius:4px;background:' + c.bg + '"></div>'; }) +
+          '</div>';
+        }) +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:11.5px;color:#A2909C">' +
+        '<span>12 weeks ago</span><div style="flex:1;height:1px;background:#F3EAEE"></div><span>Today</span>' +
+      '</div>' +
+    '</div>' +
+  '</section>';
+}
+function tile(label, big, sub) {
+  return '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:22px 24px">' +
+    '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A2909C">' + label + '</div>' +
+    '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:34px;font-weight:600;letter-spacing:-0.04em;margin-top:8px">' + esc(big) + '</div>' +
+    '<div style="font-size:12px;color:#8A7280">' + esc(sub) + '</div>' +
+  '</div>';
+}
+
+function viewApp(V) {
+  var screen = V.isToday ? viewToday(V)
+    : V.isSubjects ? viewSubjects(V)
+    : (V.isSubject && V.subj) ? viewSubject(V)
+    : (V.isRound && V.q) ? viewRound(V)
+    : (V.isReport && V.rep) ? viewReport(V)
+    : V.isCalendar ? viewCalendar(V)
+    : V.isStats ? viewStats(V)
+    : viewToday(V);
+  return '<div style="display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh;background:transparent;font-family:\'Public Sans\',system-ui,sans-serif;color:#2A1622">' +
+    viewSidebar(V) +
+    '<main style="min-width:0">' + screen + '</main>' +
+  '</div>';
+}
+
+/* ------------------------------------------------------------------
+   Render + event wiring
+   The whole app repaints on every state change; handlers are looked up by
+   index so the markup can stay a plain string.
+   ------------------------------------------------------------------ */
+
+var lastScreen = null;
+function screenKey() {
+  return [state.view, state.subjectId, state.session ? state.session.i : '', state.report ? 'r' : ''].join('|');
+}
+function render() {
+  var y = window.scrollY;
+  handlers = []; inputs = []; changes = [];
+  root.innerHTML = viewApp(computeVals());
+  var k = screenKey();
+  // ticking a topic shouldn't fling the page back to the top; moving to a
+  // different screen should. The repeat on the next frame covers the browser
+  // clamping the first call against a not-yet-laid-out document.
+  var target = k === lastScreen ? y : 0;
+  lastScreen = k;
+  window.scrollTo(0, target);
+  requestAnimationFrame(function () { window.scrollTo(0, target); });
+}
+
+function fire(bank, attr, e) {
+  var el = e.target.closest ? e.target.closest('[' + attr + ']') : null;
+  if (!el || !root.contains(el)) return;
+  var fn = bank[+el.getAttribute(attr)];
+  if (fn) fn(e);
+}
+root.addEventListener('click', function (e) { fire(handlers, 'data-h', e); });
+root.addEventListener('input', function (e) { fire(inputs, 'data-in', e); });
+root.addEventListener('change', function (e) { fire(changes, 'data-ch', e); });
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && state.ed) setState({ ed: null });
+});
+
+/* ------------------------------------------------------------------
+   Boot
+   ------------------------------------------------------------------ */
+
+state.save = load();
+render();
+
+// the countdown and the "today" highlights are day-grained, so only repaint
+// when the date actually rolls over
+var lastDay = dateKey(new Date());
+setInterval(function () {
+  var k = dateKey(new Date());
+  if (k !== lastDay) { lastDay = k; render(); }
+}, 60000);
+
+})();
+</script>
+</body>
+</html>

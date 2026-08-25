@@ -46,3 +46,11 @@ npx serve .
 
 Built on React + KaTeX (loaded from CDN), with Babel-standalone for in-
 browser JSX compilation. Progress persists in `localStorage`.
+
+---
+
+## Also in this repo
+
+- [`mcat-tracker/`](mcat-tracker/) — **MCAT Tracker**, a single-file study
+  tracker: the AAMC content map, timed practice rounds and exams, a
+  spaced-repetition error log, a study calendar, and progress analytics.
