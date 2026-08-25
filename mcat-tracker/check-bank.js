@@ -13,12 +13,31 @@ const fs = require('fs');
 const path = require('path');
 
 const FILE = path.join(__dirname, 'index.html');
-global.window = {};
 const src = fs.readFileSync(FILE, 'utf8');
 const scripts = [...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-eval(scripts[0]);                                  // defines MCAT_PASSAGES + MCAT_BANK
-const PASSAGES = window.MCAT_PASSAGES || {};
-const BANK = window.MCAT_BANK || {};
+
+/* Run the data blocks in their own scope and take what they define. `eval`
+   would not work here: this file is strict, so the scripts' `var`s stay
+   trapped inside the eval. */
+const win = {};
+new Function('window', scripts[0])(win);                       // MCAT_PASSAGES + MCAT_BANK
+const { CONFIG, SUBJECTS } = new Function(scripts[1] + '\nreturn { CONFIG, SUBJECTS };')();
+const PASSAGES = win.MCAT_PASSAGES || {};
+const BANK = win.MCAT_BANK || {};
+
+/* syllabus lookups, mirroring what the app builds at boot */
+const TOPIC_NAME = {}, GROUP_OF = {}, SUBJ_OF = {};
+SUBJECTS.forEach(s => {
+  let n = 0;
+  s.groups.forEach((g, gi) => {
+    g.id = s.id + '-g' + gi;
+    g.items = g.topics.map(t => ({ id: s.id + '-' + (n++), name: t }));
+    g.items.forEach(t => { TOPIC_NAME[t.id] = t.name; GROUP_OF[t.id] = g.id; SUBJ_OF[t.id] = s.id; });
+  });
+  s.topicCount = n;
+});
+const ROUND_LEN = CONFIG.roundLength, MIN_ROUND = 3;
+const roundsFor = n => n >= ROUND_LEN ? Math.min(5, Math.floor(n / ROUND_LEN)) : (n >= MIN_ROUND ? 1 : 0);
 
 const LETTERS = 'ABCD';
 const problems = [];
@@ -35,7 +54,9 @@ Object.keys(BANK).forEach(subject => {
       if (seen.size !== q.options.length) problems.push(id + ': two options have the same text');
       if (q.whys && q.whys.length !== q.options.length) problems.push(id + ': whys does not line up with options');
     }
-    if (!q.topic) problems.push(id + ': no topic tag');
+    if (!q.tid) problems.push(id + ': no tid (syllabus topic id)');
+    else if (!TOPIC_NAME[q.tid]) problems.push(id + ': tid "' + q.tid + '" is not a syllabus topic');
+    else if (SUBJ_OF[q.tid] !== subject) problems.push(id + ': tid "' + q.tid + '" belongs to ' + SUBJ_OF[q.tid] + ', not ' + subject);
     if (!q.why || q.why.length < 20) problems.push(id + ': explanation missing or too short');
     if (q.passage && !PASSAGES[q.passage]) problems.push(id + ': references passage "' + q.passage + '", which is not defined');
   });
@@ -62,10 +83,35 @@ const pct = x => Math.round(x / n * 100);
 const evenShare = n / 4;
 
 console.log('Bank: ' + n + ' questions across ' + Object.keys(BANK).length + ' subjects');
-Object.keys(BANK).forEach(s => {
-  const c = BANK[s].length;
-  console.log('  ' + s.padEnd(10) + String(c).padStart(4) + (c < 50 ? '   (thin — 5 rounds will reshuffle the same items)' : ''));
+
+const perTopic = {};
+items.forEach(({ q }) => { if (q.tid) perTopic[q.tid] = (perTopic[q.tid] || 0) + 1; });
+
+console.log('\nPractice the bank can actually support');
+let grandRounds = 0;
+SUBJECTS.filter(s => s.status === 'active').forEach(s => {
+  const bank = BANK[s.id] || [];
+  let topicRounds = 0, groupRounds = 0, ready = 0;
+  s.groups.forEach(g => {
+    g.items.forEach(t => { const r = roundsFor(perTopic[t.id] || 0); topicRounds += r; if (r) ready++; });
+    groupRounds += roundsFor(bank.filter(q => GROUP_OF[q.tid] === g.id).length);
+  });
+  grandRounds += topicRounds + groupRounds;
+  console.log('  ' + s.name.padEnd(22) + String(bank.length).padStart(4) + ' questions   ' +
+    String(ready + '/' + s.topicCount).padStart(6) + ' topics practisable   ' +
+    String(topicRounds + groupRounds).padStart(3) + ' rounds (' + topicRounds + ' topic + ' + groupRounds + ' mixed)');
 });
+console.log('  ' + 'TOTAL'.padEnd(22) + String(n).padStart(4) + ' questions' + ' '.repeat(33) + String(grandRounds).padStart(3) + ' rounds');
+
+const emptiest = SUBJECTS.filter(s => s.status === 'active')
+  .flatMap(s => s.groups.flatMap(g => g.items.map(t => ({ id: t.id, name: t.name, subj: s.name, n: perTopic[t.id] || 0 }))))
+  .filter(t => t.n < MIN_ROUND)
+  .sort((a, b) => a.n - b.n);
+if (emptiest.length) {
+  console.log('\n' + emptiest.length + ' topics cannot support a round yet. Shortest first:');
+  emptiest.slice(0, 8).forEach(t => console.log('  ' + String(t.n).padStart(2) + '/' + MIN_ROUND + '  ' + t.subj + ' — ' + t.name));
+  if (emptiest.length > 8) console.log('  ... and ' + (emptiest.length - 8) + ' more');
+}
 
 console.log('\nAnswer key');
 byLetter.forEach((c, i) => {

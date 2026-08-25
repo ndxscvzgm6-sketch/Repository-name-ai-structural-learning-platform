@@ -67,366 +67,366 @@ window.MCAT_PASSAGES = {
 
 window.MCAT_BANK = {
   biology: [
-    { topic: "Gene regulation", stem: "A researcher deletes a 200-bp sequence located 8 kb upstream of a mammalian gene. Transcription of the gene falls to 5% of normal levels, while the core promoter and transcription start site remain intact. The deleted sequence most likely functioned as:",
+    { tid: "biology-4", stem: "A researcher deletes a 200-bp sequence located 8 kb upstream of a mammalian gene. Transcription of the gene falls to 5% of normal levels, while the core promoter and transcription start site remain intact. The deleted sequence most likely functioned as:",
       options: ["An operator that binds a repressor protein", "A Shine–Dalgarno ribosome-binding site", "A polyadenylation signal sequence", "An enhancer bound by activator proteins"], answer: 3,
       why: "Distal cis-regulatory elements that increase transcription from thousands of bases away are enhancers; they loop to the promoter via mediator. Operators and Shine–Dalgarno sequences are prokaryotic, and poly-A signals sit 3′ of the coding sequence." },
-    { topic: "DNA replication", stem: "In eukaryotic lagging-strand synthesis, which combination of activities removes the RNA primers and fills the resulting gaps?",
+    { tid: "biology-0", stem: "In eukaryotic lagging-strand synthesis, which combination of activities removes the RNA primers and fills the resulting gaps?",
       options: ["Telomerase followed by ligase", "DNA polymerase α alone", "RNase H together with DNA polymerase δ", "Primase followed by topoisomerase II"], answer: 2,
       why: "RNase H (with FEN1) excises the RNA primer laid down by pol α/primase, and pol δ extends the adjacent 3′ end into the gap before ligase seals the nick." },
-    { topic: "Mendelian genetics", stem: "A woman homozygous for an autosomal recessive disease allele has children with a phenotypically normal heterozygous man. What is the probability that a given child is an affected girl?",
+    { tid: "biology-5", stem: "A woman homozygous for an autosomal recessive disease allele has children with a phenotypically normal heterozygous man. What is the probability that a given child is an affected girl?",
       options: ["1/8", "1/4", "1/2", "3/4"], answer: 1,
       why: "aa × Aa gives 1/2 affected offspring; sex is independent, so 1/2 × 1/2 = 1/4." },
-    { topic: "Membrane transport", stem: "An intestinal epithelial cell is treated with a specific inhibitor of the Na⁺/K⁺ ATPase. The most immediate consequence is:",
+    { tid: "biology-11", stem: "An intestinal epithelial cell is treated with a specific inhibitor of the Na⁺/K⁺ ATPase. The most immediate consequence is:",
       options: ["Increased ATP synthesis", "Reduced Na⁺-dependent glucose uptake", "Membrane hyperpolarization", "Increased intracellular K⁺ concentration"], answer: 1,
       why: "SGLT1 is secondary active transport: it depends on the inward Na⁺ gradient the pump maintains. Losing the pump collapses that gradient, so glucose uptake falls; intracellular K⁺ drops and the cell depolarizes." },
-    { topic: "Viruses", stem: "Which pair of viral enzymes best explains a retrovirus's ability to establish a permanent, heritable infection of a host cell?",
+    { tid: "biology-20", stem: "Which pair of viral enzymes best explains a retrovirus's ability to establish a permanent, heritable infection of a host cell?",
       options: ["Lysozyme and a λ-type repressor", "Protease and hemagglutinin", "Reverse transcriptase and integrase", "RNA-dependent RNA polymerase and neuraminidase"], answer: 2,
       why: "Reverse transcriptase converts the RNA genome to dsDNA and integrase inserts it into host chromatin as a provirus, which is then replicated with the host genome." },
-    { topic: "Cell cycle", stem: "A compound inactivates the spindle assembly checkpoint. Cells treated with it will most likely:",
+    { tid: "biology-13", stem: "A compound inactivates the spindle assembly checkpoint. Cells treated with it will most likely:",
       options: ["Complete karyokinesis but not cytokinesis", "Fail to replicate their DNA in S phase", "Arrest at the G1/S restriction point", "Enter anaphase with unattached kinetochores"], answer: 3,
       why: "The SAC delays anaphase until every kinetochore is attached to the spindle. Without it, sister chromatids separate prematurely and segregate unequally." },
-    { topic: "Mutation", stem: "A single base substitution in the third position of a codon leaves the encoded amino acid unchanged. This outcome is best explained by:",
+    { tid: "biology-7", stem: "A single base substitution in the third position of a codon leaves the encoded amino acid unchanged. This outcome is best explained by:",
       options: ["A frameshift corrected further downstream", "A missense mutation with a conservative swap", "Nonsense-mediated decay of the transcript", "Degeneracy of the code — a silent mutation"], answer: 3,
       why: "Most synonymous codons differ at the wobble (third) position, so third-position changes frequently produce no amino acid change — a silent mutation." },
-    { topic: "Biotechnology", stem: "PCR designed to amplify a single 300-bp product yields bands at both 300 bp and 600 bp on an agarose gel. The most likely explanation is:",
+    { tid: "biology-9", stem: "PCR designed to amplify a single 300-bp product yields bands at both 300 bp and 600 bp on an agarose gel. The most likely explanation is:",
       options: ["The template DNA degraded before the run", "The polymerase lacks 3′→5′ proofreading", "The annealing temperature exceeded the Tm", "Primers annealed at a second, partial site"], answer: 3,
       why: "Extra discrete bands indicate nonspecific priming — a second amplicon. Degradation or too-high annealing temperature reduces yield rather than adding bands, and proofreading affects fidelity, not product length." },
-    { topic: "Prokaryotic genetics", stem: "Transfer of bacterial DNA from one cell to another by a bacteriophage vector is termed:",
+    { tid: "biology-19", stem: "Transfer of bacterial DNA from one cell to another by a bacteriophage vector is termed:",
       options: ["Transduction", "Transformation", "Conjugation", "Transposition"], answer: 0,
       why: "Transduction is phage-mediated. Conjugation requires cell-to-cell contact via a pilus; transformation is uptake of naked DNA; transposition moves DNA within a genome." },
-    { topic: "Embryogenesis", stem: "Structures derived from the mesodermal germ layer include:",
+    { tid: "biology-25", stem: "Structures derived from the mesodermal germ layer include:",
       options: ["Skeletal muscle, bone, and blood vessels", "Epidermis and the central nervous system", "Gut epithelium, liver, and the pancreas", "The lens of the eye and tooth enamel"], answer: 0,
       why: "Mesoderm gives rise to muscle, bone, connective tissue, kidney, gonads, blood, and vessels. Neural tissue and epidermis are ectodermal; gut epithelium and its derivatives are endodermal." },
-    { topic: "DNA structure, packaging & replication", stem: "As a replication fork advances, positive supercoils accumulate ahead of it. Which enzyme resolves this torsional strain?",
+    { tid: "biology-0", stem: "As a replication fork advances, positive supercoils accumulate ahead of it. Which enzyme resolves this torsional strain?",
       options: ["Helicase", "DNA ligase", "Primase", "Topoisomerase"], answer: 3,
       why: "Topoisomerases nick and reseal DNA to relax supercoils generated by unwinding.",
       whys: ["Helicase unwinds the duplex — it creates the strain rather than relieving it", "Ligase seals nicks between Okazaki fragments; it cannot relax supercoiling", "Primase lays RNA primers and has no nuclease or swivel activity", "Topoisomerase nicks, swivels, and reseals the backbone to relax supercoils"] },
-    { topic: "DNA structure, packaging & replication", stem: "A culture of bacteria grown for many generations in ¹⁵N medium is switched to ¹⁴N medium. After exactly two rounds of replication, the DNA consists of:",
+    { tid: "biology-0", stem: "A culture of bacteria grown for many generations in ¹⁵N medium is switched to ¹⁴N medium. After exactly two rounds of replication, the DNA consists of:",
       options: ["All molecules fully light in density", "Half fully heavy, half fully light", "All molecules of intermediate density", "Half intermediate density, half light"], answer: 3,
       why: "Semiconservative replication: after round one all molecules are hybrid; after round two, half remain hybrid and half are fully light.",
       whys: ["All-light DNA would require additional rounds of replication", "Fully heavy DNA disappears after the first replication in ¹⁴N", "True only after the first round, not the second", "Each hybrid molecule yields one hybrid and one light duplex in round two"] },
-    { topic: "DNA structure, packaging & replication", stem: "Human somatic cells lack telomerase activity. The most direct consequence of this is:",
+    { tid: "biology-0", stem: "Human somatic cells lack telomerase activity. The most direct consequence of this is:",
       options: ["RNA primers are not removed from the lagging strand", "Double-strand breaks can no longer be repaired", "Chromosomes shorten each division, causing senescence", "Point mutations accumulate in coding regions"], answer: 2,
       why: "The end-replication problem means linear chromosome ends shorten each cycle unless telomerase extends them; somatic cells therefore hit a division limit.",
       whys: ["Primer removal is handled by RNase H/FEN1 regardless of telomerase", "Double-strand break repair uses NHEJ and homologous recombination", "Without telomere extension, ends erode each division until the cell senesces", "Point mutation rates depend on polymerase fidelity and repair, not telomerase"] },
-    { topic: "Transcription and RNA processing", stem: "α-Amanitin selectively inhibits RNA polymerase II. Synthesis of which RNA would fall most directly?",
+    { tid: "biology-1", stem: "α-Amanitin selectively inhibits RNA polymerase II. Synthesis of which RNA would fall most directly?",
       options: ["Ribosomal RNA (28S, 18S)", "Transfer RNA", "Messenger RNA", "5S ribosomal RNA"], answer: 2,
       why: "Pol II transcribes protein-coding genes into mRNA (and most snRNAs). Pol I makes large rRNAs; pol III makes tRNA and 5S rRNA.",
       whys: ["Large rRNAs are made by RNA polymerase I in the nucleolus", "tRNA is a polymerase III product", "mRNA is the defining product of RNA polymerase II", "5S rRNA is transcribed by polymerase III"] },
-    { topic: "Transcription and RNA processing", stem: "A mutation destroys the GU sequence at the 5′ end of an intron in a pre-mRNA. The most likely outcome is:",
+    { tid: "biology-1", stem: "A mutation destroys the GU sequence at the 5′ end of an intron in a pre-mRNA. The most likely outcome is:",
       options: ["Premature polyadenylation within the intron", "Loss of ribosome binding at the Shine–Dalgarno sequence", "Failure of capping at the 5′ end of the transcript", "Intron retention or skipping of the adjacent exon"], answer: 3,
       why: "The 5′ GU (with branch point and 3′ AG) defines the splice site; destroying it prevents spliceosome recognition, causing intron retention or exon skipping.",
       whys: ["Poly-A signals (AAUAAA) are separate elements near the 3′ end", "Shine–Dalgarno sequences are prokaryotic; splicing is eukaryotic", "Capping occurs at the transcript's 5′ end independent of splice signals", "Without the 5′ splice-donor site the spliceosome cannot excise the intron correctly"] },
-    { topic: "Translation and the genetic code", stem: "During initiation of eukaryotic translation, the initiator methionyl-tRNA is positioned directly in the ribosome's:",
+    { tid: "biology-2", stem: "During initiation of eukaryotic translation, the initiator methionyl-tRNA is positioned directly in the ribosome's:",
       options: ["P site", "Exit tunnel", "A site", "E site"], answer: 0,
       why: "Initiator tRNA is unique in entering the P site during initiation; all subsequent aminoacyl-tRNAs enter at the A site.",
       whys: ["Only the initiator tRNA loads directly into the peptidyl (P) site", "The exit tunnel passes the growing polypeptide, not tRNAs", "The A site receives every incoming tRNA except the initiator", "The E site is where deacylated tRNAs exit after peptide transfer"] },
-    { topic: "Translation and the genetic code", stem: "There are 61 sense codons but far fewer distinct tRNA species in most cells. This is possible because:",
+    { tid: "biology-2", stem: "There are 61 sense codons but far fewer distinct tRNA species in most cells. This is possible because:",
       options: ["Synthetases edit the codon before translation", "Several ribosomes read one codon differently", "Non-standard pairing is tolerated at position three", "Most of the sense codons are never used"], answer: 2,
       why: "Wobble pairing lets one tRNA anticodon read several synonymous codons differing at position three.",
       whys: ["Synthetases charge tRNAs with amino acids; they never edit mRNA", "Ribosomes do not alter codon identity", "Relaxed pairing at the 3′ codon base lets single tRNAs cover codon families", "Codon usage is biased but essentially all sense codons are used"] },
-    { topic: "Gene regulation in prokaryotes (operons)", stem: "In E. coli growing in medium containing both glucose and lactose, transcription of the lac operon is low because:",
+    { tid: "biology-3", stem: "In E. coli growing in medium containing both glucose and lactose, transcription of the lac operon is low because:",
       options: ["Allolactose degrades the operon's mRNA", "cAMP is low, so CAP cannot activate the promoter", "The lac repressor remains bound to the operator", "RNA polymerase cannot read prokaryotic promoters with glucose present"], answer: 1,
       why: "Lactose inactivates the repressor, but glucose keeps cAMP low; without cAMP–CAP the weak lac promoter fires only at low levels (catabolite repression).",
       whys: ["Allolactose is an inducer; it does not degrade mRNA", "Low cAMP means CAP cannot activate the promoter — the key glucose effect", "Allolactose from lactose releases the repressor from the operator", "Polymerase recognizes promoters fine; it simply needs CAP for strong initiation here"] },
-    { topic: "Gene regulation in prokaryotes (operons)", stem: "The trp operon is transcribed at high levels only when tryptophan is scarce. In this system, tryptophan acts as a:",
+    { tid: "biology-3", stem: "The trp operon is transcribed at high levels only when tryptophan is scarce. In this system, tryptophan acts as a:",
       options: ["Corepressor that activates the repressor", "Inducer that inactivates the repressor", "Activator of the promoter", "Ribosome-binding inhibitor"], answer: 0,
       why: "In repressible operons the end product (trp) binds the aporepressor, activating it to block transcription — classic feedback repression.",
       whys: ["Trp binds the repressor and enables it to bind the operator", "Inducers turn operons on; trp turns its operon off", "Trp does not act as a transcriptional activator", "Attenuation involves ribosome stalling, but trp itself is not a ribosome inhibitor"] },
-    { topic: "Eukaryotic gene regulation & epigenetics", stem: "Extensive methylation of CpG islands in a gene's promoter region is most associated with:",
+    { tid: "biology-4", stem: "Extensive methylation of CpG islands in a gene's promoter region is most associated with:",
       options: ["Increased translation efficiency", "Transcriptional silencing of the gene", "Increased transcription of the gene", "Alternative splicing of the transcript"], answer: 1,
       why: "Promoter CpG methylation recruits repressive complexes and compacts chromatin, silencing transcription — a heritable epigenetic mark.",
       whys: ["Translation occurs downstream and is not directly set by promoter methylation", "Methyl-CpG-binding proteins recruit histone deacetylases that close chromatin", "Methylation of promoters correlates with repression, not activation", "Splicing is directed by spliceosomal signals, not promoter methylation"] },
-    { topic: "Eukaryotic gene regulation & epigenetics", stem: "A microRNA binds with partial complementarity to the 3′ untranslated region of an mRNA. The expected result is:",
+    { tid: "biology-4", stem: "A microRNA binds with partial complementarity to the 3′ untranslated region of an mRNA. The expected result is:",
       options: ["Cleavage of the DNA encoding the mRNA", "Enhanced ribosome loading onto the transcript", "Translational repression and mRNA decay", "Export of the mRNA from the nucleus"], answer: 2,
       why: "miRNAs guide the RISC complex to 3′UTRs, repressing translation and promoting decay.",
       whys: ["miRNAs act on RNA, never on the genomic DNA", "miRNA binding blocks, not enhances, translation initiation", "RISC-bound transcripts are translationally silenced and often deadenylated", "Nuclear export is not the function of cytoplasmic RISC"] },
-    { topic: "Mendelian genetics and inheritance patterns", stem: "A woman who carries an X-linked recessive allele has children with an unaffected man. What fraction of their sons is expected to be affected?",
+    { tid: "biology-5", stem: "A woman who carries an X-linked recessive allele has children with an unaffected man. What fraction of their sons is expected to be affected?",
       options: ["None", "One quarter", "One half", "All"], answer: 2,
       why: "Sons receive their X from the carrier mother: half get the mutant X and are affected, since fathers give sons a Y.",
       whys: ["Half of the mother's X chromosomes carry the allele, so sons are at risk", "1/4 is the fraction of all children who are affected sons, not of sons", "Each son has a 1/2 chance of inheriting the mutant maternal X", "All sons affected would require a homozygous mother"] },
-    { topic: "Chromosomal inheritance, linkage & recombination", stem: "Genes A and B are 20 map units apart. An AaBb individual with alleles in cis (AB/ab) is test-crossed. What percentage of offspring show a recombinant phenotype?",
+    { tid: "biology-6", stem: "Genes A and B are 20 map units apart. An AaBb individual with alleles in cis (AB/ab) is test-crossed. What percentage of offspring show a recombinant phenotype?",
       options: ["5%", "10%", "20%", "40%"], answer: 2,
       why: "Map distance approximates recombination frequency: 20 cM → 20% recombinant offspring (10% each class).",
       whys: ["5% would correspond to 5 cM", "10% is one recombinant class, not the total", "20 map units means 20% total recombinants in a test cross", "40% would imply the genes are nearly unlinked (50% is the maximum)"] },
-    { topic: "Chromosomal inheritance, linkage & recombination", stem: "A child with trisomy 21 has two different chromosome 21 centromeric markers from the mother plus one from the father. The extra chromosome most likely arose from:",
+    { tid: "biology-6", stem: "A child with trisomy 21 has two different chromosome 21 centromeric markers from the mother plus one from the father. The extra chromosome most likely arose from:",
       options: ["Paternal nondisjunction in meiosis I", "Maternal nondisjunction in meiosis II", "A mitotic error after fertilization", "Maternal nondisjunction in meiosis I"], answer: 3,
       why: "Two distinct maternal homologs (different centromeric markers) indicate the homologs failed to separate — a meiosis I error.",
       whys: ["The father contributed only one chromosome 21 here", "MII errors give two copies of the same chromatid — identical centromeric markers", "A post-zygotic error would duplicate one existing chromosome, not add a distinct one", "Failure of homolog separation passes both different maternal centromeres to one egg"] },
-    { topic: "Population genetics and Hardy–Weinberg", stem: "An autosomal recessive disease affects 1 in 2,500 individuals in a population at Hardy–Weinberg equilibrium. The expected carrier frequency is closest to:",
+    { tid: "biology-8", stem: "An autosomal recessive disease affects 1 in 2,500 individuals in a population at Hardy–Weinberg equilibrium. The expected carrier frequency is closest to:",
       options: ["1/25", "1/50", "1/100", "1/625"], answer: 0,
       why: "q² = 1/2500 → q = 1/50, p ≈ 49/50; carriers 2pq ≈ 2 × (49/50) × (1/50) ≈ 1/25.",
       whys: ["2pq ≈ 2q when q is small: about 1 in 25", "1/50 is the allele frequency q, not the carrier frequency", "1/100 underestimates; carriers are twice pq", "1/625 has no basis in the H–W terms here"] },
-    { topic: "Mutations, DNA repair & genetic variability", stem: "Patients with xeroderma pigmentosum develop skin cancers from sunlight exposure because they cannot repair UV-induced pyrimidine dimers. The defective pathway is:",
+    { tid: "biology-7", stem: "Patients with xeroderma pigmentosum develop skin cancers from sunlight exposure because they cannot repair UV-induced pyrimidine dimers. The defective pathway is:",
       options: ["Mismatch repair", "Base excision repair", "Non-homologous end joining", "Nucleotide excision repair"], answer: 3,
       why: "NER excises bulky, helix-distorting lesions such as thymine dimers; its loss causes XP.",
       whys: ["Mismatch repair fixes replication errors, and its loss causes Lynch syndrome", "BER removes small, non-distorting base lesions like deaminated cytosine", "NHEJ rejoins double-strand breaks, not intrastrand dimers", "NER removes an oligonucleotide containing the bulky dimer and fills the gap"] },
-    { topic: "Mutations, DNA repair & genetic variability", stem: "A tumor shows expansion and contraction of short repetitive DNA sequences throughout the genome (microsatellite instability). This pattern points to a defect in:",
+    { tid: "biology-7", stem: "A tumor shows expansion and contraction of short repetitive DNA sequences throughout the genome (microsatellite instability). This pattern points to a defect in:",
       options: ["Photoreactivation", "Nucleotide excision repair", "Mismatch repair", "Homologous recombination"], answer: 2,
       why: "Slipped-strand errors at microsatellites are normally corrected by mismatch repair; MMR loss (as in Lynch syndrome) produces microsatellite instability.",
       whys: ["Photoreactivation is a bacterial/plant UV-repair mechanism absent in humans", "NER handles bulky adducts, not replication slippage", "MMR corrects polymerase slippage at repeats; without it repeats mutate freely", "HR repairs double-strand breaks using a sister template"] },
-    { topic: "Recombinant DNA and biotechnology (PCR, cloning, gels, sequencing)", stem: "In agarose gel electrophoresis of DNA fragments, the band closest to the positive electrode after a run contains:",
+    { tid: "biology-9", stem: "In agarose gel electrophoresis of DNA fragments, the band closest to the positive electrode after a run contains:",
       options: ["The most positively charged fragment", "The smallest fragment", "The largest fragment", "The most methylated fragment"], answer: 1,
       why: "DNA is uniformly negative and migrates toward the anode; small fragments sieve through the gel fastest and travel farthest.",
       whys: ["All DNA carries the same charge-to-mass ratio from its phosphate backbone", "Smallest fragments migrate farthest toward the anode", "Large fragments are retarded by the gel matrix and stay near the well", "Methylation does not meaningfully change electrophoretic mobility here"] },
-    { topic: "Recombinant DNA and biotechnology (PCR, cloning, gels, sequencing)", stem: "To insert a gene into a plasmid so the ends anneal before ligation, a researcher should cut both the insert and the vector with:",
+    { tid: "biology-9", stem: "To insert a gene into a plasmid so the ends anneal before ligation, a researcher should cut both the insert and the vector with:",
       options: ["DNase I followed by DNA ligase", "Two different blunt-cutting enzymes", "One sticky-end enzyme on both molecules", "Reverse transcriptase, then DNA ligase"], answer: 2,
       why: "Cutting both molecules with the same sticky-end enzyme creates complementary overhangs that base-pair, positioning the fragments for ligase.",
       whys: ["DNase I degrades DNA nonspecifically", "Different enzymes generally leave incompatible overhangs", "Identical palindromic cuts give mutually complementary single-stranded ends", "Reverse transcriptase copies RNA into cDNA; it does not cut vectors"] },
-    { topic: "Recombinant DNA and biotechnology (PCR, cloning, gels, sequencing)", stem: "Sanger (chain-termination) sequencing depends on the incorporation of dideoxynucleotides because they:",
+    { tid: "biology-9", stem: "Sanger (chain-termination) sequencing depends on the incorporation of dideoxynucleotides because they:",
       options: ["Block primer annealing to the template", "Lack a 3′-OH, halting elongation", "Are fluorescent only when unincorporated", "Cannot base-pair with the template strand"], answer: 1,
       why: "Without a 3′-OH, no phosphodiester bond can form with the next nucleotide, so synthesis stops at known bases, generating a ladder of fragments.",
       whys: ["ddNTPs act during elongation, after the primer has annealed", "No 3′-OH means the chain cannot be extended past the ddNTP", "Labeling works because incorporated ddNTPs mark fragment ends", "ddNTPs pair normally with the template — that's why they incorporate"] },
-    { topic: "Cell theory, organelle structure & function", stem: "A pancreatic cell dedicated to secreting digestive enzymes would be expected to contain especially prominent:",
+    { tid: "biology-10", stem: "A pancreatic cell dedicated to secreting digestive enzymes would be expected to contain especially prominent:",
       options: ["Lysosomes and centrioles", "Rough ER and Golgi apparatus", "Smooth ER and peroxisomes", "Free ribosomes only"], answer: 1,
       why: "Secreted proteins are synthesized on rough ER, then modified and packaged by the Golgi — the secretory pathway.",
       whys: ["Lysosomes digest material; centrioles organize spindles", "Rough ER makes secretory proteins; the Golgi sorts and ships them", "Smooth ER serves lipid synthesis and detoxification, not protein export", "Free ribosomes make cytosolic proteins, not secreted ones"] },
-    { topic: "Cell theory, organelle structure & function", stem: "In I-cell disease, hydrolases that belong in the lysosome are found secreted outside the cell. The defect is a failure to:",
+    { tid: "biology-10", stem: "In I-cell disease, hydrolases that belong in the lysosome are found secreted outside the cell. The defect is a failure to:",
       options: ["Translate the hydrolase mRNAs correctly", "Add the mannose-6-phosphate tag in the Golgi", "Form autophagosomes around the hydrolases", "Acidify the lysosomal lumen with V-ATPase"], answer: 1,
       why: "M6P is the address label that routes hydrolases from the Golgi to lysosomes; without it they follow the default secretory path.",
       whys: ["The enzymes are made normally — they are simply missorted", "Missing M6P tags means no receptor capture, so hydrolases are secreted", "Autophagosome formation is separate from hydrolase trafficking", "Acidification failures impair enzyme activity, not their destination"] },
-    { topic: "Cell theory, organelle structure & function", stem: "A disorder is transmitted from affected mothers to all of their children, while affected fathers never transmit it. The causative mutation most likely resides in:",
+    { tid: "biology-10", stem: "A disorder is transmitted from affected mothers to all of their children, while affected fathers never transmit it. The causative mutation most likely resides in:",
       options: ["Mitochondrial DNA", "An imprinted autosomal gene", "An X-linked dominant gene", "A Y-linked gene"], answer: 0,
       why: "Mitochondria — and their DNA — come from the egg, so inheritance is strictly maternal.",
       whys: ["Only oocytes contribute mitochondria to the zygote", "Imprinting alters expression by parent-of-origin but both sexes transmit alleles", "X-linked dominant fathers would pass the trait to all daughters", "Y-linked traits pass exclusively father to son"] },
-    { topic: "Cell theory, organelle structure & function", stem: "A protein destined for secretion is directed to the endoplasmic reticulum by:",
+    { tid: "biology-10", stem: "A protein destined for secretion is directed to the endoplasmic reticulum by:",
       options: ["Ubiquitination of a lysine", "A mannose-6-phosphate tag", "A nuclear localization sequence", "An N-terminal signal sequence"], answer: 3,
       why: "The signal recognition particle binds the emerging N-terminal signal peptide and docks the ribosome on the ER translocon.",
       whys: ["Ubiquitin marks proteins for proteasomal degradation", "M6P sorts lysosomal enzymes after they are already in the pathway", "NLS motifs route proteins into the nucleus through nuclear pores", "SRP pauses translation and delivers the ribosome to the ER membrane"] },
-    { topic: "Plasma membrane structure and transport", stem: "At low temperature, adding cholesterol to a phospholipid bilayer primarily:",
+    { tid: "biology-11", stem: "At low temperature, adding cholesterol to a phospholipid bilayer primarily:",
       options: ["Causes the bilayer to disassemble into micelles", "Increases fluidity by preventing tight tail packing", "Decreases fluidity by packing between the tails", "Has no measurable effect on membrane fluidity"], answer: 1,
       why: "Cholesterol is a fluidity buffer: at low temperature it disrupts tail packing (raising fluidity); at high temperature it restrains motion.",
       whys: ["Cholesterol stabilizes rather than dissolves bilayers", "Below the transition temperature, cholesterol keeps tails from crystallizing", "That describes cholesterol's effect at high temperature", "Cholesterol measurably modulates fluidity in both directions"] },
-    { topic: "Plasma membrane structure and transport", stem: "Human red blood cells placed in 0.45% saline (roughly half-isotonic) will:",
+    { tid: "biology-11", stem: "Human red blood cells placed in 0.45% saline (roughly half-isotonic) will:",
       options: ["Swell and may lyse as water enters", "Pump sodium inward to compensate", "Shrink as water leaves the cell", "Remain unchanged in volume"], answer: 0,
       why: "0.9% saline is isotonic to red cells; half that concentration is hypotonic, so water flows in by osmosis.",
       whys: ["Water moves toward the higher intracellular solute concentration, swelling the cell", "RBCs cannot counteract a strong osmotic influx by pumping ions inward", "Shrinking (crenation) happens in hypertonic solutions", "Only ~0.9% saline leaves red cell volume unchanged"] },
-    { topic: "Plasma membrane structure and transport", stem: "Uptake of a solute into a cell increases with concentration but plateaus at high concentrations. This kinetic behavior indicates:",
+    { tid: "biology-11", stem: "Uptake of a solute into a cell increases with concentration but plateaus at high concentrations. This kinetic behavior indicates:",
       options: ["Bulk-phase endocytosis of the solute", "Carrier-mediated transport that saturates", "Simple diffusion through the lipid bilayer", "Osmotic flow driven by the gradient"], answer: 1,
       why: "Saturation kinetics are the signature of a finite number of transport proteins; simple diffusion increases linearly with the gradient.",
       whys: ["Bulk endocytosis is nonspecific and roughly proportional to concentration", "A limited pool of carriers saturates, capping the transport rate", "Simple diffusion shows no plateau — flux keeps rising with concentration", "Osmosis is water movement, not solute uptake kinetics"] },
-    { topic: "Cytoskeleton, cell junctions & extracellular matrix", stem: "A neuron must move synaptic vesicle precursors from the soma down the axon toward the terminal. This anterograde transport is driven primarily by:",
+    { tid: "biology-12", stem: "A neuron must move synaptic vesicle precursors from the soma down the axon toward the terminal. This anterograde transport is driven primarily by:",
       options: ["Myosin moving along actin toward the nucleus", "Kinesin walking toward microtubule plus ends", "Passive diffusion along neurofilaments", "Dynein walking toward microtubule minus ends"], answer: 1,
       why: "Axonal microtubules are oriented plus-end-out, so plus-end-directed kinesins carry cargo away from the soma.",
       whys: ["Myosin/actin transport is short-range, not axon-length delivery", "Kinesin is the plus-end motor, and axon plus ends point to the terminal", "Diffusion is far too slow over axonal distances; neurofilaments are structural", "Dynein powers retrograde transport back toward the soma"] },
-    { topic: "Cytoskeleton, cell junctions & extracellular matrix", stem: "Cardiac muscle cells contract in near-synchrony because ions and small signaling molecules pass directly between neighboring cells through:",
+    { tid: "biology-12", stem: "Cardiac muscle cells contract in near-synchrony because ions and small signaling molecules pass directly between neighboring cells through:",
       options: ["Gap junctions", "Hemidesmosomes", "Desmosomes", "Tight junctions"], answer: 0,
       why: "Gap junctions are connexon channels linking adjacent cytoplasms, electrically coupling cardiomyocytes.",
       whys: ["Connexon pores let current and small molecules flow directly between cells", "Hemidesmosomes anchor cells to the basement membrane", "Desmosomes are mechanical rivets resisting shear", "Tight junctions seal the space between cells; nothing passes cell-to-cell"] },
-    { topic: "Mitosis, the cell cycle & checkpoint control", stem: "Growth factors drive a cell past the restriction point in part by activating cyclin D–CDK4/6, which phosphorylates Rb. Hyperphosphorylated Rb then:",
+    { tid: "biology-13", stem: "Growth factors drive a cell past the restriction point in part by activating cyclin D–CDK4/6, which phosphorylates Rb. Hyperphosphorylated Rb then:",
       options: ["Binds E2F more tightly, blocking S phase", "Releases E2F, allowing S-phase transcription", "Activates p53 and triggers apoptosis", "Degrades cyclin E and arrests the cell"], answer: 1,
       why: "Rb is a brake that sequesters E2F; phosphorylation releases the brake and commits the cell to DNA replication.",
       whys: ["Hypophosphorylated Rb is the E2F-binding, growth-suppressing form", "Freed E2F transcribes cyclin E, DNA polymerase, and other S-phase genes", "p53 responds to DNA damage through a separate pathway", "Rb phosphorylation actually leads to cyclin E accumulation"] },
-    { topic: "Mitosis, the cell cycle & checkpoint control", stem: "After ionizing radiation, cells with functional p53 arrest in G1 or undergo apoptosis. Tumor cells lacking p53 instead:",
+    { tid: "biology-13", stem: "After ionizing radiation, cells with functional p53 arrest in G1 or undergo apoptosis. Tumor cells lacking p53 instead:",
       options: ["Keep cycling with damaged DNA", "Repair the damage faster than normal cells", "Arrest permanently in G0 instead", "Become unable to replicate DNA at all"], answer: 0,
       why: "p53 is the guardian of the genome; without it, damage checkpoints fail and genomic instability accelerates tumor evolution.",
       whys: ["No G1 checkpoint means damaged templates are replicated and inherited", "Repair is impaired or unchanged — never enhanced — without p53 signaling", "Loss of p53 removes, not enforces, arrest signals", "Replication machinery works fine; the surveillance is what's missing"] },
-    { topic: "Meiosis, gametogenesis & genetic variation", stem: "Which two processes are the principal sources of genetic variation among the gametes of a single individual?",
+    { tid: "biology-14", stem: "Which two processes are the principal sources of genetic variation among the gametes of a single individual?",
       options: ["Replication and transcription of DNA", "Cytokinesis and karyokinesis in meiosis", "Crossing over and independent assortment", "DNA proofreading and mismatch repair"], answer: 2,
       why: "Recombination shuffles alleles within chromosomes; independent assortment shuffles whole chromosomes — together generating enormous gamete diversity.",
       whys: ["Replication and transcription copy information rather than recombine it", "Cell-division mechanics distribute chromosomes but do not diversify them", "These two meiosis-I events independently randomize allele combinations", "Repair systems reduce variation by fixing errors"] },
-    { topic: "Meiosis, gametogenesis & genetic variation", stem: "At ovulation, the released human oocyte is arrested at which stage, completing meiosis only if fertilization occurs?",
+    { tid: "biology-14", stem: "At ovulation, the released human oocyte is arrested at which stage, completing meiosis only if fertilization occurs?",
       options: ["Metaphase II", "Metaphase I", "Telophase II", "Prophase I"], answer: 0,
       why: "Oocytes arrest in prophase I from fetal life until each cycle's ovulation, then arrest again at metaphase II until sperm entry triggers completion.",
       whys: ["The ovulated egg waits at metaphase II for fertilization", "Metaphase I is passed just before the first polar body forms", "Telophase II occurs only after the sperm triggers anaphase II", "Prophase I arrest is the long dictyate arrest before ovulation"] },
-    { topic: "Cell communication, second messengers & apoptosis", stem: "Epinephrine binding a β-adrenergic receptor raises intracellular cAMP. The correct order of events is:",
+    { tid: "biology-15", stem: "Epinephrine binding a β-adrenergic receptor raises intracellular cAMP. The correct order of events is:",
       options: ["Receptor → Gs → adenylyl cyclase → cAMP → PKA", "Receptor → adenylyl cyclase phosphorylates Gs → PKA → cAMP", "Receptor → phospholipase C → cAMP → protein kinase C", "Receptor → cAMP opens a receptor channel → PKA → Gs"], answer: 0,
       why: "β-receptors are GPCRs coupled to Gs: GTP-bound αs stimulates adenylyl cyclase, and cAMP activates PKA.",
       whys: ["This is the canonical Gs–cyclase–cAMP–PKA cascade", "Adenylyl cyclase makes cAMP; it does not phosphorylate G proteins", "PLC generates IP₃ and DAG for the Gq pathway, not cAMP", "β-receptors are not ligand-gated channels"] },
-    { topic: "Cell communication, second messengers & apoptosis", stem: "Release of cytochrome c from mitochondria into the cytosol commits a cell to apoptosis by:",
+    { tid: "biology-15", stem: "Release of cytochrome c from mitochondria into the cytosol commits a cell to apoptosis by:",
       options: ["Directly digesting the genomic DNA", "Opening death channels in the plasma membrane", "Blocking ATP synthesis, causing necrosis", "Forming the apoptosome and activating caspase-9"], answer: 3,
       why: "Cytochrome c binds Apaf-1 to form the apoptosome, activating caspase-9 and the executioner caspase cascade — the intrinsic pathway.",
       whys: ["DNA fragmentation is done later by caspase-activated nucleases", "The intrinsic pathway begins at mitochondria, not surface channels", "Apoptosis is ATP-dependent and orderly; necrosis is the uncontrolled alternative", "The apoptosome converts mitochondrial permeabilization into caspase activation"] },
-    { topic: "Cell communication, second messengers & apoptosis", stem: "A growth factor receptor that dimerizes and cross-phosphorylates tyrosine residues on its partner upon ligand binding is a:",
+    { tid: "biology-15", stem: "A growth factor receptor that dimerizes and cross-phosphorylates tyrosine residues on its partner upon ligand binding is a:",
       options: ["Receptor tyrosine kinase", "Nuclear hormone receptor", "G protein-coupled receptor", "Ligand-gated ion channel"], answer: 0,
       why: "Dimerization plus trans-autophosphorylation on tyrosines is the defining activation mechanism of RTKs (e.g., insulin, EGF receptors).",
       whys: ["Cross-phosphorylated tyrosines recruit SH2-domain signaling proteins", "Nuclear receptors are intracellular transcription factors", "GPCRs signal through heterotrimeric G proteins, not autophosphorylation", "Channel receptors pass ions rather than phosphorylate"] },
-    { topic: "Bioenergetics and cellular respiration overview", stem: "2,4-Dinitrophenol (DNP) carries protons across the inner mitochondrial membrane. In treated cells, oxygen consumption ______ while ATP synthesis ______.",
+    { tid: "biology-16", stem: "2,4-Dinitrophenol (DNP) carries protons across the inner mitochondrial membrane. In treated cells, oxygen consumption ______ while ATP synthesis ______.",
       options: ["decreases; decreases", "decreases; increases", "increases; increases", "increases; decreases"], answer: 3,
       why: "Uncouplers dissipate the proton gradient as heat: the ETC runs faster (more O₂ used) but ATP synthase loses its driving force.",
       whys: ["O₂ consumption falls only with direct ETC inhibitors, not uncouplers", "Electron transport speeds up when the back-pressure of the gradient is lost", "ATP synthesis cannot rise without a proton-motive force", "Classic uncoupling: respiration up, phosphorylation down, energy lost as heat"] },
-    { topic: "Bioenergetics and cellular respiration overview", stem: "The primary purpose of converting pyruvate to lactate in exercising muscle is to:",
+    { tid: "biology-16", stem: "The primary purpose of converting pyruvate to lactate in exercising muscle is to:",
       options: ["Regenerate NAD⁺ so glycolysis can continue", "Produce additional ATP directly", "Store energy as lactate for later use", "Reduce the acidity of the cytoplasm"], answer: 0,
       why: "Fermentation exists to reoxidize NADH; without NAD⁺, the glyceraldehyde-3-phosphate step of glycolysis stalls.",
       whys: ["Reducing pyruvate reoxidizes NADH to NAD⁺, keeping glycolysis running", "The lactate step itself yields no ATP", "Lactate is a byproduct exported to the liver, not an energy store in muscle", "Lactate production accompanies, and does not relieve, cytosolic acidification"] },
-    { topic: "Bioenergetics and cellular respiration overview", stem: "Cyanide blocks cytochrome c oxidase (complex IV). Which statement describes the immediate consequence?",
+    { tid: "biology-16", stem: "Cyanide blocks cytochrome c oxidase (complex IV). Which statement describes the immediate consequence?",
       options: ["The chain backs up and the proton gradient falls", "Glycolysis halts immediately in the cytosol", "Electrons reach O₂ via an alternative complex", "ATP synthase reverses and pumps protons"], answer: 0,
       why: "With the terminal electron acceptor step blocked, upstream carriers stay reduced, pumping stops, and oxidative ATP production fails.",
       whys: ["No electron flow means no proton pumping — the gradient dissipates", "Glycolysis continues (even accelerates) anaerobically", "Mammalian mitochondria have no bypass to O₂ around complex IV", "Running synthase in reverse consumes ATP; it cannot restore respiration"] },
-    { topic: "Prokaryotic cell structure, growth & genetics", stem: "Gram-negative bacteria are distinguished from gram-positive bacteria by having:",
+    { tid: "biology-18", stem: "Gram-negative bacteria are distinguished from gram-positive bacteria by having:",
       options: ["A membrane-bound nucleus and organelles", "No cell wall and no peptidoglycan at all", "An outer membrane with LPS and thin peptidoglycan", "A thick peptidoglycan wall that retains crystal violet"], answer: 2,
       why: "The gram-negative envelope is a thin peptidoglycan layer plus an LPS-rich outer membrane (endotoxin), which excludes the stain.",
       whys: ["No bacterium has a membrane-bound nucleus", "Wall-less bacteria (Mycoplasma) are a separate category entirely", "The LPS outer membrane over thin peptidoglycan is the gram-negative signature", "Thick, stain-retaining walls define gram-positive organisms"] },
-    { topic: "Prokaryotic cell structure, growth & genetics", stem: "A bacterium with a 20-minute doubling time starts as a single cell in ideal medium. After 2 hours of exponential growth, the population is:",
+    { tid: "biology-18", stem: "A bacterium with a 20-minute doubling time starts as a single cell in ideal medium. After 2 hours of exponential growth, the population is:",
       options: ["6 cells", "12 cells", "64 cells", "120 cells"], answer: 2,
       why: "2 hours = 6 doublings; 2⁶ = 64.",
       whys: ["6 is the number of doublings, not the cell count", "12 would be linear growth (6 × 2), but growth is exponential", "Six doublings of one cell give 2⁶ = 64 cells", "120 confuses minutes with the exponential result"] },
-    { topic: "Bacterial gene transfer: conjugation, transformation, transduction", stem: "After conjugation between an F⁺ and an F⁻ bacterium, the typical outcome is:",
+    { tid: "biology-19", stem: "After conjugation between an F⁺ and an F⁻ bacterium, the typical outcome is:",
       options: ["The recipient receives chromosomal genes and stays F⁻", "The donor loses its chromosome to the recipient", "The recipient gains the F plasmid and becomes F⁺", "Both cells lyse after pilus contact"], answer: 2,
       why: "F⁺ × F⁻ crosses transfer the F plasmid itself via the pilus; chromosomal transfer requires Hfr donors.",
       whys: ["Chromosomal gene transfer is the Hfr scenario, not simple F⁺ crosses", "Transfer is replicative — the donor keeps its DNA", "A copy of the F plasmid moves across, converting the recipient to F⁺", "Conjugation is nonlethal to both partners"] },
-    { topic: "Viral structure, life cycles & retroviruses", stem: "A bacteriophage integrates its genome into the host chromosome and is passively replicated for many generations before stress triggers virion production. The initial state describes:",
+    { tid: "biology-20", stem: "A bacteriophage integrates its genome into the host chromosome and is passively replicated for many generations before stress triggers virion production. The initial state describes:",
       options: ["Abortive infection of the host", "Transformation of the host cell", "Lysogeny, with the genome as a prophage", "The lytic cycle, with immediate lysis"], answer: 2,
       why: "Lysogeny is dormant integration as a prophage; induction (e.g., by UV or stress) flips the switch to the lytic program.",
       whys: ["Abortive infection produces no stable association at all", "Transformation is uptake of naked environmental DNA", "Integrated, silently inherited phage DNA is the definition of a prophage", "The lytic cycle is the productive, cell-bursting phase that comes later"] },
-    { topic: "Viral structure, life cycles & retroviruses", stem: "A virus with a positive-sense single-stranded RNA genome can, upon entry into the cytoplasm:",
+    { tid: "biology-20", stem: "A virus with a positive-sense single-stranded RNA genome can, upon entry into the cytoplasm:",
       options: ["Only replicate inside the nucleus", "Serve directly as a template for DNA synthesis by host polymerases", "Integrate into the host genome without any enzymes", "Be translated directly by host ribosomes"], answer: 3,
       why: "(+)ssRNA is effectively mRNA — ribosomes translate it immediately, producing the viral replicase.",
       whys: ["Most (+)ssRNA viruses replicate entirely in the cytoplasm", "Host cells have no RNA-dependent DNA polymerase; retroviruses must carry one", "Integration requires reverse transcriptase and integrase", "Positive-sense RNA has mRNA polarity and is read directly"] },
-    { topic: "Viroids, prions and subviral particles", stem: "Prion diseases propagate without any nucleic acid because the infectious agent is:",
+    { tid: "biology-21", stem: "Prion diseases propagate without any nucleic acid because the infectious agent is:",
       options: ["A naked circular RNA molecule", "A heat-stable bacterial exotoxin", "A defective virus requiring a helper virus", "A misfolded protein that templates refolding"], answer: 3,
       why: "PrPSc converts normal PrPC into the protease-resistant β-sheet-rich conformation, propagating the misfold protein-to-protein.",
       whys: ["Naked circular RNAs are viroids, plant pathogens", "Toxins poison cells but do not self-propagate", "Defective helper-dependent agents (like hepatitis D) still use nucleic acid", "Conformational templating by misfolded PrP is the prion mechanism"] },
-    { topic: "Natural selection, fitness & speciation", stem: "The sickle-cell allele remains at high frequency in malaria-endemic regions primarily because:",
+    { tid: "biology-22", stem: "The sickle-cell allele remains at high frequency in malaria-endemic regions primarily because:",
       options: ["Heterozygotes are fitter than either homozygote", "The sickle allele arises by unusually frequent mutation", "Genetic drift favors the allele in large populations", "The sickle allele is dominant to the normal allele"], answer: 0,
       why: "Heterozygote advantage (overdominance) maintains both alleles: HbAS resists malaria without sickle-cell disease.",
       whys: ["Balancing selection through heterozygote advantage preserves the polymorphism", "Mutation pressure alone is far too weak to hold an allele at these frequencies", "Drift is strongest in small populations and is directionless", "Dominance describes expression, not why selection retains the allele"] },
-    { topic: "Natural selection, fitness & speciation", stem: "A river permanently divides a rodent population; over many generations the two groups become unable to interbreed. This is an example of:",
+    { tid: "biology-22", stem: "A river permanently divides a rodent population; over many generations the two groups become unable to interbreed. This is an example of:",
       options: ["Convergent evolution", "Sympatric speciation", "Artificial selection", "Allopatric speciation"], answer: 3,
       why: "Geographic isolation followed by independent divergence to reproductive isolation is allopatric speciation.",
       whys: ["Convergence is unrelated lineages evolving similar traits", "Sympatric speciation happens without a geographic barrier", "No human selective breeding is involved", "A physical barrier splitting the range is the allopatric mechanism"] },
-    { topic: "Fertilization, cleavage & gastrulation", stem: "Immediately after a sperm fuses with the egg membrane, polyspermy is blocked most durably by:",
+    { tid: "biology-24", stem: "Immediately after a sperm fuses with the egg membrane, polyspermy is blocked most durably by:",
       options: ["The cortical reaction, which modifies the zona pellucida", "Fusion of all remaining sperm with each other", "Ejection of the second polar body", "Depolarization of the egg membrane lasting for days"], answer: 0,
       why: "Cortical granule enzymes harden the zona and destroy sperm receptors — the slow, permanent block; membrane depolarization is only the fast, transient block.",
       whys: ["Cortical granule release remodels the zona so no further sperm can bind", "Sperm do not fuse with one another", "Polar body ejection completes meiosis and is unrelated to sperm entry", "The electrical fast block lasts seconds to minutes, not days"] },
-    { topic: "Germ layers and their derivatives", stem: "During gastrulation, cells migrating through the primitive streak establish the three germ layers. The notochord that subsequently forms is derived from:",
+    { tid: "biology-25", stem: "During gastrulation, cells migrating through the primitive streak establish the three germ layers. The notochord that subsequently forms is derived from:",
       options: ["Mesoderm", "Ectoderm", "Trophoblast", "Endoderm"], answer: 0,
       why: "The notochord is axial mesoderm; it later induces the overlying ectoderm to form the neural plate.",
       whys: ["Axial mesoderm condenses into the notochord along the midline", "Ectoderm forms epidermis and the nervous system, including what the notochord induces", "Trophoblast builds the placenta, not embryonic structures", "Endoderm lines the gut tube and its outgrowths"] },
-    { topic: "Cell differentiation, induction & determination", stem: "Transplanting the dorsal lip of the blastopore to the opposite side of an amphibian embryo induces a second body axis. This experiment demonstrates:",
+    { tid: "biology-26", stem: "Transplanting the dorsal lip of the blastopore to the opposite side of an amphibian embryo induces a second body axis. This experiment demonstrates:",
       options: ["Induction: one tissue directs a neighbor's fate", "Genomic equivalence does not hold in embryos", "Gastrulation proceeds without any signaling", "Cytoplasmic determinants act cell-autonomously"], answer: 0,
       why: "Spemann and Mangold's organizer experiment showed that secreted signals from one region instruct surrounding cells — the paradigm of embryonic induction.",
       whys: ["The graft recruited host cells into a new axis — instruction between tissues", "Genomic equivalence (all cells share the genome) is supported, not refuted", "The result is direct evidence that signaling drives gastrulation patterning", "Cell-autonomous determinants cannot explain re-patterning of host tissue"] },
-    { topic: "Stem cells, regeneration & senescence", stem: "Cells of the inner cell mass of a blastocyst can form every embryonic tissue but cannot alone form a viable embryo, because they cannot make trophoblast derivatives. They are therefore described as:",
+    { tid: "biology-27", stem: "Cells of the inner cell mass of a blastocyst can form every embryonic tissue but cannot alone form a viable embryo, because they cannot make trophoblast derivatives. They are therefore described as:",
       options: ["Totipotent", "Pluripotent", "Multipotent", "Unipotent"], answer: 1,
       why: "Pluripotent cells form all three germ layers but not extraembryonic placenta; only the zygote and early blastomeres are totipotent.",
       whys: ["Totipotency includes the trophoblast lineage — only the earliest cells qualify", "All-germ-layer potential minus extraembryonic tissue defines pluripotency", "Multipotent cells (like hematopoietic stem cells) are limited to one lineage family", "Unipotent cells produce a single cell type"] }
   ],
   genchem: [
-    { topic: "Acids, bases & buffers", stem: "A solution contains 0.20 M HA and 0.020 M A⁻. If the pKa of HA is 4.8, the pH is closest to:",
+    { tid: "genchem-18", stem: "A solution contains 0.20 M HA and 0.020 M A⁻. If the pKa of HA is 4.8, the pH is closest to:",
       options: ["2.8", "3.8", "4.8", "5.8"], answer: 1,
       why: "Henderson–Hasselbalch: pH = pKa + log([A⁻]/[HA]) = 4.8 + log(0.1) = 4.8 − 1 = 3.8." },
-    { topic: "Titration", stem: "A weak diprotic acid is titrated with standardized NaOH. At the first half-equivalence point:",
+    { tid: "genchem-19", stem: "A weak diprotic acid is titrated with standardized NaOH. At the first half-equivalence point:",
       options: ["[H₂A] = [A²⁻]", "pH = 7.0", "pH = pKa1", "pH = pKa2"], answer: 2,
       why: "Half-way to the first equivalence point, [H₂A] = [HA⁻], so the log term vanishes and pH = pKa1 — the point of maximum buffering for the first proton." },
-    { topic: "Periodic trends", stem: "The first ionization energy of aluminum is lower than that of magnesium. The best explanation is that:",
+    { tid: "genchem-2", stem: "The first ionization energy of aluminum is lower than that of magnesium. The best explanation is that:",
       options: ["Al has a smaller atomic radius than Mg does", "Al has a larger effective nuclear charge than Mg", "Al loses a 3p electron; Mg loses one from a filled 3s", "Mg is a transition metal, and Al is a main-group metal"], answer: 2,
       why: "Removing the single 3p electron of Al is easier than breaking into Mg's stable filled 3s² subshell — one of the standard breaks in the left-to-right ionization energy trend." },
-    { topic: "Thermodynamics", stem: "A reaction has ΔH = +30 kJ/mol and ΔS = +100 J/(mol·K), both temperature-independent. Above approximately what temperature does it become spontaneous?",
+    { tid: "genchem-21", stem: "A reaction has ΔH = +30 kJ/mol and ΔS = +100 J/(mol·K), both temperature-independent. Above approximately what temperature does it become spontaneous?",
       options: ["3 K", "30 K", "300 K", "It is never spontaneous"], answer: 2,
       why: "ΔG = ΔH − TΔS < 0 requires T > ΔH/ΔS = 30,000 J / 100 J·K⁻¹ = 300 K. Watch the kJ→J conversion." },
-    { topic: "Kinetics", stem: "For the reaction A + B → C, doubling [A] quadruples the initial rate while doubling [B] leaves it unchanged. The rate law is:",
+    { tid: "genchem-10", stem: "For the reaction A + B → C, doubling [A] quadruples the initial rate while doubling [B] leaves it unchanged. The rate law is:",
       options: ["rate = k[A][B]", "rate = k[A][B]²", "rate = k[A]²", "rate = k[A]²[B]"], answer: 2,
       why: "Rate ∝ [A]² (2² = 4) and is zero order in B, so rate = k[A]². Overall order is 2." },
-    { topic: "Equilibrium", stem: "For N₂(g) + 3H₂(g) ⇌ 2NH₃(g), ΔH < 0. Which change shifts the equilibrium toward NH₃?",
+    { tid: "genchem-12", stem: "For N₂(g) + 3H₂(g) ⇌ 2NH₃(g), ΔH < 0. Which change shifts the equilibrium toward NH₃?",
       options: ["Increasing the temperature of the system", "Adding a finely divided platinum catalyst", "Adding an inert gas at constant volume", "Raising total pressure by reducing volume"], answer: 3,
       why: "Compression favors the side with fewer moles of gas (4 → 2), so NH₃ increases. Heating an exothermic reaction shifts it left; catalysts and inert gas at constant volume do not shift equilibrium." },
-    { topic: "Electrochemistry", stem: "In a galvanic cell built from Zn/Zn²⁺ and Cu/Cu²⁺ half-cells (E°Zn²⁺/Zn = −0.76 V, E°Cu²⁺/Cu = +0.34 V), which statement is correct?",
+    { tid: "genchem-24", stem: "In a galvanic cell built from Zn/Zn²⁺ and Cu/Cu²⁺ half-cells (E°Zn²⁺/Zn = −0.76 V, E°Cu²⁺/Cu = +0.34 V), which statement is correct?",
       options: ["Electrons flow through the external circuit from the copper electrode to the zinc electrode", "Zinc is oxidized at the anode, which is the negative terminal", "Zinc is the cathode and gains mass", "The cell reaction has a positive ΔG°"], answer: 1,
       why: "The more negative reduction potential is oxidized: Zn → Zn²⁺ at the anode, which is negative in a galvanic cell. Electrons travel Zn → Cu externally and ΔG° = −nFE°cell < 0." },
-    { topic: "Solubility equilibria", stem: "The molar solubility of AgCl (Ksp = 1.8 × 10⁻¹⁰) in 0.10 M NaCl is approximately:",
+    { tid: "genchem-14", stem: "The molar solubility of AgCl (Ksp = 1.8 × 10⁻¹⁰) in 0.10 M NaCl is approximately:",
       options: ["1.3 × 10⁻⁵ M", "1.8 × 10⁻⁹ M", "1.8 × 10⁻¹¹ M", "Unchanged from pure water"], answer: 1,
       why: "With [Cl⁻] fixed at 0.10 M by the common ion, s = Ksp/[Cl⁻] = 1.8 × 10⁻¹⁰ / 0.10 = 1.8 × 10⁻⁹ M — far below the 1.3 × 10⁻⁵ M solubility in pure water." },
-    { topic: "Gases & kinetic theory", stem: "Helium and oxygen gas are held at the same temperature. The ratio of the root-mean-square speed of He to that of O₂ is closest to:",
+    { tid: "genchem-23", stem: "Helium and oxygen gas are held at the same temperature. The ratio of the root-mean-square speed of He to that of O₂ is closest to:",
       options: ["8:1", "2.8:1", "1:1", "1:2.8"], answer: 1,
       why: "v_rms ∝ √(1/M), so the ratio is √(32/4) = √8 ≈ 2.8. Lighter gas, faster molecules at equal temperature." },
-    { topic: "Spectroscopy", stem: "An unknown compound shows a strong IR absorption near 1710 cm⁻¹ and a very broad band spanning 2500–3300 cm⁻¹. The compound most likely contains:",
+    { tid: "genchem-28", stem: "An unknown compound shows a strong IR absorption near 1710 cm⁻¹ and a very broad band spanning 2500–3300 cm⁻¹. The compound most likely contains:",
       options: ["A primary alcohol only", "A carboxylic acid", "A secondary amine", "An aldehyde"], answer: 1,
       why: "The C=O stretch near 1710 cm⁻¹ combined with the characteristically broad, low O–H stretch of a hydrogen-bonded dimer is the carboxylic acid signature." }
   ],
   psych: [
-    { topic: "Sensory thresholds", stem: "A participant can reliably detect a change in the weight of a 100 g object at 102 g, and a change in a 200 g object at 204 g. This pattern is described by:",
+    { tid: "psych-0", stem: "A participant can reliably detect a change in the weight of a 100 g object at 102 g, and a change in a 200 g object at 204 g. This pattern is described by:",
       options: ["Weber's law", "Signal detection theory", "Sensory adaptation", "The absolute threshold"], answer: 0,
       why: "Weber's law states the just-noticeable difference is a constant proportion of the original stimulus — here 2%." },
-    { topic: "Memory", stem: "In a free-recall task, participants remember the last few list items best when tested immediately, but this advantage disappears after a 30-second distractor task. This finding is most consistent with the recency effect depending on:",
+    { tid: "psych-12", stem: "In a free-recall task, participants remember the last few list items best when tested immediately, but this advantage disappears after a 30-second distractor task. This finding is most consistent with the recency effect depending on:",
       options: ["Long-term consolidation in the hippocampus", "Semantic encoding depth", "Proactive interference", "Short-term/working memory storage"], answer: 3,
       why: "Recency reflects items still held in short-term memory; a filled delay displaces them. Primacy, which survives delay, reflects rehearsal into long-term memory." },
-    { topic: "Learning & conditioning", stem: "A rat receives food after an unpredictable number of lever presses. Its responding is rapid, steady, and highly resistant to extinction. The schedule is:",
+    { tid: "psych-10", stem: "A rat receives food after an unpredictable number of lever presses. Its responding is rapid, steady, and highly resistant to extinction. The schedule is:",
       options: ["Fixed interval", "Fixed ratio", "Variable interval", "Variable ratio"], answer: 3,
       why: "Variable-ratio reinforcement produces the highest, steadiest response rates and the greatest resistance to extinction because reinforcement timing is unpredictable." },
-    { topic: "Emotion", stem: "A student's heart pounds during an exam; noticing the racing heart and the exam context, she concludes she is anxious. Which theory of emotion best accounts for this sequence?",
+    { tid: "psych-18", stem: "A student's heart pounds during an exam; noticing the racing heart and the exam context, she concludes she is anxious. Which theory of emotion best accounts for this sequence?",
       options: ["James–Lange theory of emotion", "Schachter–Singer two-factor theory", "Cannon–Bard theory of emotion", "The Yerkes–Dodson arousal law"], answer: 1,
       why: "Two-factor theory requires physiological arousal plus a cognitive label drawn from context. James–Lange omits the appraisal step; Cannon–Bard has arousal and emotion occur simultaneously and independently." },
-    { topic: "Consciousness & sleep", stem: "Which EEG finding characterizes REM sleep?",
+    { tid: "psych-6", stem: "Which EEG finding characterizes REM sleep?",
       options: ["Dominant alpha activity with eyes closed", "Low-amplitude, high-frequency activity", "Sleep spindles and K-complexes", "High-amplitude delta waves throughout"], answer: 1,
       why: "REM is 'paradoxical sleep': cortical activity resembles waking (beta-like, with sawtooth waves) while skeletal muscle is atonic. Spindles/K-complexes mark stage 2; delta marks stage 3." },
-    { topic: "Attribution & social cognition", stem: "A driver is cut off in traffic and immediately concludes the other driver is reckless, without considering that the driver might be responding to an emergency. This illustrates:",
+    { tid: "psych-31", stem: "A driver is cut off in traffic and immediately concludes the other driver is reckless, without considering that the driver might be responding to an emergency. This illustrates:",
       options: ["Fundamental attribution error", "The self-serving bias", "The halo effect in impressions", "Cognitive dissonance"], answer: 0,
       why: "Attributing another person's behavior to disposition while discounting situational causes is the fundamental attribution error." },
-    { topic: "Development", stem: "An 8-year-old understands that pouring water into a taller glass does not change its volume but cannot reason about a hypothetical world with different physical laws. She is best placed in which Piagetian stage?",
+    { tid: "psych-27", stem: "An 8-year-old understands that pouring water into a taller glass does not change its volume but cannot reason about a hypothetical world with different physical laws. She is best placed in which Piagetian stage?",
       options: ["Preoperational", "Sensorimotor", "Concrete operational", "Formal operational"], answer: 2,
       why: "Conservation marks the concrete operational stage (roughly 7–11); abstract and hypothetical reasoning emerges with formal operations." },
-    { topic: "Cognition & heuristics", stem: "After extensive news coverage of an airline crash, people overestimate the risk of flying relative to driving. This judgment error reflects:",
+    { tid: "psych-15", stem: "After extensive news coverage of an airline crash, people overestimate the risk of flying relative to driving. This judgment error reflects:",
       options: ["The representativeness heuristic", "Belief perseverance", "Functional fixedness", "The availability heuristic"], answer: 3,
       why: "Availability substitutes ease of recall for actual frequency; vivid, well-publicized events feel more probable." },
-    { topic: "Personality", stem: "A researcher measures participants on conscientiousness, neuroticism, and openness to predict job performance. This approach belongs to which theoretical tradition?",
+    { tid: "psych-24", stem: "A researcher measures participants on conscientiousness, neuroticism, and openness to predict job performance. This approach belongs to which theoretical tradition?",
       options: ["Psychoanalytic", "Behaviorist", "Humanistic", "Trait"], answer: 3,
       why: "Quantifying stable dispositional dimensions (the Five Factor Model) is the trait approach. Humanistic theory emphasizes self-actualization; behaviorism rejects internal dispositions as explanations." },
-    { topic: "Stress", stem: "In Selye's general adaptation syndrome, which stage is characterized by depleted physiological resources and heightened susceptibility to illness?",
+    { tid: "psych-20", stem: "In Selye's general adaptation syndrome, which stage is characterized by depleted physiological resources and heightened susceptibility to illness?",
       options: ["Resistance", "Exhaustion", "Appraisal", "Alarm"], answer: 1,
       why: "Alarm is the initial sympathetic/HPA surge, resistance sustains elevated cortisol, and exhaustion follows when reserves are depleted — the stage linked to immunosuppression and disease." }
   ],
   anatphys: [
-    { topic: "Neurons & action potentials", stem: "Tetrodotoxin selectively blocks voltage-gated Na⁺ channels. In a treated axon, the most direct consequence is:",
+    { tid: "anatphys-1", stem: "Tetrodotoxin selectively blocks voltage-gated Na⁺ channels. In a treated axon, the most direct consequence is:",
       options: ["Failure to reach threshold or propagate", "Prolonged depolarization from delayed repolarization", "Continuous neurotransmitter release at the terminal", "Immediate loss of the resting membrane potential"], answer: 0,
       why: "The rising phase of the action potential requires Na⁺ influx. Blocking those channels prevents depolarization and propagation; the resting potential, set largely by K⁺ leak and the Na⁺/K⁺ ATPase, persists." },
-    { topic: "Cardiac cycle", stem: "During isovolumetric ventricular contraction, which valves are closed?",
+    { tid: "anatphys-10", stem: "During isovolumetric ventricular contraction, which valves are closed?",
       options: ["Only the atrioventricular valves", "Only the aortic and pulmonary valves", "Both the AV and the semilunar valves", "Neither the AV nor the semilunar valves"], answer: 2,
       why: "All four valves are shut, so ventricular volume is constant while pressure rises. The semilunar valves open only once ventricular pressure exceeds aortic/pulmonary pressure." },
-    { topic: "Renal physiology", stem: "Increased secretion of antidiuretic hormone raises urine osmolarity primarily by:",
+    { tid: "anatphys-24", stem: "Increased secretion of antidiuretic hormone raises urine osmolarity primarily by:",
       options: ["Inhibiting the Na⁺/K⁺/2Cl⁻ cotransporter", "Dilating the afferent arteriole to raise GFR", "Increasing Na⁺ reabsorption in the distal tubule", "Inserting aquaporin-2 into the collecting duct"], answer: 3,
       why: "ADH acts on V2 receptors to traffic aquaporin-2 to the collecting duct apical membrane, permitting water reabsorption down the medullary osmotic gradient. Aldosterone drives distal Na⁺ reabsorption; loop diuretics block NKCC2." },
-    { topic: "Respiratory & gas transport", stem: "Which change shifts the oxygen–hemoglobin dissociation curve to the right?",
+    { tid: "anatphys-13", stem: "Which change shifts the oxygen–hemoglobin dissociation curve to the right?",
       options: ["Increased 2,3-bisphosphoglycerate", "Hypothermia", "Replacement of adult hemoglobin with fetal hemoglobin", "Respiratory alkalosis"], answer: 0,
       why: "2,3-BPG stabilizes the T (deoxy) state, lowering O₂ affinity and promoting unloading in tissue. Alkalosis, cold, and HbF all increase affinity (left shift)." },
-    { topic: "Endocrine feedback", stem: "A patient takes high-dose exogenous glucocorticoids for several weeks. Expected laboratory findings include:",
+    { tid: "anatphys-8", stem: "A patient takes high-dose exogenous glucocorticoids for several weeks. Expected laboratory findings include:",
       options: ["Unchanged ACTH with adrenal hypertrophy", "Elevated ACTH and elevated CRH", "Elevated ACTH with low cortisol", "Suppressed ACTH and adrenal cortical atrophy"], answer: 3,
       why: "Exogenous glucocorticoid feeds back negatively on the hypothalamus and anterior pituitary, suppressing CRH and ACTH; without ACTH trophic support the adrenal cortex atrophies." },
-    { topic: "Muscle contraction", stem: "In the cross-bridge cycle, binding of a new ATP molecule to myosin causes:",
+    { tid: "anatphys-25", stem: "In the cross-bridge cycle, binding of a new ATP molecule to myosin causes:",
       options: ["Troponin to shift tropomyosin off the actin binding site", "Detachment of the myosin head from actin", "The power stroke", "Ca²⁺ release from the sarcoplasmic reticulum"], answer: 1,
       why: "ATP binding releases myosin from actin; its hydrolysis then re-cocks the head. Pi release drives the power stroke, and Ca²⁺ binding to troponin — not ATP — exposes the binding sites." },
-    { topic: "Immune system", stem: "Which cell type presents exogenous antigen on MHC class II to activate a naïve CD4⁺ T cell?",
+    { tid: "anatphys-17", stem: "Which cell type presents exogenous antigen on MHC class II to activate a naïve CD4⁺ T cell?",
       options: ["Dendritic cell", "Erythrocyte", "Cytotoxic CD8⁺ T cell", "Platelet"], answer: 0,
       why: "Professional antigen-presenting cells — dendritic cells, macrophages, and B cells — express MHC II. All nucleated cells present endogenous peptide on MHC I; erythrocytes lack MHC entirely." },
-    { topic: "Digestive system", stem: "Acidic chyme entering the duodenum triggers S cells to release secretin, which primarily stimulates:",
+    { tid: "anatphys-20", stem: "Acidic chyme entering the duodenum triggers S cells to release secretin, which primarily stimulates:",
       options: ["Pancreatic bicarbonate secretion", "Pepsinogen release from chief cells", "Gastric parietal cell acid secretion", "Gallbladder contraction and bile release"], answer: 0,
       why: "Secretin drives pancreatic ductal HCO₃⁻ secretion to neutralize duodenal acid and inhibits gastric acid secretion. CCK, not secretin, is the main stimulus for gallbladder contraction." },
-    { topic: "Autonomic nervous system", stem: "Which response is mediated by sympathetic activation?",
+    { tid: "anatphys-4", stem: "Which response is mediated by sympathetic activation?",
       options: ["Increased salivary secretion", "Bronchiolar dilation", "Pupillary constriction", "Increased gastric motility"], answer: 1,
       why: "β2 receptors relax bronchiolar smooth muscle. The other three are parasympathetic effects mediated largely by muscarinic receptors." },
-    { topic: "Reproductive physiology", stem: "The mid-cycle luteinizing hormone surge is most directly responsible for:",
+    { tid: "anatphys-30", stem: "The mid-cycle luteinizing hormone surge is most directly responsible for:",
       options: ["Endometrial proliferation", "Maintenance of pregnancy after implantation", "Ovulation and formation of the corpus luteum", "Follicular recruitment at the start of the cycle"], answer: 2,
       why: "Rising estradiol switches to positive feedback, producing the LH surge that ruptures the dominant follicle and converts the remnant into the corpus luteum. FSH recruits follicles; hCG maintains early pregnancy." }
   ],
   cars: [
-    { passage: "p1", topic: "Main idea", stem: "The central thesis of the passage is that:",
+    { passage: "p1", tid: "cars-0", stem: "The central thesis of the passage is that:",
       options: ["Reversible materials should be required in all conservation work", "Cleaning artworks damages them more often than conservators admit", "Museums should intervene more aggressively than they currently do", "Every preservation decision embodies an unstated view of what the object is for"], answer: 3,
       why: "The final paragraph states it directly: every act of preservation contains a theory of what the object is for. The author's complaint is that this prior question goes unasked, not that cleaning is destructive." },
-    { passage: "p1", topic: "Author's attitude", stem: "The author's attitude toward the ethic of reversibility is best described as:",
+    { passage: "p1", tid: "cars-6", stem: "The author's attitude toward the ethic of reversibility is best described as:",
       options: ["Fully persuaded by its claim to neutrality", "Indifferent, since it rarely affects practice", "Sympathetic to its modesty, critical of its deferral", "Dismissive of it as professional self-flattery"], answer: 2,
       why: "'Reads as modesty, and largely it is' concedes the virtue; 'postponement is not neutral' registers the criticism. Neither dismissal nor full endorsement fits." },
-    { passage: "p1", topic: "Inference", stem: "The phrase 'chosen the side that requires no defense' most nearly implies that:",
+    { passage: "p1", tid: "cars-5", stem: "The phrase 'chosen the side that requires no defense' most nearly implies that:",
       options: ["Darkened canvases are more valuable to scholars than cleaned ones", "Museums lack the technical expertise to justify cleaning", "Non-intervention is treated as a default and therefore escapes scrutiny", "Conservators disagree about which solvents are reversible"], answer: 2,
       why: "The author argues inaction is itself an interpretive choice, but one that is not perceived as needing justification — its cost is invisibility, not incompetence." },
-    { passage: "p1", topic: "Rhetorical function", stem: "The clause 'Pigments have shifted; the ground has darkened' functions primarily to:",
+    { passage: "p1", tid: "cars-3", stem: "The clause 'Pigments have shifted; the ground has darkened' functions primarily to:",
       options: ["Contrast oil painting with fresco technique", "Support the claim that the original is unrecoverable", "Illustrate the technical difficulty of cleaning", "Concede a point the author later refutes"], answer: 1,
       why: "The list of irreversible physical changes grounds the assertion two sentences later that 'conservation cannot be a return.'" },
-    { passage: "p1", topic: "Reasoning beyond the text", stem: "Suppose a survey found that most conservators believe cleaning restores an artist's original intent. This finding would most likely be used by the author to:",
+    { passage: "p1", tid: "cars-8", stem: "Suppose a survey found that most conservators believe cleaning restores an artist's original intent. This finding would most likely be used by the author to:",
       options: ["Revise the claim that conservation cannot be a return", "Show that reversibility has been abandoned in practice", "Demonstrate that the technical literature is more rigorous than claimed", "Argue that the profession holds a theory of the object without examining it"], answer: 3,
       why: "A widely held but unexamined belief is exactly what the author's closing sentence predicts: the field acts on an answer to a question it is reluctant to ask." },
-    { passage: "p2", topic: "Main idea", stem: "The passage is primarily concerned with arguing that:",
+    { passage: "p2", tid: "cars-0", stem: "The passage is primarily concerned with arguing that:",
       options: ["The reliability of written records must itself be argued", "Memory decays too quickly to serve historical research", "Oral testimony is a more reliable source than documents", "Tax rolls are the least trustworthy administrative record"], answer: 0,
       why: "The final sentence names the thesis: the reliability of paper is 'a claim to be argued rather than a premise.' The author explicitly denies the stronger claim in option A." },
-    { passage: "p2", topic: "Vocabulary in context", stem: "In context, 'Its stillness is not accuracy but finality' means that documents:",
+    { passage: "p2", tid: "cars-1", stem: "In context, 'Its stillness is not accuracy but finality' means that documents:",
       options: ["Are produced more slowly than oral accounts", "Cannot be reinterpreted by later historians", "Grow more accurate as they age in archives", "Preserve their errors rather than avoid them"], answer: 3,
       why: "Stillness is reframed: the record does not improve or self-correct, so a mistake made at the moment of writing is fixed permanently — 'the error, once made, stops moving.'" },
-    { passage: "p2", topic: "Argument structure", stem: "The author concedes which point to the traditional view?",
+    { passage: "p2", tid: "cars-4", stem: "The author concedes which point to the traditional view?",
       options: ["That administrative categories are convenient", "That memory revises itself over time", "That documents record neutral information", "That oral tradition is unsupervised"], answer: 1,
       why: "'The objection was never wrong about memory' grants the decay premise, then denies the comparison by attacking the assumed reliability of documents." },
-    { passage: "p2", topic: "Inference", stem: "The author would most likely agree that the strength of oral tradition lies in:",
+    { passage: "p2", tid: "cars-5", stem: "The author would most likely agree that the strength of oral tradition lies in:",
       options: ["Preservation of visible disagreement", "Its independence from community values", "Its greater age relative to written records", "The absence of error in oral transmission"], answer: 0,
       why: "Testimony 'gives us several with the disagreement intact' — the contest between versions is audible evidence, whereas the archive hides its assumptions in a single account." },
-    { passage: "p2", topic: "Reasoning beyond the text", stem: "A study finds that oral genealogies in one region agree with parish registers in 90% of cases. This finding would:",
+    { passage: "p2", tid: "cars-8", stem: "A study finds that oral genealogies in one region agree with parish registers in 90% of cases. This finding would:",
       options: ["Weaken it, by showing documents are reliable after all", "Contradict the claim that memory revises itself over time", "Leave it intact, since it concerns how errors arise, not how often", "Strengthen it, by showing oral sources are accurate after all"], answer: 2,
       why: "The author's case is about the structure of error and the burden of proof, not about rates of agreement; two sources agreeing does not establish that either one's reliability may be presumed." }
   ]
@@ -548,6 +548,7 @@ function homeOf(id) { return id === 'final' ? 'subjects' : 'today'; }
 
 var KEY = 'hnoo-mcat-v1';
 var PER_Q = 95;                    // seconds per question in timed sittings
+var MIN_ROUND = 3;                 // fewest questions that can honestly be called a round
 var REVIEW_INTERVALS = [1, 3, 7, 14, 28];   // spaced-repetition ladder, in days
 
 /* ------------------------------------------------------------------
@@ -566,18 +567,43 @@ function setState(patch) { for (var k in patch) state[k] = patch[k]; render(); }
    ------------------------------------------------------------------ */
 
 function blank() {
-  return { done: {}, rounds: {}, log: {}, events: {}, misses: {}, topicStats: {}, history: [], carsLog: {}, plan: { h: 14, days: [1, 1, 1, 1, 1, 1, 1] } };
+  return { schema: 2, done: {}, rounds: {}, log: {}, events: {}, misses: {}, topicStats: {}, history: [], carsLog: {}, plan: { h: 14, days: [1, 1, 1, 1, 1, 1, 1] } };
 }
 function load() {
   try {
     var r = JSON.parse(localStorage.getItem(KEY));
     if (r && r.done) {
-      var b = blank();
+      var wasOld = r.schema !== 2;
+      r = migrate(r);                       // before defaults are filled in, or
+      var b = blank();                      // blank()'s schema marker would mask it
       Object.keys(b).forEach(function (k) { if (r[k] === undefined) r[k] = b[k]; });
+      if (wasOld) { try { localStorage.setItem(KEY, JSON.stringify(r)); } catch (e) {} }
       return r;
     }
   } catch (e) {}
   return blank();
+}
+
+/* Saves written before questions carried syllabus topic ids tagged their
+   analytics with free-text topic names. Misses can be re-tagged exactly, since
+   the question id identifies the item; topic accuracy keyed by an old name has
+   nothing to map onto, so it is dropped rather than shown against the wrong
+   topic. Rounds, streaks, the study log and the calendar are untouched. */
+function migrate(d) {
+  if (d.schema === 2) return d;
+  Object.keys(d.misses || {}).forEach(function (k) {
+    var m = d.misses[k];
+    var q = bankOf(m.subj)[parseInt(k.split('#')[1], 10)];
+    m.tid = q ? q.tid : '';
+    delete m.topic;
+  });
+  var kept = {};
+  Object.keys(d.topicStats || {}).forEach(function (k) {
+    if (TOPIC_NAME[k.split('|')[1]]) kept[k] = d.topicStats[k];
+  });
+  d.topicStats = kept;
+  d.schema = 2;
+  return d;
 }
 function save() { return state.save || blank(); }
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -605,11 +631,22 @@ function fmtTime(m) {
    Syllabus lookups
    ------------------------------------------------------------------ */
 
+var TOPIC_NAME = {};       // syllabus topic id -> its name
+var GROUP_OF = {};         // syllabus topic id -> the concept group it sits in
+
 SUBJECTS.forEach(function (s) {
   var n = 0;
-  s.groups.forEach(function (g) { g.items = g.topics.map(function (t) { return { id: s.id + '-' + (n++), name: t }; }); });
+  s.groups.forEach(function (g, gi) {
+    g.id = s.id + '-g' + gi;
+    g.items = g.topics.map(function (t) { return { id: s.id + '-' + (n++), name: t }; });
+    g.items.forEach(function (t) { TOPIC_NAME[t.id] = t.name; GROUP_OF[t.id] = g.id; });
+  });
   s.topicCount = n;
 });
+function topicName(tid) { return TOPIC_NAME[tid] || tid || 'Untagged'; }
+function short(str, n) { str = String(str == null ? '' : str); return str.length > n ? str.slice(0, n - 1).trim() + '\u2026' : str; }
+function isGroupScope(scopeId) { return /-g\d+$/.test(scopeId); }
+function isExamScope(scopeId) { return scopeId.indexOf('#exam') > -1; }
 
 function subject(id) { return SUBJECTS.find(function (s) { return s.id === id; }); }
 function allTopics(s) { var out = []; s.groups.forEach(function (g) { (g.items || []).forEach(function (t) { out.push(t); }); }); return out; }
@@ -628,14 +665,47 @@ function bankOf(id) {
   return _banks[id];
 }
 
+/* A round draws from a scope: one syllabus topic, one concept group, or the
+   whole subject (the subject exam). Anything narrower than MIN_ROUND questions
+   does not get offered at all — serving another topic's questions under this
+   topic's name is what the old build did, and it made every per-topic score
+   meaningless. */
+var _pools = {};
+function poolFor(subjId, scopeId) {
+  var key = subjId + '|' + scopeId;
+  if (!_pools[key]) {
+    var bank = bankOf(subjId);
+    _pools[key] = isExamScope(scopeId) ? bank
+      : isGroupScope(scopeId) ? bank.filter(function (q) { return GROUP_OF[q.tid] === scopeId; })
+      : bank.filter(function (q) { return q.tid === scopeId; });
+  }
+  return _pools[key];
+}
+function roundsFor(n) {
+  var len = roundLen();
+  if (n >= len) return Math.min(5, Math.floor(n / len));
+  return n >= MIN_ROUND ? 1 : 0;
+}
+function scopeRounds(subjId, scopeId) { return roundsFor(poolFor(subjId, scopeId).length); }
+
 function roundRec(tid, r) { return save().rounds[tid + '#' + r]; }
-function topicRounds(tid) {
+function topicRounds(subjId, scopeId) {
   var sv = save(), n = 0, best = 0;
-  for (var r = 1; r <= 5; r++) {
-    var rec = sv.rounds[tid + '#' + r];
+  var avail = scopeRounds(subjId, scopeId);
+  for (var r = 1; r <= avail; r++) {
+    var rec = sv.rounds[scopeId + '#' + r];
     if (rec) { n++; best = Math.max(best, Math.round(rec.c / rec.t * 100)); }
   }
-  return { n: n, best: best };
+  return { n: n, best: best, avail: avail };
+}
+/* every round the bank can currently support for a subject */
+function availableRounds(s) {
+  var total = 0;
+  s.groups.forEach(function (g) {
+    g.items.forEach(function (t) { total += scopeRounds(s.id, t.id); });
+    total += scopeRounds(s.id, g.id);
+  });
+  return total;
 }
 function subjStats(s) {
   var topics = allTopics(s), sv = save();
@@ -649,13 +719,23 @@ function subjStats(s) {
   var total = topics.length || 1;
   return { done: done, total: topics.length, pct: Math.round(done / total * 100), rounds: rounds, acc: t ? Math.round(c / t * 100) : null };
 }
-function nextTopicFor(s) {
-  var sv = save(), topics = allTopics(s);
-  for (var i = 0; i < topics.length; i++) {
-    var tp = topics[i], tr = topicRounds(tp.id);
-    if (tr.n < 5) return { topic: tp, round: tr.n + 1, done: !!sv.done[tp.id] };
+/* the next thing she can actually practise in this subject: an unfinished
+   topic first, then an unfinished concept-group mix. null when the bank
+   cannot support anything yet. */
+function nextScopeFor(s) {
+  var scopes = [];
+  s.groups.forEach(function (g) {
+    g.items.forEach(function (t) { scopes.push({ id: t.id, name: t.name, kind: 'topic' }); });
+  });
+  s.groups.forEach(function (g) { scopes.push({ id: g.id, name: g.concept, kind: 'group' }); });
+  var fallback = null;
+  for (var i = 0; i < scopes.length; i++) {
+    var sc = scopes[i], tr = topicRounds(s.id, sc.id);
+    if (!tr.avail) continue;
+    if (tr.n < tr.avail) return { scope: sc, round: tr.n + 1, avail: tr.avail };
+    if (!fallback) fallback = { scope: sc, round: tr.avail, avail: tr.avail };
   }
-  return { topic: topics[0], round: 1, done: true };
+  return fallback;   // everything cleared — offer the first scope again
 }
 function streakDays() {
   var log = save().log, n = 0, d = new Date();
@@ -721,18 +801,16 @@ function launch(part, subjectId) {
   if (sess.timed) startTimer();
 }
 
-function startRound(subjId, topicId, topicName, round) {
-  var bank = bankOf(subjId);
-  if (!bank.length) return;
-  var len = roundLen(), qs;
-  if (bank.length >= len * 5) {
-    qs = seedShuffle(bank, subjId + topicId).slice((round - 1) * len, round * len);
-  } else {
-    qs = seedShuffle(bank, subjId + topicId + round).slice(0, len);
-  }
+function startRound(subjId, scopeId, scopeName, round) {
+  var pool = poolFor(subjId, scopeId);
+  if (round < 1 || round > roundsFor(pool.length)) return;
+  var len = Math.min(roundLen(), pool.length);
+  var qs = pool.length >= len * 2
+    ? seedShuffle(pool, subjId + scopeId).slice((round - 1) * len, round * len)
+    : seedShuffle(pool, subjId + scopeId + round).slice(0, len);
   // keep questions on a shared passage adjacent, the way the real exam sets them
   if (subjId === 'cars') qs = qs.slice().sort(function (a, b) { return (a.passage || '').localeCompare(b.passage || ''); });
-  launch({ subjId: subjId, topicId: topicId, topicName: topicName, round: round, qs: qs, timed: topicId.indexOf('#exam') > -1 }, subjId);
+  launch({ subjId: subjId, topicId: scopeId, topicName: scopeName, round: round, qs: qs, timed: isExamScope(scopeId) }, subjId);
 }
 
 function startSpecial(kind) {
@@ -833,9 +911,9 @@ function finish(s) {
       // right twice running retires a question from the error log
       if (m) { m.streak = (m.streak || 0) + 1; m.last = k; if (m.streak >= 2) delete next.misses[q._k]; }
     } else {
-      next.misses[q._k] = { subj: q._subj, topic: q.topic || '', count: (m ? m.count : 0) + 1, streak: 0, last: k };
+      next.misses[q._k] = { subj: q._subj, tid: q.tid, count: (m ? m.count : 0) + 1, streak: 0, last: k };
     }
-    var tkey = q._subj + '|' + (q.topic || 'General');
+    var tkey = q._subj + '|' + q.tid;
     var ts = next.topicStats[tkey] || { c: 0, t: 0 };
     ts.t++; if (ok) ts.c++;
     next.topicStats[tkey] = ts;
@@ -961,6 +1039,28 @@ function importSave(e) {
    One pass over state produces everything the screens draw.
    ------------------------------------------------------------------ */
 
+/* One pip per round the scope can actually support — never five by default. */
+function pipsFor(s, scopeId, scopeName, tr, A, titlePrefix) {
+  var locked = s.status === 'locked';
+  var out = [];
+  for (var r = 1; r <= tr.avail; r++) {
+    (function (r) {
+      var rec = roundRec(scopeId, r);
+      var pctv = rec ? Math.round(rec.c / rec.t * 100) : null;
+      var passed = pctv !== null && pctv >= passMark();
+      out.push({
+        label: r,
+        bg: locked ? '#F6F2F4' : passed ? A.a : rec ? A.soft : '#FFFFFF',
+        fg: locked ? '#C6BAC0' : passed ? '#FFFFFF' : rec ? A.deep : '#A2909C',
+        bd: locked ? '#EFE9EC' : passed ? A.a : rec ? A.bd : '#E9DFE4',
+        title: locked ? 'Unlocks with the course' : rec ? titlePrefix + r + ' · ' + pctv + '%' : titlePrefix + r,
+        start: function () { if (!locked) startRound(s.id, scopeId, scopeName, r); }
+      });
+    })(r);
+  }
+  return out;
+}
+
 function computeVals() {
   var S = state, sv = save();
   var active = SUBJECTS.filter(function (s) { return s.status === 'active'; });
@@ -981,7 +1081,14 @@ function computeVals() {
   var perWeek = Math.ceil(Math.max(0, tAll - tDone) / weeksLeft);
   var plan = sv.plan || { h: 14, days: [1, 1, 1, 1, 1, 1, 1] };
   var capacity = plan.h * 3;                     // ~20 min a round
-  var roundsNeeded = Math.ceil(Math.max(0, tAll * 5 - tot.n) / weeksLeft);
+  var totalRounds = 0, practiceable = 0;
+  active.forEach(function (s) {
+    totalRounds += availableRounds(s);
+    s.groups.forEach(function (g) {
+      g.items.forEach(function (t) { if (scopeRounds(s.id, t.id)) practiceable++; });
+    });
+  });
+  var roundsNeeded = Math.ceil(Math.max(0, totalRounds - tot.n) / weeksLeft);
   var wkMon = new Date(); wkMon.setHours(0, 0, 0, 0); wkMon.setDate(wkMon.getDate() - ((wkMon.getDay() + 6) % 7));
   var wkDone = 0;
   for (var wi = 0; wi < 7; wi++) { var d0 = new Date(wkMon); d0.setDate(wkMon.getDate() + wi); wkDone += sv.log[dateKey(d0)] || 0; }
@@ -996,7 +1103,8 @@ function computeVals() {
     return {
       id: s.id, name: s.name, section: s.section, pct: st.pct, acc: A.a, soft: A.soft, bd: A.bd,
       topicsLabel: st.done + '/' + st.total + ' topics ready',
-      roundsLabel: st.rounds + ' rounds done',
+      roundsLabel: st.rounds + ' of ' + availableRounds(s) + ' rounds done',
+      bankLabel: plural(bankOf(s.id).length, 'question', 'questions') + ' written',
       accLabel: st.acc === null ? 'no score yet' : st.acc + '% accuracy',
       meta: st.done + ' of ' + st.total + ' topics ready · ' + (st.acc === null ? 'not tested yet' : st.acc + '% accuracy'),
       open: function () { setState({ view: 'subject', subjectId: s.id }); }
@@ -1041,20 +1149,27 @@ function computeVals() {
       var A0 = subjStats(a), B0 = subjStats(b);
       return ((A0.acc === null ? 55 : A0.acc) - (B0.acc === null ? 55 : B0.acc)) || (A0.rounds - B0.rounds);
     }).slice(0, 3).map(function (s) {
-      var nt = nextTopicFor(s), A = acc(s.id), st0 = subjStats(s);
+      var nt = nextScopeFor(s), A = acc(s.id), st0 = subjStats(s);
+      if (!nt) return {
+        initials: s.short, topic: s.name + ' has no questions yet', cta: 'Subjects', acc: A.a, soft: A.soft,
+        meta: 'Nothing in the bank for this subject — write some questions first',
+        start: function () { setState({ view: 'subject', subjectId: s.id }); }
+      };
       return {
-        initials: s.short, topic: nt.topic.name, cta: 'Round ' + nt.round, acc: A.a, soft: A.soft,
-        meta: s.name + ' · round ' + nt.round + ' of 5 · ' + (st0.acc === null ? 'not tested yet' : st0.acc + '% so far'),
-        start: function () { startRound(s.id, nt.topic.id, nt.topic.name, nt.round); }
+        initials: s.short, topic: nt.scope.name + (nt.scope.kind === 'group' ? ' — mixed' : ''),
+        cta: 'Round ' + nt.round, acc: A.a, soft: A.soft,
+        meta: s.name + ' · round ' + nt.round + ' of ' + nt.avail + ' · ' + (st0.acc === null ? 'not tested yet' : st0.acc + '% so far'),
+        start: function () { startRound(s.id, nt.scope.id, nt.scope.name, nt.round); }
       };
     }),
     planBar: {
-      line: plan.h + ' hrs/week ≈ ' + capacity + ' rounds. Finishing every topic by ' +
-            exam.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) + ' needs ' + roundsNeeded + '/week — ' +
+      line: plan.h + ' hrs/week ≈ ' + capacity + ' rounds. Clearing all ' + totalRounds +
+            ' rounds the bank supports by ' + exam.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) +
+            ' needs ' + roundsNeeded + '/week — ' +
             (capacity >= roundsNeeded ? 'on pace.' : 'behind pace: add hours or focus weakest topics.'),
       week: 'This week: ' + wkDone + ' of ' + wkTarget,
       color: capacity >= roundsNeeded ? '#3F7F63' : '#C33F68',
-      note: 'Biochem, O-Chem, Physics and Sociology join the plan when their courses start.'
+      note: practiceable + ' of ' + tAll + ' topics have enough questions to practise on their own; the rest run as concept mixes until the bank grows.'
     }
   };
 
@@ -1097,32 +1212,32 @@ function computeVals() {
       examNote: 'Mixed questions drawn across every topic in this subject, at test difficulty. Sit it after the five rounds of a section are done.',
       startExam: function () { startRound(s.id, s.id + '#exam', s.name + ' subject exam', 1); },
       groups: s.groups.map(function (g) {
+        var gr = topicRounds(s.id, g.id);
+        var gPool = poolFor(s.id, g.id).length;
         return {
           concept: g.concept,
           count: (g.items || []).filter(function (t) { return sv.done[t.id]; }).length + '/' + (g.items || []).length,
+          mixLabel: gr.avail ? 'Mixed' : '',
+          mixNote: gr.avail ? '' : plural(gPool, 'question', 'questions'),
+          mixPips: pipsFor(s, g.id, g.concept + ' — mixed', gr, A, 'Mixed round '),
           topics: (g.items || []).map(function (t) {
-            var tr = topicRounds(t.id);
+            var tr = topicRounds(s.id, t.id);
+            var pool = poolFor(s.id, t.id).length;
             var isDone = !!sv.done[t.id];
+            var meta;
+            if (s.status === 'locked') meta = 'practice locked';
+            else if (!tr.avail) meta = pool === 0 ? 'no questions yet'
+                                     : plural(pool, 'question', 'questions') + ' — needs ' + (MIN_ROUND - pool) + ' more for a round';
+            else if (tr.n === 0) meta = plural(pool, 'question', 'questions') + ' · ' + plural(tr.avail, 'round', 'rounds') + ' ready';
+            else meta = tr.n + ' of ' + tr.avail + ' rounds · best ' + tr.best + '%';
             return {
               name: t.name, mark: isDone ? '✓' : '',
               nameColor: isDone ? '#8A7280' : '#2A1622',
               boxBg: isDone ? A.a : '#FFFFFF', boxBd: isDone ? A.a : '#E4D6DC', boxFg: '#FFFFFF',
-              meta: tr.n === 0 ? (s.status === 'locked' ? 'practice locked' : 'no rounds yet') : tr.n + ' of 5 rounds · best ' + tr.best + '%',
+              meta: meta,
               toggle: function () { toggleTopic(t.id); },
-              pips: [1, 2, 3, 4, 5].map(function (r) {
-                var rec = roundRec(t.id, r);
-                var pctv = rec ? Math.round(rec.c / rec.t * 100) : null;
-                var passed = pctv !== null && pctv >= passMark();
-                var lockedPip = s.status === 'locked' || bankSize === 0;
-                return {
-                  label: r,
-                  bg: lockedPip ? '#F6F2F4' : passed ? A.a : rec ? A.soft : '#FFFFFF',
-                  fg: lockedPip ? '#C6BAC0' : passed ? '#FFFFFF' : rec ? A.deep : '#A2909C',
-                  bd: lockedPip ? '#EFE9EC' : passed ? A.a : rec ? A.bd : '#E9DFE4',
-                  title: lockedPip ? 'Locked' : rec ? 'Round ' + r + ' · ' + pctv + '%' : 'Start round ' + r,
-                  start: function () { if (!lockedPip) startRound(s.id, t.id, t.name, r); }
-                };
-              })
+              empty: tr.avail === 0,
+              pips: pipsFor(s, t.id, t.name, tr, A, 'Round ')
             };
           })
         };
@@ -1238,7 +1353,7 @@ function computeVals() {
         var yourNote = !ok && q2.whys && rs.picks[i] !== undefined && q2.whys[rs.picks[i]] ? ' — ' + q2.whys[rs.picks[i]] : '';
         return {
           mark: ok ? '✓' : '✕', markBg: ok ? '#F1F8F3' : '#FDF2F5', markFg: ok ? '#3F7F63' : '#C33F68',
-          topic: (rs.flags && rs.flags[i] ? '⚑ ' : '') + (q2.topic || ''),
+          topic: (rs.flags && rs.flags[i] ? '⚑ ' : '') + topicName(q2.tid),
           stem: q2.stem, correct: q2.options[q2.answer],
           yours: ok ? 'You had it.' : 'You chose: ' + (rs.picks[i] === undefined ? 'nothing (time ran out)' : q2.options[rs.picks[i]]) + yourNote,
           why: q2.why
@@ -1262,8 +1377,10 @@ function computeVals() {
   var planTopics = [];
   active.forEach(function (sub) {
     if (planTopics.length >= 5) return;
-    var nt = nextTopicFor(sub);
-    planTopics.push({ subject: sub.name, short: sub.short, topic: nt.topic.name, round: nt.round, sid: sub.id, tid: nt.topic.id });
+    var nt = nextScopeFor(sub);
+    if (!nt) return;
+    planTopics.push({ subject: sub.name, short: sub.short, topic: nt.scope.name, round: nt.round,
+                      avail: nt.avail, sid: sub.id, tid: nt.scope.id });
   });
   var calLabel = '', cells = [], wk = { days: [], hours: [] };
 
@@ -1372,7 +1489,8 @@ function computeVals() {
     agToday: agList, agEmpty: agList.length === 0,
     plan: planTopics.map(function (p) {
       var A2 = acc(p.sid);
-      return { short: p.short, acc: A2.a, soft: A2.soft, topic: p.topic, subject: p.subject + ' · round ' + p.round,
+      return { short: p.short, acc: A2.a, soft: A2.soft, topic: p.topic,
+        subject: p.subject + ' · round ' + p.round + ' of ' + p.avail,
         start: function () { startRound(p.sid, p.tid, p.topic, p.round); } };
     })
   };
@@ -1421,7 +1539,7 @@ function computeVals() {
     heat.push({ cells: hcells });
   }
   vals.st = {
-    rounds: tot.n, roundsNote: 'of ' + (tAll * 5) + ' planned',
+    rounds: tot.n, roundsNote: 'of ' + totalRounds + ' the bank supports',
     questions: tot.t, correctNote: tot.c + ' correct',
     accNote: tot.acc === null ? 'after the first round' : tot.acc >= passMark() ? 'above her ' + passMark() + '% bar' : 'below her ' + passMark() + '% bar',
     bars: active.map(function (sub) {
@@ -1456,7 +1574,7 @@ function computeVals() {
   }).filter(function (w2) { return w2.t >= 3; }).sort(function (a2, b2) { return a2.a2 - b2.a2; }).slice(0, 6);
   vals.st.weak = wt.map(function (w2) {
     var A2 = acc(w2.subj);
-    return { topic: w2.topic, label: w2.a2 + '%', pct: w2.a2, acc: A2.a,
+    return { topic: topicName(w2.topic), label: w2.a2 + '%', pct: w2.a2, acc: A2.a,
       meta: (subject(w2.subj) || { name: 'Mixed' }).name + ' · ' + w2.t + ' answered' };
   });
   vals.st.hasWeak = wt.length > 0;
@@ -1472,7 +1590,7 @@ function computeVals() {
     var q3 = bankOf(m3.subj)[parseInt(m3.k.split('#')[1], 10)] || {};
     return {
       stem: (q3.stem || '').slice(0, 110) + ((q3.stem || '').length > 110 ? '…' : ''),
-      topic: m3.topic || 'General', meta: 'missed ' + m3.count + '×', acc: A3.a, soft: A3.soft
+      topic: short(topicName(m3.tid), 30), meta: 'missed ' + m3.count + '×', acc: A3.a, soft: A3.soft
     };
   });
   vals.st.redoMisses = function () { startSpecial('misses'); };
@@ -1686,8 +1804,9 @@ function viewSubjects(V) {
           '<div style="height:6px;border-radius:99px;background:#F5EBEF">' +
             '<div style="height:6px;border-radius:99px;background:' + c.acc + ';width:' + c.pct + '%;transition:width .5s"></div>' +
           '</div>' +
-          '<div style="display:flex;gap:22px;font-size:12.5px;color:#6E5266">' +
-            '<span>' + esc(c.topicsLabel) + '</span><span>' + esc(c.roundsLabel) + '</span><span>' + esc(c.accLabel) + '</span>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:6px 20px;font-size:12.5px;color:#6E5266">' +
+            '<span>' + esc(c.topicsLabel) + '</span><span>' + esc(c.bankLabel) + '</span>' +
+            '<span>' + esc(c.roundsLabel) + '</span><span>' + esc(c.accLabel) + '</span>' +
           '</div>' +
         '</button>';
       }) +
@@ -1731,6 +1850,10 @@ function viewSubjects(V) {
   '</section>';
 }
 
+function pip(p) {
+  return '<button ' + h(p.start) + ' class="hv-pop" title="' + esc(p.title) + '" style="width:26px;height:26px;border-radius:8px;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:transform .14s;border:1px solid ' + p.bd + ';background:' + p.bg + ';color:' + p.fg + '">' + p.label + '</button>';
+}
+
 function viewSubject(V) {
   var s = V.subj;
   return '' +
@@ -1757,7 +1880,13 @@ function viewSubject(V) {
         return '<div>' +
           '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid #EFE6EA">' +
             '<h2 style="display:flex;align-items:center;gap:8px;font-family:\'Bricolage Grotesque\',serif;font-size:17px;font-weight:600;letter-spacing:-0.02em;margin:0"><span style="color:' + s.acc + ';font-size:11px">✦</span>' + esc(g.concept) + '</h2>' +
-            '<div style="font-size:12px;color:#A2909C">' + esc(g.count) + '</div>' +
+            '<div style="display:flex;align-items:center;gap:9px;white-space:nowrap">' +
+              '<span style="font-size:12px;color:#A2909C">' + esc(g.count) + '</span>' +
+              (g.mixLabel
+                ? '<span style="font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#A2909C">' + g.mixLabel + '</span>' +
+                  '<div style="display:flex;gap:5px">' + map(g.mixPips, pip) + '</div>'
+                : '<span style="font-size:11px;color:#B9A9B2">' + esc(g.mixNote) + '</span>') +
+            '</div>' +
           '</div>' +
           '<div style="display:flex;flex-direction:column">' +
             map(g.topics, function (t) {
@@ -1767,11 +1896,9 @@ function viewSubject(V) {
                   '<div style="font-size:14.5px;letter-spacing:-0.01em;line-height:1.35;color:' + t.nameColor + '">' + esc(t.name) + '</div>' +
                   '<div style="font-size:11.5px;color:#A2909C;margin-top:2px">' + esc(t.meta) + '</div>' +
                 '</div>' +
-                '<div style="display:flex;gap:5px">' +
-                  map(t.pips, function (p) {
-                    return '<button ' + h(p.start) + ' class="hv-pop" title="' + esc(p.title) + '" style="width:26px;height:26px;border-radius:8px;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:transform .14s;border:1px solid ' + p.bd + ';background:' + p.bg + ';color:' + p.fg + '">' + p.label + '</button>';
-                  }) +
-                '</div>' +
+                (t.empty
+                  ? ''
+                  : '<div style="display:flex;gap:5px">' + map(t.pips, pip) + '</div>') +
               '</div>';
             }) +
           '</div>' +

@@ -43,9 +43,21 @@ every few weeks.
 
 ## How practice works
 
-- Each topic has **five rounds** of `roundLength` questions. Rounds are dealt by
-  a seeded shuffle, so a retake is a genuine retake of the same questions.
-  Once a subject's bank holds `5 x roundLength` items, the five rounds slice
+Every question is tagged with the syllabus topic it belongs to, and a round
+only ever draws from the scope you asked for. There are three scopes:
+
+| Scope | Where | Draws from |
+|---|---|---|
+| **Topic round** | the pips on a topic row | that one topic |
+| **Mixed round** | the pips on a concept-group heading | every topic in that group |
+| **Subject exam** | the button at the foot of a subject | the whole subject, timed |
+
+- A scope offers **as many rounds as its questions support** — `floor(pool ÷
+  roundLength)`, capped at five — so the pip count is a fact about the bank,
+  not a promise. Below `roundLength` questions it offers one short round, and
+  below **3** it offers none and says how many more it needs.
+- Rounds are dealt by a seeded shuffle, so a retake is a genuine retake of the
+  same questions. Once a scope holds twice `roundLength`, its rounds slice
   distinct windows instead of reshuffling one pool.
 - A round **passes** at or above `passMark`.
 - Missed questions enter the **error log** and resurface in the review queue at
@@ -60,9 +72,12 @@ every few weeks.
 Two blocks near the top of `index.html` are the ones worth touching:
 
 - `window.MCAT_PASSAGES` / `window.MCAT_BANK` — the question bank, keyed by
-  subject id. Each item is `{ topic, stem, options, answer, why }`, optionally
+  subject id. Each item is `{ tid, stem, options, answer, why }`, optionally
   with `whys` (per-option notes) and `passage` (a key into `MCAT_PASSAGES`).
-  `answer` is a zero-based index into `options`.
+  `answer` is a zero-based index into `options`. **`tid` is the syllabus topic
+  id** — `biology-0` is the first topic of the first `biology` group, counting
+  from zero across the whole subject. It is what binds a question to a topic
+  row, so a wrong `tid` puts a question in the wrong round.
 - `CONFIG` — learner name, exam date, prep start, pass mark, round length, and
   whether locked subjects are listed.
 
@@ -85,11 +100,20 @@ or the most qualified option, that is a second free answer. Write distractors
 at comparable length and specificity, and trim the answer rather than padding
 the distractors.
 
-Both are checkable — count the `answer` values across the bank, and count how
-often the longest option is the correct one. The second number should sit near
-25–35%, not above it.
+Run `node mcat-tracker/check-bank.js` after editing. It validates every `tid`
+against the syllabus, reports the answer-key distribution and the option-length
+tell, lists which topics still cannot support a round, and exits non-zero if
+the key has drifted back toward guessable.
 
 Where a question's options are genuinely ordered — ascending numbers, or a
 logical `only / only / both / neither` set — leave them in their natural order
 and balance the key elsewhere. Ordering is information the student is meant to
 use.
+
+## Growing the bank
+
+`check-bank.js` prints the shortest topics first, which is the work queue. A
+topic needs 3 questions before it offers any practice of its own and
+`roundLength` before it offers a full round, so the cheapest way to turn the
+map green is to take the 0-question topics to 3 rather than deepening the ones
+that already work.
