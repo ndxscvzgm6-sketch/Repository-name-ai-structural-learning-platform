@@ -40,6 +40,42 @@ button{font:inherit;cursor:pointer}
 .hv-lift:hover{border-color:#EFC9D8 !important;transform:translateY(-2px);box-shadow:0 14px 30px rgba(212,67,107,.12)}
 .hv-pop:hover{transform:scale(1.12)}
 .hv-pop2:hover{transform:scale(1.08)}
+
+/* Keyboard focus — the mouse never sees this, the Tab key always does */
+:focus-visible{outline:2px solid #D4436B;outline-offset:2px;border-radius:6px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+
+/* One breakpoint. The desktop layout is a fixed 252px rail beside the content;
+   below it, the rail becomes a bottom tab bar and every multi-column grid
+   stacks. Inline styles win the cascade, hence !important throughout. */
+@media (max-width:820px){
+  .app{display:block !important}
+  .side{position:fixed !important;top:auto !important;left:0;right:0;bottom:0;height:auto !important;
+        flex-direction:row !important;align-items:center;gap:8px !important;
+        padding:8px 10px calc(8px + env(safe-area-inset-bottom)) !important;
+        border-right:0 !important;border-top:1px solid #EFE6EA;
+        background:rgba(255,255,255,.96) !important;z-index:50}
+  .side > div:first-child{display:none !important}
+  .side .testday{display:none !important}
+  .side nav{flex-direction:row !important;flex:1;justify-content:space-around;gap:2px !important}
+  .side nav button{flex:1;justify-content:center;padding:9px 4px !important;font-size:13px !important;white-space:nowrap}
+  .scr{padding:26px 16px 110px !important;max-width:none !important}
+  .mgrid{grid-template-columns:1fr !important}
+  .mgrid2{grid-template-columns:1fr 1fr !important}
+  .statbar{grid-template-columns:1fr !important;gap:6px !important}
+  .mwrap{flex-wrap:wrap}
+  .trow{flex-wrap:wrap}
+  .hero-num{font-size:84px !important}
+  .rhead{padding:10px 12px !important;gap:10px !important}
+  .rdot{width:10px !important}
+  .qcount{display:none}
+  .qgrid{padding:18px 14px 120px !important;gap:24px !important}
+  .ppanel{position:static !important;max-height:none !important}
+  .mcell{min-height:60px !important;padding:4px 3px !important}
+}
 </style>
 </head>
 <body>
@@ -560,7 +596,40 @@ var state = {
   save: null, calView: 'month', calCursor: 0, ed: null
 };
 
-function setState(patch) { for (var k in patch) state[k] = patch[k]; render(); }
+function setState(patch) { for (var k in patch) state[k] = patch[k]; render(); syncHash(); }
+
+/* ------------------------------------------------------------------
+   URL routing
+   The five stable screens live in the hash so the browser's Back button
+   moves between screens instead of leaving the app. Rounds and reports are
+   transient and stay under their parent's URL — Back during a round returns
+   to the screen it was started from.
+   ------------------------------------------------------------------ */
+
+var STABLE_VIEWS = ['today', 'subjects', 'calendar', 'stats'];
+
+function hashFor() {
+  if (state.view === 'subject' && state.subjectId) return '#/subject/' + state.subjectId;
+  if (STABLE_VIEWS.indexOf(state.view) > -1) return '#/' + state.view;
+  return null;
+}
+function parseHash(h) {
+  var p = String(h || '').replace(/^#\/?/, '').split('/');
+  if (p[0] === 'subject' && subject(p[1])) return { view: 'subject', subjectId: p[1] };
+  if (STABLE_VIEWS.indexOf(p[0]) > -1) return { view: p[0], subjectId: null };
+  return { view: 'today', subjectId: null };
+}
+var expectedHash = null;
+function syncHash() {
+  var h = hashFor();
+  if (h && location.hash !== h) { expectedHash = h; location.hash = h; }
+}
+window.addEventListener('hashchange', function () {
+  if (location.hash === expectedHash) { expectedHash = null; return; }
+  var t = parseHash(location.hash);
+  stopTimer();
+  setState({ view: t.view, subjectId: t.subjectId, session: null, report: null, ed: null });
+});
 
 /* ------------------------------------------------------------------
    Persistence
@@ -885,6 +954,8 @@ function primary() {
 }
 function exitRound() {
   var s = state.session;
+  var touched = s && (s.i > 0 || Object.keys(s.picks).length > 0);
+  if (touched && !window.confirm('Leave this round? Its answers are discarded.')) return;
   stopTimer();
   setState({
     view: isSpecial(s.subjId) ? homeOf(s.subjId) : 'subject',
@@ -1051,7 +1122,7 @@ function pipsFor(s, scopeId, scopeName, tr, A, titlePrefix) {
       out.push({
         label: r,
         bg: locked ? '#F6F2F4' : passed ? A.a : rec ? A.soft : '#FFFFFF',
-        fg: locked ? '#C6BAC0' : passed ? '#FFFFFF' : rec ? A.deep : '#A2909C',
+        fg: locked ? '#968D92' : passed ? '#FFFFFF' : rec ? A.deep : '#776A73',
         bd: locked ? '#EFE9EC' : passed ? A.a : rec ? A.bd : '#E9DFE4',
         title: locked ? 'Unlocks with the course' : rec ? titlePrefix + r + ' · ' + pctv + '%' : titlePrefix + r,
         start: function () { if (!locked) startRound(s.id, scopeId, scopeName, r); }
@@ -1232,7 +1303,7 @@ function computeVals() {
             else meta = tr.n + ' of ' + tr.avail + ' rounds · best ' + tr.best + '%';
             return {
               name: t.name, mark: isDone ? '✓' : '',
-              nameColor: isDone ? '#8A7280' : '#2A1622',
+              nameColor: isDone ? '#7D6774' : '#2A1622',
               boxBg: isDone ? A.a : '#FFFFFF', boxBd: isDone ? A.a : '#E4D6DC', boxFg: '#FFFFFF',
               meta: meta,
               toggle: function () { toggleTopic(t.id); },
@@ -1271,7 +1342,7 @@ function computeVals() {
       clockFg: sess.remaining <= 15 ? '#C33F68' : '#6E5266',
       flagLabel: flagged ? '⚑ Flagged' : '⚑ Flag',
       flagBg: flagged ? '#FBEEF3' : 'transparent',
-      flagFg: flagged ? '#B03A5E' : '#8A7280',
+      flagFg: flagged ? '#B03A5E' : '#7D6774',
       flag: toggleFlag,
       verdict: right ? 'Correct' : 'Not quite',
       whyBg: sess.revealed ? (right ? '#F1F8F3' : '#FDF2F5') : '#FFFFFF',
@@ -1283,12 +1354,14 @@ function computeVals() {
       primaryOpacity: (!sess.timed && !sess.revealed && pick === undefined) ? 0.45 : 1,
       hint: sess.timed
         ? 'Answers lock when you advance — no going back, just like test day.'
-        : (!sess.revealed ? (pick === undefined ? 'Pick an answer to check it.' : 'No penalty for guessing on the real thing.') : ''),
+        : (!sess.revealed
+            ? (pick === undefined ? 'Pick an answer — tap it, or press A–D.' : 'Enter checks it. No penalty for guessing on the real thing.')
+            : 'Enter continues.'),
       primary: primary,
       exit: exitRound,
       options: (q.options || []).map(function (text, i) {
         var sel = pick === i, isAns = i === q.answer, dead = !!elim[i];
-        var bg = '#FFFFFF', bd = '#EFE6EA', fg = '#2A1622', badgeBg = '#F7F1F4', badgeFg = '#8A7280';
+        var bg = '#FFFFFF', bd = '#EFE6EA', fg = '#2A1622', badgeBg = '#F7F1F4', badgeFg = '#7D6774';
         if (!sess.revealed && sel) { bg = '#FDF4F7'; bd = '#D4436B'; badgeBg = '#D4436B'; badgeFg = '#FFFFFF'; }
         if (sess.revealed && isAns) { bg = '#F1F8F3'; bd = '#3F7F63'; badgeBg = '#3F7F63'; badgeFg = '#FFFFFF'; }
         if (sess.revealed && sel && !isAns) { bg = '#FDF2F5'; bd = '#C33F68'; badgeBg = '#C33F68'; badgeFg = '#FFFFFF'; fg = '#7A5468'; }
@@ -1298,7 +1371,7 @@ function computeVals() {
           deco: dead && !sess.revealed ? 'line-through' : 'none',
           dim: dead && !sess.revealed ? 0.45 : 1,
           note: sess.revealed && q.whys && q.whys[i] ? q.whys[i] : '',
-          noteColor: isAns ? '#3F7F63' : '#8A7280',
+          noteColor: isAns ? '#3F7F63' : '#7D6774',
           exLabel: dead ? '↺' : '✕', exTitle: dead ? 'Restore option' : 'Rule out',
           elim: function () { toggleElim(i); },
           pick: function () { choose(i); }
@@ -1398,7 +1471,7 @@ function computeVals() {
         var cnt = sv.log[k] || 0;
         cells.push({
           num: d.getDate(),
-          fg: isT ? '#FFFFFF' : inMonth ? '#2A1622' : '#C9BCC3',
+          fg: isT ? '#FFFFFF' : inMonth ? '#2A1622' : '#787074',
           fw: isT ? 700 : 500,
           numBg: isT ? '#D4436B' : 'transparent',
           bg: inMonth ? '#FFFFFF' : '#FBF8F9',
@@ -1481,7 +1554,7 @@ function computeVals() {
       return {
         label: nm,
         bg: plan.days[i] ? '#4E2140' : '#FFFFFF',
-        fg: plan.days[i] ? '#FFF6F9' : '#8A7280',
+        fg: plan.days[i] ? '#FFF6F9' : '#7D6774',
         bd: plan.days[i] ? '#4E2140' : '#E9DFE4',
         toggle: function () { var d2 = plan.days.slice(); d2[i] = d2[i] ? 0 : 1; setPlan(plan.h, d2); }
       };
@@ -1548,7 +1621,7 @@ function computeVals() {
         name: sub.name, pct: stt.acc === null ? 0 : stt.acc,
         label: stt.acc === null ? '—' : stt.acc + '%',
         color: stt.acc === null ? '#F0E4E9' : acc(sub.id).a,
-        labelColor: stt.acc === null ? '#A2909C' : '#40293A'
+        labelColor: stt.acc === null ? '#776A73' : '#40293A'
       };
     }),
     heat: heat
@@ -1645,7 +1718,7 @@ function map(list, fn) { return (list || []).map(fn).join(''); }
 
 function viewSidebar(V) {
   return '' +
-  '<aside style="border-right:1px solid #EFE6EA;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);padding:30px 20px 24px;display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh">' +
+  '<aside class="side" style="border-right:1px solid #EFE6EA;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);padding:30px 20px 24px;display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh">' +
     '<div style="display:flex;flex-direction:column;gap:3px;padding:0 8px">' +
       '<div style="font-family:\'Bricolage Grotesque\',serif;font-weight:700;font-size:19px;letter-spacing:-0.03em;line-height:1.1">' + esc(V.learnerName) + '</div>' +
       '<div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#D4436B"><span style="animation:twinkle 2.8s ease-in-out infinite">✦</span>MCAT 2027</div>' +
@@ -1656,7 +1729,7 @@ function viewSidebar(V) {
       navBtn(V.goCalendar, V.nav.c, 'Calendar') +
       navBtn(V.goStats, V.nav.d, 'Progress') +
     '</nav>' +
-    '<div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:14px;background:linear-gradient(160deg,#FBEEF3,#F1EDFA)">' +
+    '<div class="testday" style="margin-top:auto;display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:14px;background:linear-gradient(160deg,#FBEEF3,#F1EDFA)">' +
       '<div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#B03A5E">Test day</div>' +
       '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:15px;font-weight:600;letter-spacing:-0.02em;line-height:1.25">' + esc(V.examLabel) + '</div>' +
       '<div style="height:1px;background:#F3D3DF"></div>' +
@@ -1670,11 +1743,11 @@ function navBtn(fn, n, label) {
 
 function viewToday(V) {
   return '' +
-  '<section style="padding:52px 60px 88px;max-width:1120px;animation:rise .4s ease">' +
+  '<section class="scr" style="padding:52px 60px 88px;max-width:1120px;animation:rise .4s ease">' +
     '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ ' + esc(V.todayLabel) + '</div>' +
     '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:40px;font-weight:600;letter-spacing:-0.035em;line-height:1.08;margin:12px 0 0">Let\'s keep the <em style="font-family:\'Instrument Serif\',serif;font-style:italic;font-weight:400;color:#D4436B">streak</em> going.</h1>' +
 
-    '<div style="display:grid;grid-template-columns:1.15fr 1fr;gap:20px;margin-top:34px">' +
+    '<div class="mgrid" style="display:grid;grid-template-columns:1.15fr 1fr;gap:20px;margin-top:34px">' +
       '<div style="position:relative;overflow:hidden;border-radius:24px;padding:36px 38px;background:linear-gradient(150deg,#3E1834 0%,#6E2449 52%,#C33F68 100%);color:#FFF6F9">' +
         '<div style="position:absolute;top:-70px;right:-50px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,169,196,.5),transparent 65%);filter:blur(10px);animation:floaty 7s ease-in-out infinite"></div>' +
         '<div style="position:absolute;bottom:-90px;left:30%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(151,89,181,.45),transparent 65%);filter:blur(14px);animation:floaty 9s ease-in-out infinite reverse"></div>' +
@@ -1683,7 +1756,7 @@ function viewToday(V) {
         '<div style="position:relative">' +
           '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;opacity:.75">Countdown to test day</div>' +
           '<div style="display:flex;align-items:baseline;gap:16px;margin-top:12px">' +
-            '<div style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:118px;font-weight:400;letter-spacing:-0.04em;line-height:0.82">' + V.daysLeft + '</div>' +
+            '<div class="hero-num" style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:118px;font-weight:400;letter-spacing:-0.04em;line-height:0.82">' + V.daysLeft + '</div>' +
             '<div style="font-size:15px;font-weight:500;opacity:.85;padding-bottom:12px">days to go, <span style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:17px">future Dr. Oo</span></div>' +
           '</div>' +
           '<div style="margin-top:24px;height:5px;border-radius:99px;background:rgba(255,255,255,.22)">' +
@@ -1697,7 +1770,7 @@ function viewToday(V) {
 
       '<div style="display:grid;grid-template-rows:1fr 1fr;gap:20px">' +
         '<div style="border:1px solid #EFE6EA;border-radius:22px;background:#FFFFFF;padding:26px 28px">' +
-          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#A2909C">Syllabus marked ready</div>' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#776A73">Syllabus marked ready</div>' +
           '<div style="display:flex;align-items:baseline;gap:10px;margin-top:10px">' +
             '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:38px;font-weight:600;letter-spacing:-0.04em;line-height:1">' + V.overallPct + '%</div>' +
             '<div style="font-size:13px;color:#6E5266">' + esc(V.topicsDoneLabel) + '</div>' +
@@ -1715,16 +1788,16 @@ function viewToday(V) {
 
     '<div style="display:flex;align-items:center;gap:14px;margin-top:20px;border:1px solid #EFE6EA;border-radius:16px;background:#FFFFFF;padding:15px 20px">' +
       '<span style="width:9px;height:9px;border-radius:50%;flex:0 0 9px;background:' + V.planBar.color + '"></span>' +
-      '<div style="flex:1;font-size:13px;color:#40293A;line-height:1.55">' + esc(V.planBar.line) + ' <span style="color:#A2909C">' + esc(V.planBar.note) + '</span></div>' +
+      '<div style="flex:1;font-size:13px;color:#40293A;line-height:1.55">' + esc(V.planBar.line) + ' <span style="color:#776A73">' + esc(V.planBar.note) + '</span></div>' +
       '<div style="font-size:12.5px;font-weight:700;white-space:nowrap;color:' + V.planBar.color + '">' + esc(V.planBar.week) + '</div>' +
     '</div>' +
 
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">' +
+    '<div class="mgrid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">' +
       '<div style="display:flex;align-items:center;gap:16px;border:1px solid #EFE6EA;border-radius:16px;padding:18px 20px;background:' + V.habits.carsBg + '">' +
         '<div style="width:38px;height:38px;border-radius:11px;background:#EDF6F2;display:flex;align-items:center;justify-content:center;font-size:14px;color:#3F8F7B;font-weight:700">✦</div>' +
         '<div style="flex:1;min-width:0">' +
           '<div style="font-size:14px;font-weight:600;letter-spacing:-0.01em">Daily CARS</div>' +
-          '<div style="font-size:12px;color:#8A7280;margin-top:2px">' + esc(V.habits.carsLabel) + ' · streak ' + esc(V.habits.carsStreak) + '</div>' +
+          '<div style="font-size:12px;color:#7D6774;margin-top:2px">' + esc(V.habits.carsLabel) + ' · streak ' + esc(V.habits.carsStreak) + '</div>' +
         '</div>' +
         '<button ' + h(V.habits.startCars) + ' class="hv-b92" style="border:0;border-radius:10px;background:#3F8F7B;color:#FFF;font-size:12.5px;font-weight:600;padding:9px 16px;transition:filter .15s;white-space:nowrap">Start</button>' +
       '</div>' +
@@ -1732,7 +1805,7 @@ function viewToday(V) {
         '<div style="width:38px;height:38px;border-radius:11px;background:#FBEEF3;display:flex;align-items:center;justify-content:center;font-size:15px;color:#C33F68;font-weight:700">↻</div>' +
         '<div style="flex:1;min-width:0">' +
           '<div style="font-size:14px;font-weight:600;letter-spacing:-0.01em">Review queue</div>' +
-          '<div style="font-size:12px;color:#8A7280;margin-top:2px">' + esc(V.habits.reviewLabel) + ' · ' + esc(V.habits.reviewTotal) + '</div>' +
+          '<div style="font-size:12px;color:#7D6774;margin-top:2px">' + esc(V.habits.reviewLabel) + ' · ' + esc(V.habits.reviewTotal) + '</div>' +
         '</div>' +
         '<button ' + h(V.habits.startReview) + ' class="hv-b92" style="border:0;border-radius:10px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:12.5px;font-weight:600;padding:9px 16px;transition:filter .15s;white-space:nowrap">Review</button>' +
       '</div>' +
@@ -1740,16 +1813,16 @@ function viewToday(V) {
 
     '<div style="display:flex;align-items:flex-end;justify-content:space-between;margin:42px 0 18px">' +
       '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:22px;font-weight:600;letter-spacing:-0.03em;margin:0">Up next — weakest first</h2>' +
-      '<div style="font-size:12.5px;color:#A2909C">Ordered by accuracy, then progress</div>' +
+      '<div style="font-size:12.5px;color:#776A73">Ordered by accuracy, then progress</div>' +
     '</div>' +
 
     '<div style="display:flex;flex-direction:column;gap:12px">' +
       map(V.upNext, function (u) {
-        return '<div class="hv-edge" style="display:flex;align-items:center;gap:20px;border:1px solid #EFE6EA;border-radius:16px;background:#FFFFFF;padding:18px 22px">' +
+        return '<div class="hv-edge mwrap" style="display:flex;align-items:center;gap:20px;border:1px solid #EFE6EA;border-radius:16px;background:#FFFFFF;padding:18px 22px">' +
           '<div style="width:40px;height:40px;border-radius:12px;background:' + u.soft + ';display:flex;align-items:center;justify-content:center;font-family:\'Bricolage Grotesque\',serif;font-size:12.5px;font-weight:700;color:' + u.acc + '">' + esc(u.initials) + '</div>' +
           '<div style="min-width:0;flex:1">' +
             '<div style="font-size:15px;font-weight:600;letter-spacing:-0.015em">' + esc(u.topic) + '</div>' +
-            '<div style="font-size:12.5px;color:#8A7280;margin-top:3px">' + esc(u.meta) + '</div>' +
+            '<div style="font-size:12.5px;color:#7D6774;margin-top:3px">' + esc(u.meta) + '</div>' +
           '</div>' +
           '<button ' + h(u.start) + ' class="hv-b92" style="border:0;border-radius:10px;background:' + u.acc + ';color:#FFF;font-size:13px;font-weight:600;padding:10px 18px;letter-spacing:-0.01em;transition:filter .15s;white-space:nowrap">' + esc(u.cta) + '</button>' +
         '</div>';
@@ -1760,7 +1833,7 @@ function viewToday(V) {
       '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:22px;font-weight:600;letter-spacing:-0.03em;margin:0">Pick up where you left off</h2>' +
       '<button ' + h(V.goSubjects) + ' style="border:0;background:none;color:#D4436B;font-size:13px;font-weight:600;padding:0">All subjects →</button>' +
     '</div>' +
-    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">' +
+    '<div class="mgrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">' +
       map(V.continueCards, function (c) {
         return '<button ' + h(c.open) + ' class="hv-lift" style="text-align:left;border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:22px;display:flex;flex-direction:column;gap:16px;transition:border-color .16s,transform .16s">' +
           '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">' +
@@ -1770,7 +1843,7 @@ function viewToday(V) {
           '<div style="height:6px;border-radius:99px;background:#F5EBEF">' +
             '<div style="height:6px;border-radius:99px;background:' + c.acc + ';width:' + c.pct + '%;transition:width .5s"></div>' +
           '</div>' +
-          '<div style="font-size:12.5px;color:#8A7280;line-height:1.5">' + esc(c.meta) + '</div>' +
+          '<div style="font-size:12.5px;color:#7D6774;line-height:1.5">' + esc(c.meta) + '</div>' +
         '</button>';
       }) +
     '</div>' +
@@ -1778,7 +1851,7 @@ function viewToday(V) {
 }
 function statCard(label, big, sub) {
   return '<div style="border:1px solid #EFE6EA;border-radius:22px;background:#FFFFFF;padding:24px">' +
-    '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#A2909C">' + label + '</div>' +
+    '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#776A73">' + label + '</div>' +
     '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:32px;font-weight:600;letter-spacing:-0.04em;margin-top:8px">' + esc(big) + '</div>' +
     '<div style="font-size:12.5px;color:#6E5266">' + esc(sub) + '</div>' +
   '</div>';
@@ -1786,18 +1859,18 @@ function statCard(label, big, sub) {
 
 function viewSubjects(V) {
   return '' +
-  '<section style="padding:52px 60px 88px;max-width:1120px;animation:rise .4s ease">' +
+  '<section class="scr" style="padding:52px 60px 88px;max-width:1120px;animation:rise .4s ease">' +
     '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ The full map</div>' +
     '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:40px;font-weight:600;letter-spacing:-0.035em;line-height:1.08;margin:12px 0 8px">Subjects</h1>' +
     '<p style="font-size:15px;color:#6E5266;max-width:620px;line-height:1.6;margin:0">Every content category the AAMC tests, split by the coursework you\'ve finished. Five practice rounds per topic, then a subject exam.</p>' +
 
-    '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:34px">' +
+    '<div class="mgrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:34px">' +
       map(V.activeCards, function (c) {
         return '<button ' + h(c.open) + ' class="hv-lift" style="text-align:left;border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:26px 28px;display:flex;flex-direction:column;gap:18px;transition:border-color .16s,transform .16s">' +
           '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">' +
             '<div>' +
               '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:21px;font-weight:600;letter-spacing:-0.03em">' + esc(c.name) + '</div>' +
-              '<div style="font-size:12.5px;color:#8A7280;margin-top:4px">' + esc(c.section) + '</div>' +
+              '<div style="font-size:12.5px;color:#7D6774;margin-top:4px">' + esc(c.section) + '</div>' +
             '</div>' +
             '<div style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:30px;font-weight:400;letter-spacing:-0.02em;color:' + c.acc + '">' + c.pct + '%</div>' +
           '</div>' +
@@ -1831,18 +1904,18 @@ function viewSubjects(V) {
         '<div style="display:flex;align-items:baseline;gap:12px;margin:46px 0 6px">' +
           '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:22px;font-weight:600;letter-spacing:-0.03em;margin:0">Not in her coursework yet</h2>' +
         '</div>' +
-        '<p style="font-size:14px;color:#8A7280;max-width:620px;line-height:1.6;margin:0 0 20px">Listed so nothing goes missing. Topics are visible; practice unlocks when the course starts.</p>' +
-        '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px">' +
+        '<p style="font-size:14px;color:#7D6774;max-width:620px;line-height:1.6;margin:0 0 20px">Listed so nothing goes missing. Topics are visible; practice unlocks when the course starts.</p>' +
+        '<div class="mgrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px">' +
           map(V.lockedCards, function (c) {
             return '<button ' + h(c.open) + ' class="hv-edge2" style="text-align:left;border:1px dashed #E4DBE0;border-radius:20px;background:#FBF8F9;padding:24px 26px;display:flex;flex-direction:column;gap:12px;transition:border-color .16s">' +
               '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">' +
                 '<div>' +
                   '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:19px;font-weight:600;letter-spacing:-0.03em;color:#7A6B74">' + esc(c.name) + '</div>' +
-                  '<div style="font-size:12.5px;color:#A2909C;margin-top:4px">' + esc(c.section) + '</div>' +
+                  '<div style="font-size:12.5px;color:#776A73;margin-top:4px">' + esc(c.section) + '</div>' +
                 '</div>' +
-                '<div style="font-size:11px;font-weight:600;color:#8A7280;background:#F2EBEE;padding:4px 9px;border-radius:6px;white-space:nowrap">Locked</div>' +
+                '<div style="font-size:11px;font-weight:600;color:#7D6774;background:#F2EBEE;padding:4px 9px;border-radius:6px;white-space:nowrap">Locked</div>' +
               '</div>' +
-              '<div style="font-size:12.5px;color:#8A7280;line-height:1.5">' + esc(c.meta) + '</div>' +
+              '<div style="font-size:12.5px;color:#7D6774;line-height:1.5">' + esc(c.meta) + '</div>' +
             '</button>';
           }) +
         '</div>' +
@@ -1857,9 +1930,9 @@ function pip(p) {
 function viewSubject(V) {
   var s = V.subj;
   return '' +
-  '<section style="padding:52px 60px 88px;max-width:1060px;animation:rise .35s ease">' +
-    '<button ' + h(V.goSubjects) + ' class="hv-link" style="border:0;background:none;color:#8A7280;font-size:13px;font-weight:500;padding:0;margin-bottom:20px">← Subjects</button>' +
-    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:32px">' +
+  '<section class="scr" style="padding:52px 60px 88px;max-width:1060px;animation:rise .35s ease">' +
+    '<button ' + h(V.goSubjects) + ' class="hv-link" style="border:0;background:none;color:#7D6774;font-size:13px;font-weight:500;padding:0;margin-bottom:20px">← Subjects</button>' +
+    '<div class="mwrap" style="display:flex;align-items:flex-start;justify-content:space-between;gap:32px">' +
       '<div style="min-width:0">' +
         '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">' + esc(s.section) + '</div>' +
         '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:38px;font-weight:600;letter-spacing:-0.035em;line-height:1.1;margin:10px 0 10px">' + esc(s.name) + '</h1>' +
@@ -1867,7 +1940,7 @@ function viewSubject(V) {
       '</div>' +
       '<div style="text-align:right;white-space:nowrap">' +
         '<div style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:52px;font-weight:400;letter-spacing:-0.03em;line-height:1;color:' + s.acc + '">' + s.pct + '%</div>' +
-        '<div style="font-size:12.5px;color:#8A7280;margin-top:6px">' + esc(s.topicsLabel) + '</div>' +
+        '<div style="font-size:12.5px;color:#7D6774;margin-top:6px">' + esc(s.topicsLabel) + '</div>' +
       '</div>' +
     '</div>' +
     '<div style="margin-top:26px;height:6px;border-radius:99px;background:#F5EBEF">' +
@@ -1878,23 +1951,23 @@ function viewSubject(V) {
     '<div style="display:flex;flex-direction:column;gap:34px;margin-top:38px">' +
       map(s.groups, function (g) {
         return '<div>' +
-          '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid #EFE6EA">' +
+          '<div class="mwrap" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid #EFE6EA">' +
             '<h2 style="display:flex;align-items:center;gap:8px;font-family:\'Bricolage Grotesque\',serif;font-size:17px;font-weight:600;letter-spacing:-0.02em;margin:0"><span style="color:' + s.acc + ';font-size:11px">✦</span>' + esc(g.concept) + '</h2>' +
             '<div style="display:flex;align-items:center;gap:9px;white-space:nowrap">' +
-              '<span style="font-size:12px;color:#A2909C">' + esc(g.count) + '</span>' +
+              '<span style="font-size:12px;color:#776A73">' + esc(g.count) + '</span>' +
               (g.mixLabel
-                ? '<span style="font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#A2909C">' + g.mixLabel + '</span>' +
+                ? '<span style="font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#776A73">' + g.mixLabel + '</span>' +
                   '<div style="display:flex;gap:5px">' + map(g.mixPips, pip) + '</div>'
-                : '<span style="font-size:11px;color:#B9A9B2">' + esc(g.mixNote) + '</span>') +
+                : '<span style="font-size:11px;color:#776A73">' + esc(g.mixNote) + '</span>') +
             '</div>' +
           '</div>' +
           '<div style="display:flex;flex-direction:column">' +
             map(g.topics, function (t) {
-              return '<div class="hv-mist" style="display:flex;align-items:center;gap:16px;padding:14px 4px;border-bottom:1px solid #F6F0F3">' +
+              return '<div class="hv-mist trow" style="display:flex;align-items:center;gap:16px;padding:14px 4px;border-bottom:1px solid #F6F0F3">' +
                 '<button ' + h(t.toggle) + ' style="width:22px;height:22px;flex:0 0 22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .15s;border:1.5px solid ' + t.boxBd + ';background:' + t.boxBg + ';color:' + t.boxFg + '">' + t.mark + '</button>' +
                 '<div style="flex:1;min-width:0">' +
                   '<div style="font-size:14.5px;letter-spacing:-0.01em;line-height:1.35;color:' + t.nameColor + '">' + esc(t.name) + '</div>' +
-                  '<div style="font-size:11.5px;color:#A2909C;margin-top:2px">' + esc(t.meta) + '</div>' +
+                  '<div style="font-size:11.5px;color:#776A73;margin-top:2px">' + esc(t.meta) + '</div>' +
                 '</div>' +
                 (t.empty
                   ? ''
@@ -1907,7 +1980,7 @@ function viewSubject(V) {
     '</div>' +
 
     (s.examReady ?
-      '<div style="margin-top:42px;display:flex;align-items:center;gap:24px;border-radius:20px;padding:28px 32px;border:1px solid ' + s.bd + ';background:linear-gradient(135deg,' + s.soft + ',#FFFFFF)">' +
+      '<div class="mwrap" style="margin-top:42px;display:flex;align-items:center;gap:24px;border-radius:20px;padding:28px 32px;border:1px solid ' + s.bd + ';background:linear-gradient(135deg,' + s.soft + ',#FFFFFF)">' +
         '<div style="flex:1;min-width:0">' +
           '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.025em">' + esc(s.examTitle) + '</div>' +
           '<div style="font-size:13.5px;color:#7A5468;margin-top:6px;line-height:1.55">' + esc(s.examNote) + '</div>' +
@@ -1921,25 +1994,25 @@ function viewRound(V) {
   var q = V.q;
   return '' +
   '<section style="animation:rise .3s ease">' +
-    '<div style="position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:22px;padding:18px 44px;background:rgba(252,250,249,.9);backdrop-filter:blur(12px);border-bottom:1px solid #EFE6EA">' +
-      '<button ' + h(q.exit) + ' class="hv-link" style="border:0;background:none;color:#8A7280;font-size:13px;font-weight:500;padding:0">← Leave round</button>' +
+    '<div class="rhead" style="position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:22px;padding:18px 44px;background:rgba(252,250,249,.9);backdrop-filter:blur(12px);border-bottom:1px solid #EFE6EA">' +
+      '<button ' + h(q.exit) + ' class="hv-link" style="border:0;background:none;color:#7D6774;font-size:13px;font-weight:500;padding:0">← Leave round</button>' +
       '<div style="flex:1;min-width:0;display:flex;align-items:center;gap:10px;justify-content:center">' +
-        map(q.dots, function (d) { return '<div style="width:22px;height:4px;border-radius:99px;transition:background .2s;background:' + d.bg + '"></div>'; }) +
+        map(q.dots, function (d) { return '<div class="rdot" style="width:22px;height:4px;border-radius:99px;transition:background .2s;background:' + d.bg + '"></div>'; }) +
       '</div>' +
       '<button ' + h(q.flag) + ' class="hv-pink" style="border:0;border-radius:9px;font-size:12px;font-weight:600;padding:7px 12px;transition:background .15s;background:' + q.flagBg + ';color:' + q.flagFg + '">' + q.flagLabel + '</button>' +
       (q.isTimed ? '<div id="dc-clock" style="font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;border-radius:9px;padding:7px 12px;background:' + q.clockBg + ';color:' + q.clockFg + '">' + q.clock + '</div>' : '') +
-      '<div style="font-size:12.5px;color:#8A7280;white-space:nowrap">' + esc(q.counter) + '</div>' +
+      '<div class="qcount" style="font-size:12.5px;color:#7D6774;white-space:nowrap">' + esc(q.counter) + '</div>' +
     '</div>' +
 
-    '<div style="display:grid;grid-template-columns:' + q.cols + ';gap:44px;padding:40px 44px 90px;max-width:1180px">' +
+    '<div class="mgrid qgrid" style="display:grid;grid-template-columns:' + q.cols + ';gap:44px;padding:40px 44px 90px;max-width:1180px">' +
       (q.hasPassage ?
-        '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:28px 30px;align-self:start;position:sticky;top:96px;max-height:calc(100vh - 140px);overflow:auto">' +
+        '<div class="ppanel" style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:28px 30px;align-self:start;position:sticky;top:96px;max-height:calc(100vh - 140px);overflow:auto">' +
           '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">' + esc(q.passageTitle) + '</div>' +
           '<div style="font-size:14.5px;line-height:1.75;color:#40293A;margin-top:16px;white-space:pre-wrap">' + esc(q.passageText) + '</div>' +
         '</div>' : '') +
 
       '<div style="min-width:0">' +
-        '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#A2909C">' + esc(q.crumb) + '</div>' +
+        '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#776A73">' + esc(q.crumb) + '</div>' +
         '<h1 style="font-family:\'Public Sans\',sans-serif;font-size:20px;font-weight:500;letter-spacing:-0.015em;line-height:1.55;margin:14px 0 28px;max-width:660px">' + esc(q.stem) + '</h1>' +
 
         '<div style="display:flex;flex-direction:column;gap:10px;max-width:660px">' +
@@ -1951,7 +2024,7 @@ function viewRound(V) {
                   (o.note ? '<span style="display:block;font-size:12px;line-height:1.5;margin-top:6px;font-weight:500;text-decoration:none;color:' + o.noteColor + '">' + esc(o.note) + '</span>' : '') +
                 '</span>' +
               '</button>' +
-              '<button ' + h(o.elim) + ' class="hv-outline" title="' + esc(o.exTitle) + '" style="width:34px;flex:0 0 34px;border:1.5px solid #EFE6EA;border-radius:12px;background:#FFFFFF;color:#C6BAC0;font-size:12px;font-weight:700;transition:all .14s">' + o.exLabel + '</button>' +
+              '<button ' + h(o.elim) + ' class="hv-outline" title="' + esc(o.exTitle) + '" style="width:34px;flex:0 0 34px;border:1.5px solid #EFE6EA;border-radius:12px;background:#FFFFFF;color:#968D92;font-size:12px;font-weight:700;transition:all .14s">' + o.exLabel + '</button>' +
             '</div>';
           }) +
         '</div>' +
@@ -1964,7 +2037,7 @@ function viewRound(V) {
 
         '<div style="display:flex;align-items:center;gap:16px;margin-top:28px;max-width:660px">' +
           '<button ' + h(q.primary) + ' class="hv-b93" style="border:0;border-radius:11px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:14px;font-weight:600;padding:14px 26px;letter-spacing:-0.01em;transition:filter .15s,opacity .15s;opacity:' + q.primaryOpacity + '">' + esc(q.primaryLabel) + '</button>' +
-          '<div style="font-size:12.5px;color:#A2909C">' + esc(q.hint) + '</div>' +
+          '<div style="font-size:12.5px;color:#776A73">' + esc(q.hint) + '</div>' +
         '</div>' +
       '</div>' +
     '</div>' +
@@ -1974,11 +2047,11 @@ function viewRound(V) {
 function viewReport(V) {
   var r = V.rep;
   return '' +
-  '<section style="padding:52px 60px 90px;max-width:920px;animation:rise .4s ease">' +
+  '<section class="scr" style="padding:52px 60px 90px;max-width:920px;animation:rise .4s ease">' +
     '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ ' + esc(r.crumb) + '</div>' +
     '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:38px;font-weight:600;letter-spacing:-0.035em;line-height:1.1;margin:12px 0 0">' + esc(r.headline) + '</h1>' +
 
-    '<div style="display:flex;align-items:center;gap:36px;margin-top:32px;border:1px solid #EFE6EA;border-radius:22px;background:#FFFFFF;padding:32px 34px">' +
+    '<div class="mwrap" style="display:flex;align-items:center;gap:36px;margin-top:32px;border:1px solid #EFE6EA;border-radius:22px;background:#FFFFFF;padding:32px 34px">' +
       '<div style="position:relative;width:124px;height:124px;flex:0 0 124px">' +
         '<svg viewBox="0 0 120 120" style="width:124px;height:124px;transform:rotate(-90deg)">' +
           '<circle cx="60" cy="60" r="52" fill="none" stroke="#F5EBEF" stroke-width="12"></circle>' +
@@ -1986,7 +2059,7 @@ function viewReport(V) {
         '</svg>' +
         '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
           '<div style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:32px;font-weight:400;letter-spacing:-0.02em;line-height:1">' + r.pct + '%</div>' +
-          '<div style="font-size:11.5px;color:#8A7280;margin-top:2px">' + esc(r.scoreLabel) + '</div>' +
+          '<div style="font-size:11.5px;color:#7D6774;margin-top:2px">' + esc(r.scoreLabel) + '</div>' +
         '</div>' +
       '</div>' +
       '<div style="flex:1;min-width:0">' +
@@ -1995,7 +2068,7 @@ function viewReport(V) {
         '<div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">' +
           '<button ' + h(r.next) + ' class="hv-deep" style="border:0;border-radius:11px;background:#D4436B;color:#FFF;font-size:13.5px;font-weight:600;padding:12px 22px;transition:background .15s">' + esc(r.nextLabel) + '</button>' +
           '<button ' + h(r.retake) + ' class="hv-outline" style="border:1.5px solid #EFE6EA;border-radius:11px;background:#FFF;color:#4E2140;font-size:13.5px;font-weight:600;padding:12px 22px;transition:all .15s">Retake this round</button>' +
-          '<button ' + h(r.back) + ' class="hv-link" style="border:0;background:none;color:#8A7280;font-size:13.5px;font-weight:500;padding:12px 4px;transition:color .15s">Back to subject</button>' +
+          '<button ' + h(r.back) + ' class="hv-link" style="border:0;background:none;color:#7D6774;font-size:13.5px;font-weight:500;padding:12px 4px;transition:color .15s">Back to subject</button>' +
         '</div>' +
       '</div>' +
     '</div>' +
@@ -2006,10 +2079,10 @@ function viewReport(V) {
         return '<div style="border:1px solid #EFE6EA;border-radius:16px;background:#FFFFFF;padding:20px 22px;display:flex;gap:16px">' +
           '<div style="width:26px;height:26px;flex:0 0 26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:' + it.markBg + ';color:' + it.markFg + '">' + it.mark + '</div>' +
           '<div style="min-width:0">' +
-            '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#A2909C">' + esc(it.topic) + '</div>' +
+            '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#776A73">' + esc(it.topic) + '</div>' +
             '<div style="font-size:14.5px;line-height:1.55;margin-top:7px;letter-spacing:-0.01em">' + esc(it.stem) + '</div>' +
-            '<div style="font-size:13px;color:#6E5266;margin-top:10px;line-height:1.6"><span style="color:#A2909C">Correct: </span>' + esc(it.correct) + '</div>' +
-            '<div style="font-size:13px;color:#8A7280;margin-top:4px;line-height:1.6">' + esc(it.yours) + '</div>' +
+            '<div style="font-size:13px;color:#6E5266;margin-top:10px;line-height:1.6"><span style="color:#776A73">Correct: </span>' + esc(it.correct) + '</div>' +
+            '<div style="font-size:13px;color:#7D6774;margin-top:4px;line-height:1.6">' + esc(it.yours) + '</div>' +
             '<div style="font-size:13.5px;color:#40293A;margin-top:12px;line-height:1.65;padding-top:12px;border-top:1px solid #F6F0F3">' + esc(it.why) + '</div>' +
           '</div>' +
         '</div>';
@@ -2023,7 +2096,7 @@ var DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 function viewCalendar(V) {
   var c = V.cal;
   return '' +
-  '<section style="padding:44px 48px 88px;max-width:1320px;animation:rise .4s ease">' +
+  '<section class="scr" style="padding:44px 48px 88px;max-width:1320px;animation:rise .4s ease">' +
     '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap">' +
       '<div>' +
         '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ Study calendar</div>' +
@@ -2042,48 +2115,48 @@ function viewCalendar(V) {
         '<button ' + h(c.newEvent) + ' class="hv-b93" style="border:0;border-radius:10px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:13px;font-weight:600;padding:10px 18px;transition:filter .15s">+ New session</button>' +
       '</div>' +
     '</div>' +
-    '<p style="font-size:13.5px;color:#8A7280;line-height:1.6;margin:10px 0 0">' + esc(c.paceNote) + ' Click any day or time slot to schedule a session.</p>' +
+    '<p style="font-size:13.5px;color:#7D6774;line-height:1.6;margin:10px 0 0">' + esc(c.paceNote) + ' Click any day or time slot to schedule a session.</p>' +
 
-    '<div style="display:grid;grid-template-columns:minmax(0,1fr) 292px;gap:18px;margin-top:22px;align-items:start">' +
+    '<div class="mgrid" style="display:grid;grid-template-columns:minmax(0,1fr) 292px;gap:18px;margin-top:22px;align-items:start">' +
       '<div style="min-width:0">' + (c.isMonth ? monthGrid(c) : weekGrid(c)) + '</div>' +
       '<div style="display:flex;flex-direction:column;gap:16px">' +
         '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:20px">' +
-          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A2909C">Weekly plan</div>' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#776A73">Weekly plan</div>' +
           '<div style="display:flex;align-items:center;gap:10px;margin-top:12px">' +
             '<button ' + h(c.hDown) + ' class="hv-pink" style="width:28px;height:28px;border:1.5px solid #E9DFE4;border-radius:8px;background:#FFF;color:#6E5266;font-size:14px;transition:background .15s;padding:0">−</button>' +
             '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:17px;font-weight:600;min-width:62px;text-align:center">' + esc(c.planH) + '</div>' +
             '<button ' + h(c.hUp) + ' class="hv-pink" style="width:28px;height:28px;border:1.5px solid #E9DFE4;border-radius:8px;background:#FFF;color:#6E5266;font-size:14px;transition:background .15s;padding:0">+</button>' +
-            '<span style="font-size:11.5px;color:#A2909C">per week</span>' +
+            '<span style="font-size:11.5px;color:#776A73">per week</span>' +
           '</div>' +
           '<div style="display:flex;gap:4px;margin-top:12px">' +
             map(c.dayChips, function (d) {
               return '<button ' + h(d.toggle) + ' style="flex:1;border-radius:8px;font-size:10.5px;font-weight:700;padding:6px 0;transition:all .13s;border:1.5px solid ' + d.bd + ';background:' + d.bg + ';color:' + d.fg + '">' + d.label + '</button>';
             }) +
           '</div>' +
-          '<div style="font-size:11.5px;color:#8A7280;line-height:1.55;margin-top:12px">' + esc(V.planBar.line) + '</div>' +
+          '<div style="font-size:11.5px;color:#7D6774;line-height:1.55;margin-top:12px">' + esc(V.planBar.line) + '</div>' +
         '</div>' +
         '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:20px">' +
-          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A2909C">Today</div>' +
-          (c.agEmpty ? '<div style="font-size:12.5px;color:#A2909C;line-height:1.6;margin-top:10px">Nothing scheduled yet — click a day or time slot to add a session.</div>' : '') +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#776A73">Today</div>' +
+          (c.agEmpty ? '<div style="font-size:12.5px;color:#776A73;line-height:1.6;margin-top:10px">Nothing scheduled yet — click a day or time slot to add a session.</div>' : '') +
           '<div style="display:flex;flex-direction:column;gap:4px;margin-top:10px">' +
             map(c.agToday, function (a) {
               return '<button ' + h(a.open) + ' class="hv-blush" style="display:flex;align-items:center;gap:10px;border:0;border-radius:10px;background:transparent;padding:7px 8px;text-align:left;transition:background .12s">' +
                 '<span style="width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:' + a.color + '"></span>' +
-                '<span style="font-size:11px;font-weight:700;color:#8A7280;width:58px;flex:0 0 58px">' + esc(a.time) + '</span>' +
+                '<span style="font-size:11px;font-weight:700;color:#7D6774;width:58px;flex:0 0 58px">' + esc(a.time) + '</span>' +
                 '<span style="font-size:12.5px;font-weight:600;color:#40293A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(a.title) + '</span>' +
               '</button>';
             }) +
           '</div>' +
         '</div>' +
         '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:20px">' +
-          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A2909C">Suggested next</div>' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#776A73">Suggested next</div>' +
           '<div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">' +
             map(c.plan, function (p) {
               return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #F8F3F5">' +
                 '<span style="font-size:10px;font-weight:700;padding:4px 7px;border-radius:6px;white-space:nowrap;color:' + p.acc + ';background:' + p.soft + '">' + esc(p.short) + '</span>' +
                 '<div style="flex:1;min-width:0">' +
                   '<div style="font-size:12px;font-weight:600;color:#40293A;line-height:1.35">' + esc(p.topic) + '</div>' +
-                  '<div style="font-size:10.5px;color:#A2909C;margin-top:1px">' + esc(p.subject) + '</div>' +
+                  '<div style="font-size:10.5px;color:#776A73;margin-top:1px">' + esc(p.subject) + '</div>' +
                 '</div>' +
                 '<button ' + h(p.start) + ' class="hv-link2" style="border:0;background:none;color:#D4436B;font-size:11.5px;font-weight:700;padding:0;white-space:nowrap;transition:color .15s">Start →</button>' +
               '</div>';
@@ -2099,11 +2172,11 @@ function viewCalendar(V) {
 function monthGrid(c) {
   return '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;overflow:hidden">' +
     '<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #F1EAED">' +
-      DOW.map(function (d) { return '<div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#A2909C;text-align:center;padding:11px 0">' + d + '</div>'; }).join('') +
+      DOW.map(function (d) { return '<div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#776A73;text-align:center;padding:11px 0">' + d + '</div>'; }).join('') +
     '</div>' +
     '<div style="display:grid;grid-template-columns:repeat(7,1fr)">' +
       map(c.cells, function (d) {
-        return '<div ' + h(d.add) + ' class="hv-blush" style="min-height:106px;border-right:1px solid #F6F0F3;border-bottom:1px solid #F6F0F3;padding:7px;display:flex;flex-direction:column;gap:3px;cursor:pointer;transition:background .12s;background:' + d.bg + '">' +
+        return '<div ' + h(d.add) + ' class="hv-blush mcell" style="min-height:106px;border-right:1px solid #F6F0F3;border-bottom:1px solid #F6F0F3;padding:7px;display:flex;flex-direction:column;gap:3px;cursor:pointer;transition:background .12s;background:' + d.bg + '">' +
           '<div style="display:flex;align-items:center;justify-content:space-between;gap:4px">' +
             '<span style="width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:' + d.fw + ';color:' + d.fg + ';background:' + d.numBg + '">' + d.num + '</span>' +
             '<span style="font-size:10px;font-weight:700;color:#3F8F7B;white-space:nowrap">' + esc(d.chip) + '</span>' +
@@ -2114,7 +2187,7 @@ function monthGrid(c) {
               '<span style="overflow:hidden;text-overflow:ellipsis">' + esc(e.title) + '</span>' +
             '</button>';
           }) +
-          '<div style="font-size:10px;font-weight:600;color:#A2909C">' + esc(d.more) + '</div>' +
+          '<div style="font-size:10px;font-weight:600;color:#776A73">' + esc(d.more) + '</div>' +
         '</div>';
       }) +
     '</div>' +
@@ -2128,13 +2201,13 @@ function weekGrid(c) {
       '<div></div>' +
       map(days, function (d) {
         return '<div style="display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 0;border-left:1px solid #F6F0F3;background:' + d.headBg + '">' +
-          '<span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#A2909C">' + esc(d.dow) + '</span>' +
+          '<span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#776A73">' + esc(d.dow) + '</span>' +
           '<span style="font-size:14px;font-weight:700;color:' + d.headFg + '">' + d.num + '</span>' +
         '</div>';
       }) +
     '</div>' +
     '<div style="display:grid;grid-template-columns:58px repeat(7,1fr);border-bottom:1px solid #F1EAED">' +
-      '<div style="font-size:10px;font-weight:600;color:#A2909C;padding:8px;text-align:right">all day</div>' +
+      '<div style="font-size:10px;font-weight:600;color:#776A73;padding:8px;text-align:right">all day</div>' +
       map(days, function (d) {
         return '<div style="border-left:1px solid #F6F0F3;padding:5px;display:flex;flex-direction:column;gap:3px;min-height:34px">' +
           map(d.allday, function (e) {
@@ -2145,7 +2218,7 @@ function weekGrid(c) {
       }) +
     '</div>' +
     '<div style="display:grid;grid-template-columns:58px repeat(7,1fr)">' +
-      '<div>' + map(c.week.hours, function (hr) { return '<div style="height:44px;font-size:10px;color:#A2909C;text-align:right;padding:2px 8px 0 0">' + esc(hr.label) + '</div>'; }) + '</div>' +
+      '<div>' + map(c.week.hours, function (hr) { return '<div style="height:44px;font-size:10px;color:#776A73;text-align:right;padding:2px 8px 0 0">' + esc(hr.label) + '</div>'; }) + '</div>' +
       map(days, function (d) {
         return '<div style="position:relative;border-left:1px solid #F6F0F3;height:660px">' +
           map(d.slots, function (s) {
@@ -2179,7 +2252,7 @@ function editorModal(ed) {
           '<div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#C33F68">' + esc(ed.heading) + '</div>' +
           '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:19px;font-weight:600;letter-spacing:-0.02em;margin-top:5px">' + esc(ed.dateLabel) + '</div>' +
         '</div>' +
-        '<button ' + h(ed.cancel) + ' class="hv-pink" style="width:30px;height:30px;border:0;border-radius:9px;background:#F7F1F4;color:#8A7280;font-size:13px;transition:background .15s">✕</button>' +
+        '<button ' + h(ed.cancel) + ' class="hv-pink" style="width:30px;height:30px;border:0;border-radius:9px;background:#F7F1F4;color:#7D6774;font-size:13px;transition:background .15s">✕</button>' +
       '</div>' +
       '<div style="margin-top:20px">' +
         '<div style="font-size:11.5px;font-weight:600;color:#6E5266;margin-bottom:7px">Title</div>' +
@@ -2216,11 +2289,11 @@ function editorModal(ed) {
 function viewStats(V) {
   var st = V.st;
   return '' +
-  '<section style="padding:52px 60px 88px;max-width:1060px;animation:rise .4s ease">' +
+  '<section class="scr" style="padding:52px 60px 88px;max-width:1060px;animation:rise .4s ease">' +
     '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ Since August 2026</div>' +
     '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:40px;font-weight:600;letter-spacing:-0.035em;line-height:1.08;margin:12px 0 0">Progress</h1>' +
 
-    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px">' +
+    '<div class="mgrid2" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px">' +
       tile('Streak', V.streak, V.streakLabel) +
       tile('Rounds', st.rounds, st.roundsNote) +
       tile('Questions', st.questions, st.correctNote) +
@@ -2230,7 +2303,7 @@ function viewStats(V) {
     '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 18px">Accuracy by subject</h2>' +
     '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:28px 30px;display:flex;flex-direction:column;gap:18px">' +
       map(st.bars, function (b) {
-        return '<div style="display:grid;grid-template-columns:190px 1fr 58px;align-items:center;gap:18px">' +
+        return '<div class="statbar" style="display:grid;grid-template-columns:190px 1fr 58px;align-items:center;gap:18px">' +
           '<div style="font-size:13.5px;letter-spacing:-0.01em;color:#40293A">' + esc(b.name) + '</div>' +
           '<div style="height:8px;border-radius:99px;background:#F5EBEF">' +
             '<div style="height:8px;border-radius:99px;transition:width .5s;background:' + b.color + ';width:' + b.pct + '%"></div>' +
@@ -2242,7 +2315,7 @@ function viewStats(V) {
 
     '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 18px">Score trend</h2>' +
     '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:24px 26px">' +
-      '<div style="font-size:12px;color:#A2909C;margin-bottom:12px">' + esc(st.trendNote) + '</div>' +
+      '<div style="font-size:12px;color:#776A73;margin-bottom:12px">' + esc(st.trendNote) + '</div>' +
       '<svg viewBox="0 0 560 110" style="width:100%;height:auto;display:block">' +
         '<line x1="8" y1="8" x2="552" y2="8" stroke="#F6F0F3" stroke-width="1"></line>' +
         '<line x1="8" y1="55" x2="552" y2="55" stroke="#F6F0F3" stroke-width="1"></line>' +
@@ -2258,20 +2331,20 @@ function viewStats(V) {
     (st.hasWeak ?
       '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:22px 26px;display:flex;flex-direction:column;gap:14px">' +
         map(st.weak, function (w) {
-          return '<div style="display:grid;grid-template-columns:minmax(0,1fr) 130px 52px;align-items:center;gap:16px">' +
+          return '<div class="statbar" style="display:grid;grid-template-columns:minmax(0,1fr) 130px 52px;align-items:center;gap:16px">' +
             '<div style="min-width:0">' +
               '<div style="font-size:13.5px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(w.topic) + '</div>' +
-              '<div style="font-size:11.5px;color:#A2909C;margin-top:2px">' + esc(w.meta) + '</div>' +
+              '<div style="font-size:11.5px;color:#776A73;margin-top:2px">' + esc(w.meta) + '</div>' +
             '</div>' +
             '<div style="height:7px;border-radius:99px;background:#F5EBEF"><div style="height:7px;border-radius:99px;background:' + w.acc + ';width:' + w.pct + '%"></div></div>' +
             '<div style="font-size:13px;font-weight:700;text-align:right;color:' + w.acc + '">' + esc(w.label) + '</div>' +
           '</div>';
         }) +
       '</div>' : '') +
-    (st.noWeak ? '<div style="border:1px dashed #E4DBE0;border-radius:16px;padding:18px 22px;font-size:13px;color:#8A7280;background:#FBF8F9">Shows once a topic has 3+ answered questions — the six lowest-accuracy topics land here.</div>' : '') +
+    (st.noWeak ? '<div style="border:1px dashed #E4DBE0;border-radius:16px;padding:18px 22px;font-size:13px;color:#7D6774;background:#FBF8F9">Shows once a topic has 3+ answered questions — the six lowest-accuracy topics land here.</div>' : '') +
 
     '<div style="display:flex;align-items:flex-end;justify-content:space-between;margin:44px 0 18px">' +
-      '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:0">Error log <span style="font-size:13px;font-weight:500;color:#A2909C">· ' + esc(st.missCount) + '</span></h2>' +
+      '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:0">Error log <span style="font-size:13px;font-weight:500;color:#776A73">· ' + esc(st.missCount) + '</span></h2>' +
       (st.hasMisses ? '<button ' + h(st.redoMisses) + ' class="hv-b93" style="border:0;border-radius:10px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:12.5px;font-weight:600;padding:9px 16px;transition:filter .15s">Redo my misses</button>' : '') +
     '</div>' +
     (st.hasMisses ?
@@ -2284,7 +2357,7 @@ function viewStats(V) {
           '</div>';
         }) +
       '</div>' : '') +
-    (st.noMisses ? '<div style="border:1px dashed #E4DBE0;border-radius:16px;padding:18px 22px;font-size:13px;color:#8A7280;background:#FBF8F9">Missed questions land here, then resurface in the review queue at 1, 3, 7, 14 and 28-day intervals until she answers them right twice.</div>' : '') +
+    (st.noMisses ? '<div style="border:1px dashed #E4DBE0;border-radius:16px;padding:18px 22px;font-size:13px;color:#7D6774;background:#FBF8F9">Missed questions land here, then resurface in the review queue at 1, 3, 7, 14 and 28-day intervals until she answers them right twice.</div>' : '') +
 
     '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 18px">Study history</h2>' +
     '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:28px 30px">' +
@@ -2295,7 +2368,7 @@ function viewStats(V) {
           '</div>';
         }) +
       '</div>' +
-      '<div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:11.5px;color:#A2909C">' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:11.5px;color:#776A73">' +
         '<span>12 weeks ago</span><div style="flex:1;height:1px;background:#F3EAEE"></div><span>Today</span>' +
       '</div>' +
     '</div>' +
@@ -2303,7 +2376,7 @@ function viewStats(V) {
     '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 18px">Your data</h2>' +
     '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:26px 30px">' +
       '<div style="font-size:13.5px;color:#6E5266;line-height:1.6;max-width:60ch">Everything lives in this browser only. Download a backup now and again \u2014 clearing site data, switching browsers or changing device wipes it otherwise.</div>' +
-      '<div style="font-size:12.5px;color:#A2909C;margin-top:10px">Currently saved: ' + esc(V.data.summary) + '</div>' +
+      '<div style="font-size:12.5px;color:#776A73;margin-top:10px">Currently saved: ' + esc(V.data.summary) + '</div>' +
       '<div style="display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap">' +
         '<button ' + h(V.data.exportSave) + ' class="hv-deep" style="border:0;border-radius:11px;background:#D4436B;color:#FFF;font-size:13.5px;font-weight:600;padding:12px 22px;transition:background .15s">Download backup</button>' +
         '<label class="hv-outline" style="display:inline-flex;align-items:center;border:1.5px solid #EFE6EA;border-radius:11px;background:#FFF;color:#4E2140;font-size:13.5px;font-weight:600;padding:12px 22px;cursor:pointer;transition:all .15s">Restore from file' +
@@ -2316,9 +2389,9 @@ function viewStats(V) {
 }
 function tile(label, big, sub) {
   return '<div style="border:1px solid #EFE6EA;border-radius:18px;background:#FFFFFF;padding:22px 24px">' +
-    '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#A2909C">' + label + '</div>' +
+    '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#776A73">' + label + '</div>' +
     '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:34px;font-weight:600;letter-spacing:-0.04em;margin-top:8px">' + esc(big) + '</div>' +
-    '<div style="font-size:12px;color:#8A7280">' + esc(sub) + '</div>' +
+    '<div style="font-size:12px;color:#7D6774">' + esc(sub) + '</div>' +
   '</div>';
 }
 
@@ -2331,7 +2404,7 @@ function viewApp(V) {
     : V.isCalendar ? viewCalendar(V)
     : V.isStats ? viewStats(V)
     : viewToday(V);
-  return '<div style="display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh;background:transparent;font-family:\'Public Sans\',system-ui,sans-serif;color:#2A1622">' +
+  return '<div class="app" style="display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh;background:transparent;font-family:\'Public Sans\',system-ui,sans-serif;color:#2A1622">' +
     viewSidebar(V) +
     '<main style="min-width:0">' + screen + '</main>' +
   '</div>';
@@ -2371,15 +2444,31 @@ root.addEventListener('click', function (e) { fire(handlers, 'data-h', e); });
 root.addEventListener('input', function (e) { fire(inputs, 'data-in', e); });
 root.addEventListener('change', function (e) { fire(changes, 'data-ch', e); });
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape' && state.ed) setState({ ed: null });
+  if (e.key === 'Escape' && state.ed) { setState({ ed: null }); return; }
+  // answer with the keyboard inside a round: A-D or 1-4 pick, F flags, Enter advances
+  if (state.view !== 'round' || !state.session || state.ed) return;
+  var t = e.target;
+  if (t && /^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName)) return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  var k = e.key.toLowerCase();
+  var idx = 'abcd'.indexOf(k);
+  if (idx === -1 && e.key >= '1' && e.key <= '4') idx = +e.key - 1;
+  if (idx > -1) { e.preventDefault(); choose(idx); return; }
+  if (k === 'f') { e.preventDefault(); toggleFlag(); return; }
+  // preventDefault here also stops a focused button from double-firing on Enter
+  if (e.key === 'Enter') { e.preventDefault(); primary(); }
 });
 
 /* ------------------------------------------------------------------
    Boot
    ------------------------------------------------------------------ */
 
+var initialRoute = parseHash(location.hash);
+state.view = initialRoute.view;
+state.subjectId = initialRoute.subjectId;
 state.save = load();
 render();
+try { history.replaceState(null, '', hashFor() || '#/today'); } catch (e) {}
 
 // the countdown and the "today" highlights are day-grained, so only repaint
 // when the date actually rolls over

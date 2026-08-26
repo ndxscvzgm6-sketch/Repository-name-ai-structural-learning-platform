@@ -33,13 +33,20 @@ every few weeks.
 - **Subject detail** — topics grouped by foundational concept, each with a
   ready checkbox and five round pips; a timed subject exam unlocks below
 - **Practice round** — one question at a time, with option elimination,
-  flagging, per-option explanations on reveal, and a passage panel for CARS
+  flagging, per-option explanations on reveal, and a passage panel for CARS.
+  Fully keyboard-driven: **A–D** or **1–4** picks an answer, **F** flags,
+  **Enter** checks and advances
 - **Score report** — ring score, verdict against the pass mark, and a full
   question-by-question review
 - **Calendar** — month and week views, click any day or slot to schedule a
   session, plus a weekly-hours plan and a suggested-next list
 - **Progress** — headline stats, accuracy by subject, score trend, weakest
   topics, the error log, and a twelve-week study heatmap
+
+The layout adapts below 820px — the sidebar becomes a bottom tab bar and
+every screen works one-handed on a phone. Screens live in the URL
+(`#/subjects`, `#/subject/biology`, …), so the browser's Back button moves
+between screens and a screen can be bookmarked.
 
 ## How practice works
 
