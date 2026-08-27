@@ -1050,7 +1050,7 @@ window.MCAT_BANK = {
 var CONFIG = {
   learnerName: 'Han Ni',
   examDate: '2027-05-29',   // test day, YYYY-MM-DD
-  prepStart: '2026-08-24',  // day the countdown bar starts filling from
+  prepStart: '2026-08-27',  // fallback start; a fresh save stamps the real first day
   passMark: 70,             // % a round must clear to count as passed
   roundLength: 10,          // questions per practice round
   showLocked: true          // list not-yet-coursework subjects on Subjects
@@ -1221,21 +1221,26 @@ window.addEventListener('hashchange', function () {
    ------------------------------------------------------------------ */
 
 function blank() {
-  return { schema: 2, done: {}, rounds: {}, log: {}, events: {}, misses: {}, topicStats: {}, history: [], carsLog: {}, plan: { h: 14, days: [1, 1, 1, 1, 1, 1, 1] } };
+  return { schema: 2, startedOn: dateKey(new Date()), done: {}, rounds: {}, log: {}, events: {}, misses: {}, topicStats: {}, history: [], carsLog: {}, plan: { h: 14, days: [1, 1, 1, 1, 1, 1, 1] } };
 }
 function load() {
   try {
     var r = JSON.parse(localStorage.getItem(KEY));
     if (r && r.done) {
-      var wasOld = r.schema !== 2;
+      var wasOld = r.schema !== 2 || r.startedOn === undefined;
       r = migrate(r);                       // before defaults are filled in, or
       var b = blank();                      // blank()'s schema marker would mask it
+      if (r.startedOn === undefined) r.startedOn = earliestDay(r) || CONFIG.prepStart;
       Object.keys(b).forEach(function (k) { if (r[k] === undefined) r[k] = b[k]; });
       if (wasOld) { try { localStorage.setItem(KEY, JSON.stringify(r)); } catch (e) {} }
       return r;
     }
   } catch (e) {}
-  return blank();
+  /* Write the fresh save out now rather than on her first action, so startedOn
+     records the day she opened the tracker, not the day she first used it. */
+  var fresh = blank();
+  try { localStorage.setItem(KEY, JSON.stringify(fresh)); } catch (e2) {}
+  return fresh;
 }
 
 /* Saves written before questions carried syllabus topic ids tagged their
@@ -1273,6 +1278,16 @@ function persist(next) {
 function dateKey(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function parseDate(s) { var p = String(s).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
 function examDate() { return parseDate(CONFIG.examDate || '2027-05-29'); }
+/* The countdown bar fills from the day she actually started, which a fresh save
+   stamps for itself. Saves made before that field existed are back-dated to the
+   oldest day they have a record of, so nobody's bar jumps back to empty. */
+function earliestDay(d) {
+  var days = Object.keys(d.log || {}).concat(Object.keys(d.events || {}).map(function (k) {
+    return (d.events[k] || {}).d;
+  })).filter(Boolean).sort();
+  return days[0] || '';
+}
+function prepStart() { return parseDate(save().startedOn || CONFIG.prepStart || '2026-08-27'); }
 function passMark() { return CONFIG.passMark || 70; }
 function roundLen() { return CONFIG.roundLength || 10; }
 function fmtTime(m) {
@@ -1750,6 +1765,7 @@ function applyBackup(incoming, sourceLabel) {
     dataNote = 'Restore cancelled \u2014 nothing changed.'; render(); return false;
   }
   var b = blank();
+  if (d.startedOn === undefined) d.startedOn = earliestDay(d) || CONFIG.prepStart;
   Object.keys(b).forEach(function (k) { if (d[k] === undefined) d[k] = b[k]; });
   try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (err) {}
   dataNote = 'Restored ' + counts + (sourceLabel ? ' from ' + sourceLabel : '') + '.';
@@ -1862,7 +1878,7 @@ function computeVals() {
   var exam = examDate();
   var now = new Date(); now.setHours(0, 0, 0, 0);
   var daysLeft = Math.max(0, Math.round((exam - now) / 86400000));
-  var start = parseDate(CONFIG.prepStart || '2026-08-24');
+  var start = prepStart();
   var span = Math.max(1, Math.round((exam - start) / 86400000));
   var timePct = Math.min(100, Math.max(2, Math.round((span - daysLeft) / span * 100)));
   var tot = totals();
@@ -1923,6 +1939,7 @@ function computeVals() {
     },
     daysLeft: daysLeft, weeksLeft: weeksLeft, timePct: timePct,
     startLabel: start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    sinceLabel: 'Since ' + start.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
     examLabel: exam.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }),
     examShort: exam.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     todayLabel: new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
@@ -3061,7 +3078,7 @@ function viewStats(V) {
   var st = V.st;
   return '' +
   '<section class="scr" style="padding:52px 60px 88px;max-width:1060px;animation:rise .4s ease">' +
-    '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ Since August 2026</div>' +
+    '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">✦ ' + esc(V.sinceLabel) + '</div>' +
     '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:40px;font-weight:600;letter-spacing:-0.035em;line-height:1.08;margin:12px 0 0">Progress</h1>' +
 
     '<div class="mgrid2" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px">' +
