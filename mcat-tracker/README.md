@@ -100,7 +100,11 @@ Two blocks near the top of `index.html` are the ones worth touching:
   from zero across the whole subject. It is what binds a question to a topic
   row, so a wrong `tid` puts a question in the wrong round.
 - `CONFIG` — learner name, exam date, prep start, pass mark, round length, and
-  whether locked subjects are listed.
+  whether locked subjects are listed. `prepStart` is only a fallback: the first
+  time the tracker is opened it stamps the real date into the save as
+  `startedOn`, and the countdown bar fills from that. A save or backup made
+  before that field existed is back-dated to the oldest day it has a record of,
+  so restoring an old backup never resets the bar.
 
 `SUBJECTS` below them holds the syllabus. Moving a subject from
 `status: 'locked'` to `'active'` is what unlocks its practice when the course
