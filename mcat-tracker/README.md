@@ -131,8 +131,17 @@ use.
 
 ## Growing the bank
 
+The bank holds **278 questions across 9 passages** — every Biology topic is
+practisable, Biochemistry is a real subject, and the four thin subjects each
+have 40+ items — but 109 topics still cannot support a round of their own.
 `check-bank.js` prints the shortest topics first, which is the work queue. A
 topic needs 3 questions before it offers any practice of its own and
 `roundLength` before it offers a full round, so the cheapest way to turn the
 map green is to take the 0-question topics to 3 rather than deepening the ones
 that already work.
+
+Passage sets are the highest-value additions: the real exam hangs roughly
+three-quarters of its questions off passages. Define the passage in
+`MCAT_PASSAGES`, reference it from each question with `passage: "pN"`, and the
+app shows the passage panel beside those questions and keeps them together in
+any round or exam that deals them.
