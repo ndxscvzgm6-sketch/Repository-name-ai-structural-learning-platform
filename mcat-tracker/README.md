@@ -25,7 +25,7 @@ every few weeks.
 
 ## Screens
 
-- **Today** — countdown to test day, syllabus-ready percentage, streak and
+- **Today** — countdown to test day, the mastered percentage, streak and
   accuracy, a pace line against the weekly plan, the Daily CARS and review-queue
   habits, and the three weakest subjects surfaced as one-tap rounds
 - **Subjects** — every content category, split into coursework she has done and
@@ -37,7 +37,10 @@ every few weeks.
   Fully keyboard-driven: **A–D** or **1–4** picks an answer, **F** flags,
   **Enter** checks and advances
 - **Score report** — ring score, verdict against the pass mark, and a full
-  question-by-question review
+  question-by-question review. Every miss must be tagged with why it happened
+  — *didn't know it, misread it, fell for a trap, careless slip, ran out of
+  time* — before the next round unlocks; the five causes have five different
+  remedies, and the error log aggregates them
 - **Calendar** — month and week views, click any day or slot to schedule a
   session, plus a weekly-hours plan and a suggested-next list
 - **Progress** — headline stats, accuracy by subject, score trend, weakest
@@ -66,9 +69,18 @@ only ever draws from the scope you asked for. There are three scopes:
 - Rounds are dealt by a seeded shuffle, so a retake is a genuine retake of the
   same questions. Once a scope holds twice `roundLength`, its rounds slice
   distinct windows instead of reshuffling one pool.
-- A round **passes** at or above `passMark`.
-- Missed questions enter the **error log** and resurface in the review queue at
-  1, 3, 7, 14 and 28-day intervals, retiring once answered right twice running.
+- A round **passes** at or above `passMark`, and a topic is **mastered** once
+  every round it offers has been passed. Mastery is the number the headlines
+  report; the self-ticked "covered in class" checkbox is kept only as a
+  coursework marker.
+- Missed questions enter the **error log** and their *concepts* resurface in
+  the review queue at 1, 3, 7, 14 and 28-day intervals — served as a different
+  question on the same topic whenever the bank has one, so the retrieval is of
+  the idea rather than the memorised card. A miss retires after three clears
+  on separate days.
+- **Biochemistry** is active ahead of its course (the exam does not wait for a
+  transcript); the *ahead of coursework* chip marks it. Organic Chemistry,
+  Physics and Sociology stay locked until their courses start.
 - Subject exams and final exams are **timed** — 95 seconds a question, answers
   lock when you advance.
 - The review queue and "Redo my misses" are drills: they update the error log

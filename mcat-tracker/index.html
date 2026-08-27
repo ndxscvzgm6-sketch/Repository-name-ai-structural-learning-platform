@@ -524,8 +524,8 @@ var SUBJECTS = [
         { concept: 'Reasoning within the text', topics: ['Argument structure: claims, evidence & assumptions', 'Inference and implication questions', 'Author\u2019s attitude and evaluative language', 'Strengthen and weaken reasoning within the passage'] },
         { concept: 'Reasoning beyond the text', topics: ['Applying new information to the author\u2019s argument', 'Analogy and generalization questions', 'Humanities passages: philosophy, ethics & criticism', 'Social science passages: history, economics & anthropology', 'Timing, triage & the 90-minute strategy'] }
       ] },
-    { id: 'biochem', name: 'Biochemistry', short: 'BC', section: 'Bio / Biochem section', status: 'locked', course: 'Biochemistry',
-      blurb: 'A quarter of the Bio/Biochem section and a chunk of Chem/Phys. Topics are mapped out; practice unlocks with the course.',
+    { id: 'biochem', name: 'Biochemistry', short: 'BC', section: 'Bio / Biochem section', status: 'active', ahead: true, course: 'Biochemistry',
+      blurb: 'A quarter of the Bio/Biochem section and a chunk of Chem/Phys \u2014 the highest-yield subject on the exam. Her course starts later; practising ahead of it is fair game.',
       groups: [
         { concept: 'Proteins & enzymes', topics: ['Amino acid structure, classification & titration behaviour', 'Peptide bonds and the four levels of protein structure', 'Protein folding, chaperones & denaturation', 'Enzyme classes, cofactors & catalytic mechanisms', 'Michaelis–Menten kinetics, Km and Vmax', 'Enzyme inhibition: competitive, non-competitive, allosteric', 'Regulation by phosphorylation, zymogens & feedback'] },
         { concept: 'Metabolism', topics: ['Glycolysis and its regulation', 'Pyruvate oxidation and the citric acid cycle', 'Oxidative phosphorylation and the electron transport chain', 'Glycogen metabolism, gluconeogenesis & the pentose phosphate pathway', 'Lipid structure, transport & lipoproteins', 'Fatty acid oxidation, ketogenesis & lipid synthesis', 'Amino acid metabolism and the urea cycle', 'Metabolic integration: fed, fasted & starved states'] },
@@ -586,6 +586,19 @@ var KEY = 'hnoo-mcat-v1';
 var PER_Q = 95;                    // seconds per question in timed sittings
 var MIN_ROUND = 3;                 // fewest questions that can honestly be called a round
 var REVIEW_INTERVALS = [1, 3, 7, 14, 28];   // spaced-repetition ladder, in days
+/* Why a question was missed. The five causes have five different remedies,
+   which is why the score report insists on one. */
+var CAUSES = [
+  ['gap', "Didn't know it"],
+  ['misread', 'Misread it'],
+  ['trap', 'Fell for a trap'],
+  ['careless', 'Careless slip'],
+  ['time', 'Ran out of time']
+];
+function causeLabel(key) {
+  for (var i = 0; i < CAUSES.length; i++) if (CAUSES[i][0] === key) return CAUSES[i][1];
+  return '';
+}
 
 /* ------------------------------------------------------------------
    State
@@ -776,17 +789,32 @@ function availableRounds(s) {
   });
   return total;
 }
+/* A topic is mastered when every round its questions support has been passed.
+   That is the earned number; the self-ticked "covered in class" checkbox is
+   kept, but only as a coursework marker — it no longer drives any headline. */
+function topicMastered(subjId, tid) {
+  var avail = scopeRounds(subjId, tid);
+  if (!avail) return false;
+  for (var r = 1; r <= avail; r++) {
+    var rec = roundRec(tid, r);
+    if (!rec || Math.round(rec.c / rec.t * 100) < passMark()) return false;
+  }
+  return true;
+}
 function subjStats(s) {
   var topics = allTopics(s), sv = save();
-  var done = 0, rounds = 0, c = 0, t = 0;
-  topics.forEach(function (tp) { if (sv.done[tp.id]) done++; });
+  var done = 0, mast = 0, rounds = 0, c = 0, t = 0;
+  topics.forEach(function (tp) {
+    if (sv.done[tp.id]) done++;
+    if (topicMastered(s.id, tp.id)) mast++;
+  });
   Object.keys(sv.rounds).forEach(function (k) {
     if (k.indexOf(s.id + '-') === 0 || k.indexOf(s.id + '#exam') === 0) {
       var r = sv.rounds[k]; rounds++; c += r.c; t += r.t;
     }
   });
   var total = topics.length || 1;
-  return { done: done, total: topics.length, pct: Math.round(done / total * 100), rounds: rounds, acc: t ? Math.round(c / t * 100) : null };
+  return { done: done, mast: mast, total: topics.length, pct: Math.round(mast / total * 100), rounds: rounds, acc: t ? Math.round(c / t * 100) : null };
 }
 /* the next thing she can actually practise in this subject: an unfinished
    topic first, then an unfinished concept-group mix. null when the bank
@@ -894,9 +922,24 @@ function startSpecial(kind) {
   var items = Object.keys(sv.misses || {}).map(function (k) { return assign({ k: k }, sv.misses[k]); });
   var pick = kind === 'review' ? items.filter(function (m) { return isDue(m, tk); }) : items;
   pick.sort(function (a, b) { return (a.last || '').localeCompare(b.last || ''); });
-  var qs = pick.slice(0, 10)
-    .map(function (m) { return bankOf(m.subj)[parseInt(m.k.split('#')[1], 10)]; })
-    .filter(Boolean);
+  // serve the concept, not the memorised card: rotate to a different question
+  // sharing the missed item's topic when the bank has one
+  var used = {};
+  var qs = pick.slice(0, 10).map(function (m) {
+    var bank = bankOf(m.subj);
+    var orig = bank[parseInt(m.k.split('#')[1], 10)];
+    if (!orig) return null;
+    var mates = bank.filter(function (b) { return b.tid === orig.tid; });
+    var start = mates.indexOf(orig) + 1 + (m.streak || 0);
+    var served = orig;
+    for (var j = 0; j < mates.length; j++) {
+      var cand = mates[(start + j) % mates.length];
+      if (!used[cand._k]) { served = cand; break; }
+    }
+    if (used[served._k]) return null;
+    used[served._k] = 1;
+    return assign(served, { _for: m.k });
+  }).filter(Boolean);
   if (!qs.length) return;
   launch({ subjId: kind, topicId: kind, topicName: SPECIAL[kind], round: 1, qs: qs, timed: false }, null);
 }
@@ -974,15 +1017,29 @@ function finish(s) {
   next.log[k] = (next.log[k] || 0) + 1;
   if (s.subjId === 'carsdaily') { next.carsLog = next.carsLog || {}; next.carsLog[k] = 1; }
   next.misses = next.misses || {}; next.topicStats = next.topicStats || {}; next.history = next.history || [];
+  var causes = {};
   s.qs.forEach(function (q, i) {
     if (!q._k) return;
     var ok = s.picks[i] === q.answer;
-    var m = next.misses[q._k];
+    // a review-queue stand-in credits the concept it was served for
+    var key = q._for || q._k;
+    var m = next.misses[key];
     if (ok) {
-      // right twice running retires a question from the error log
-      if (m) { m.streak = (m.streak || 0) + 1; m.last = k; if (m.streak >= 2) delete next.misses[q._k]; }
+      // retire a miss after three clears on separate days — the review queue's
+      // spacing means those days sit at least one interval apart, and rotation
+      // means they are usually different questions on the same concept
+      if (m && m.lastClear !== k) {
+        m.streak = (m.streak || 0) + 1; m.last = k; m.lastClear = k;
+        if (m.streak >= 3) delete next.misses[key];
+      }
     } else {
-      next.misses[q._k] = { subj: q._subj, tid: q.tid, count: (m ? m.count : 0) + 1, streak: 0, last: k };
+      next.misses[key] = {
+        subj: m ? m.subj : q._subj, tid: m ? m.tid : q.tid,
+        count: (m ? m.count : 0) + 1, streak: 0, last: k,
+        cause: m ? m.cause : undefined
+      };
+      // the score report asks why; a cause tagged on an earlier miss carries over
+      if (next.misses[key].cause) causes[i] = next.misses[key].cause;
     }
     var tkey = q._subj + '|' + q.tid;
     var ts = next.topicStats[tkey] || { c: 0, t: 0 };
@@ -992,7 +1049,25 @@ function finish(s) {
   next.history.push({ d: k, s: s.subjId, p: Math.round(c / s.qs.length * 100) });
   if (next.history.length > 60) next.history = next.history.slice(-60);
   try { localStorage.setItem(KEY, JSON.stringify(next)); } catch (e) {}
-  setState({ save: next, view: 'report', report: { session: s, correct: c } });
+  setState({ save: next, view: 'report', report: { session: s, correct: c, causes: causes } });
+}
+
+/* Tag why question i of the reported round was missed. Writes through to the
+   miss record so the error log can aggregate remedies. */
+function setCause(i, key) {
+  var rep = state.report;
+  if (!rep) return;
+  var q = rep.session.qs[i];
+  var causes = assign(rep.causes || {}, {});
+  causes[i] = key;
+  var next = clone(save());
+  var mk = q._for || q._k;
+  if (next.misses[mk]) {
+    next.misses[mk].cause = key;
+    try { localStorage.setItem(KEY, JSON.stringify(next)); } catch (e) {}
+    state.save = next;
+  }
+  setState({ report: assign(rep, { causes: causes }) });
 }
 function toggleTopic(tid) {
   var next = clone(save());
@@ -1145,9 +1220,9 @@ function computeVals() {
   var tot = totals();
   var streak = streakDays();
 
-  var tDone = 0, tAll = 0;
-  active.forEach(function (s) { var st = subjStats(s); tDone += st.done; tAll += st.total; });
-  var overallPct = tAll ? Math.round(tDone / tAll * 100) : 0;
+  var tDone = 0, tMast = 0, tAll = 0;
+  active.forEach(function (s) { var st = subjStats(s); tDone += st.done; tMast += st.mast; tAll += st.total; });
+  var overallPct = tAll ? Math.round(tMast / tAll * 100) : 0;
   var weeksLeft = Math.max(1, Math.ceil(daysLeft / 7));
   var perWeek = Math.ceil(Math.max(0, tAll - tDone) / weeksLeft);
   var plan = sv.plan || { h: 14, days: [1, 1, 1, 1, 1, 1, 1] };
@@ -1173,11 +1248,13 @@ function computeVals() {
     var st = subjStats(s), A = acc(s.id);
     return {
       id: s.id, name: s.name, section: s.section, pct: st.pct, acc: A.a, soft: A.soft, bd: A.bd,
-      topicsLabel: st.done + '/' + st.total + ' topics ready',
+      ahead: !!s.ahead,
+      topicsLabel: st.mast + ' of ' + st.total + ' mastered',
+      coveredLabel: st.done + '/' + st.total + ' covered in class',
       roundsLabel: st.rounds + ' of ' + availableRounds(s) + ' rounds done',
       bankLabel: plural(bankOf(s.id).length, 'question', 'questions') + ' written',
       accLabel: st.acc === null ? 'no score yet' : st.acc + '% accuracy',
-      meta: st.done + ' of ' + st.total + ' topics ready · ' + (st.acc === null ? 'not tested yet' : st.acc + '% accuracy'),
+      meta: st.mast + ' of ' + st.total + ' topics mastered · ' + (st.acc === null ? 'not tested yet' : st.acc + '% accuracy'),
       open: function () { setState({ view: 'subject', subjectId: s.id }); }
     };
   }
@@ -1202,7 +1279,8 @@ function computeVals() {
     examShort: exam.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     todayLabel: new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
     overallPct: overallPct,
-    topicsDoneLabel: tDone + ' of ' + tAll + ' topics',
+    topicsDoneLabel: tMast + ' of ' + tAll + ' topics',
+    coveredLabel: tDone + ' of ' + tAll + ' marked covered in class',
     streak: streak, streakLabel: streak === 1 ? 'day in a row' : 'days in a row',
     accuracyLabel: tot.acc === null ? '—' : tot.acc + '%',
     roundsLabel: tot.n + (tot.n === 1 ? ' round' : ' rounds'),
@@ -1274,8 +1352,8 @@ function computeVals() {
     var A = acc(s.id);
     vals.subj = {
       name: s.name, section: s.section, blurb: s.blurb, pct: st.pct,
-      locked: s.status === 'locked', acc: A.a, soft: A.soft, bd: A.bd,
-      topicsLabel: st.done + ' of ' + st.total + ' topics marked ready',
+      locked: s.status === 'locked', ahead: !!s.ahead, acc: A.a, soft: A.soft, bd: A.bd,
+      topicsLabel: st.mast + ' of ' + st.total + ' topics mastered',
       lockNote: 'Practice for ' + s.name + ' unlocks when she starts ' + (s.course || 'the course') +
                 '. The topic list is here so the syllabus stays complete — she can still tick off anything she has already covered.',
       examReady: s.status === 'active' && bankSize > 0,
@@ -1386,6 +1464,10 @@ function computeVals() {
     var rs = rep.session, n = rs.qs.length, pct = Math.round(rep.correct / n * 100);
     var passed = pct >= passMark();
     var nextRound = Math.min(5, rs.round + 1);
+    var repCauses = rep.causes || {};
+    var untagged = 0;
+    rs.qs.forEach(function (q2, i) { if (rs.picks[i] !== q2.answer && !repCauses[i]) untagged++; });
+    var allTagged = untagged === 0;
     vals.rep = {
       crumb: isSpecial(rs.subjId)
         ? (SPECIAL[rs.subjId] === rs.topicName ? rs.topicName : SPECIAL[rs.subjId] + ' · ' + rs.topicName)
@@ -1398,10 +1480,13 @@ function computeVals() {
       note: passed
         ? 'Read the explanations for anything you guessed, then move on to round ' + nextRound + '. Spacing the rounds a few days apart is what makes them stick.'
         : 'Read every explanation below before retaking. Missing the same reasoning twice is the pattern worth breaking.',
+      allTagged: allTagged,
+      tagNote: allTagged ? '' : 'Tag why each miss happened \u2014 ' + plural(untagged, 'question', 'questions') + ' left.',
       nextLabel: rs.subjId === 'final'
         ? (rs.round < 5 ? 'Start final exam ' + nextRound : 'Back to subjects')
         : isSpecial(rs.subjId) ? 'Done — back home' : (rs.round < 5 ? 'Start round ' + nextRound : 'Back to subject'),
       next: function () {
+        if (untagged) return;
         if (rs.subjId === 'final') {
           if (rs.round < 5) startFinal(nextRound);
           else setState({ view: 'subjects', report: null, session: null });
@@ -1410,6 +1495,7 @@ function computeVals() {
         else setState({ view: 'subject', subjectId: rs.subjId, report: null, session: null });
       },
       retake: function () {
+        if (untagged) return;
         if (rs.subjId === 'final') startFinal(rs.round);
         else if (isSpecial(rs.subjId)) startSpecial(rs.subjId);
         else startRound(rs.subjId, rs.topicId, rs.topicName, rs.round);
@@ -1429,7 +1515,14 @@ function computeVals() {
           topic: (rs.flags && rs.flags[i] ? '⚑ ' : '') + topicName(q2.tid),
           stem: q2.stem, correct: q2.options[q2.answer],
           yours: ok ? 'You had it.' : 'You chose: ' + (rs.picks[i] === undefined ? 'nothing (time ran out)' : q2.options[rs.picks[i]]) + yourNote,
-          why: q2.why
+          why: q2.why,
+          wrong: !ok,
+          causes: ok ? [] : CAUSES.map(function (cz) {
+            var on = repCauses[i] === cz[0];
+            return { label: cz[1], on: on,
+              bg: on ? '#C33F68' : '#FFFFFF', fg: on ? '#FFFFFF' : '#6E5266', bd: on ? '#C33F68' : '#E9DFE4',
+              pick: function () { setCause(i, cz[0]); } };
+          })
         };
       })
     };
@@ -1663,9 +1756,18 @@ function computeVals() {
     var q3 = bankOf(m3.subj)[parseInt(m3.k.split('#')[1], 10)] || {};
     return {
       stem: (q3.stem || '').slice(0, 110) + ((q3.stem || '').length > 110 ? '…' : ''),
-      topic: short(topicName(m3.tid), 30), meta: 'missed ' + m3.count + '×', acc: A3.a, soft: A3.soft
+      topic: short(topicName(m3.tid), 30), meta: 'missed ' + m3.count + '×', acc: A3.a, soft: A3.soft,
+      cause: m3.cause ? causeLabel(m3.cause) : ''
     };
   });
+  // where the misses come from decides the remedy: re-drill a content gap,
+  // slow down for a misread, build stamina for timing
+  var causeCounts = {};
+  missItems2.forEach(function (m3) { var ck = m3.cause || 'untagged'; causeCounts[ck] = (causeCounts[ck] || 0) + 1; });
+  vals.st.causeSummary = CAUSES.map(function (cz) { return causeCounts[cz[0]] ? causeLabel(cz[0]) + ' ' + causeCounts[cz[0]] : null; })
+    .filter(Boolean)
+    .concat(causeCounts.untagged ? ['untagged ' + causeCounts.untagged] : [])
+    .join(' · ');
   vals.st.redoMisses = function () { startSpecial('misses'); };
 
   var sv2 = save();
@@ -1770,14 +1872,15 @@ function viewToday(V) {
 
       '<div style="display:grid;grid-template-rows:1fr 1fr;gap:20px">' +
         '<div style="border:1px solid #EFE6EA;border-radius:22px;background:#FFFFFF;padding:26px 28px">' +
-          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#776A73">Syllabus marked ready</div>' +
+          '<div style="font-size:11.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#776A73">Mastered</div>' +
           '<div style="display:flex;align-items:baseline;gap:10px;margin-top:10px">' +
             '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:38px;font-weight:600;letter-spacing:-0.04em;line-height:1">' + V.overallPct + '%</div>' +
             '<div style="font-size:13px;color:#6E5266">' + esc(V.topicsDoneLabel) + '</div>' +
           '</div>' +
-          '<div style="margin-top:16px;height:6px;border-radius:99px;background:#F5EBEF">' +
+          '<div style="margin-top:14px;height:6px;border-radius:99px;background:#F5EBEF">' +
             '<div style="height:6px;border-radius:99px;background:linear-gradient(90deg,#D4436B,#7C6BD6);width:' + V.overallPct + '%;transition:width .5s"></div>' +
           '</div>' +
+          '<div style="font-size:11.5px;color:#776A73;margin-top:10px">Earned by passing every round a topic offers · ' + esc(V.coveredLabel) + '</div>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">' +
           statCard('Streak', V.streak, V.streakLabel) +
@@ -1869,7 +1972,10 @@ function viewSubjects(V) {
         return '<button ' + h(c.open) + ' class="hv-lift" style="text-align:left;border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:26px 28px;display:flex;flex-direction:column;gap:18px;transition:border-color .16s,transform .16s">' +
           '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">' +
             '<div>' +
-              '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:21px;font-weight:600;letter-spacing:-0.03em">' + esc(c.name) + '</div>' +
+              '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+                '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:21px;font-weight:600;letter-spacing:-0.03em">' + esc(c.name) + '</div>' +
+                (c.ahead ? '<span style="font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6656BE;background:#F1EFFB;padding:3px 8px;border-radius:6px;white-space:nowrap">Ahead of coursework</span>' : '') +
+              '</div>' +
               '<div style="font-size:12.5px;color:#7D6774;margin-top:4px">' + esc(c.section) + '</div>' +
             '</div>' +
             '<div style="font-family:\'Instrument Serif\',serif;font-style:italic;font-size:30px;font-weight:400;letter-spacing:-0.02em;color:' + c.acc + '">' + c.pct + '%</div>' +
@@ -1878,8 +1984,8 @@ function viewSubjects(V) {
             '<div style="height:6px;border-radius:99px;background:' + c.acc + ';width:' + c.pct + '%;transition:width .5s"></div>' +
           '</div>' +
           '<div style="display:flex;flex-wrap:wrap;gap:6px 20px;font-size:12.5px;color:#6E5266">' +
-            '<span>' + esc(c.topicsLabel) + '</span><span>' + esc(c.bankLabel) + '</span>' +
-            '<span>' + esc(c.roundsLabel) + '</span><span>' + esc(c.accLabel) + '</span>' +
+            '<span>' + esc(c.topicsLabel) + '</span><span>' + esc(c.coveredLabel) + '</span>' +
+            '<span>' + esc(c.bankLabel) + '</span><span>' + esc(c.roundsLabel) + '</span><span>' + esc(c.accLabel) + '</span>' +
           '</div>' +
         '</button>';
       }) +
@@ -1934,7 +2040,10 @@ function viewSubject(V) {
     '<button ' + h(V.goSubjects) + ' class="hv-link" style="border:0;background:none;color:#7D6774;font-size:13px;font-weight:500;padding:0;margin-bottom:20px">← Subjects</button>' +
     '<div class="mwrap" style="display:flex;align-items:flex-start;justify-content:space-between;gap:32px">' +
       '<div style="min-width:0">' +
-        '<div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">' + esc(s.section) + '</div>' +
+        '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+          '<span style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#C33F68">' + esc(s.section) + '</span>' +
+          (s.ahead ? '<span style="font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6656BE;background:#F1EFFB;padding:3px 8px;border-radius:6px;white-space:nowrap">Ahead of coursework</span>' : '') +
+        '</div>' +
         '<h1 style="font-family:\'Bricolage Grotesque\',serif;font-size:38px;font-weight:600;letter-spacing:-0.035em;line-height:1.1;margin:10px 0 10px">' + esc(s.name) + '</h1>' +
         '<p style="font-size:14.5px;color:#6E5266;max-width:600px;line-height:1.6;margin:0">' + esc(s.blurb) + '</p>' +
       '</div>' +
@@ -2065,10 +2174,11 @@ function viewReport(V) {
       '<div style="flex:1;min-width:0">' +
         '<div style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.025em">' + esc(r.verdict) + '</div>' +
         '<div style="font-size:14px;color:#6E5266;line-height:1.6;margin-top:8px">' + esc(r.note) + '</div>' +
-        '<div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">' +
-          '<button ' + h(r.next) + ' class="hv-deep" style="border:0;border-radius:11px;background:#D4436B;color:#FFF;font-size:13.5px;font-weight:600;padding:12px 22px;transition:background .15s">' + esc(r.nextLabel) + '</button>' +
-          '<button ' + h(r.retake) + ' class="hv-outline" style="border:1.5px solid #EFE6EA;border-radius:11px;background:#FFF;color:#4E2140;font-size:13.5px;font-weight:600;padding:12px 22px;transition:all .15s">Retake this round</button>' +
+        '<div style="display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap">' +
+          '<button ' + h(r.next) + ' class="hv-deep" style="border:0;border-radius:11px;background:#D4436B;color:#FFF;font-size:13.5px;font-weight:600;padding:12px 22px;transition:background .15s,opacity .15s;opacity:' + (r.allTagged ? 1 : 0.45) + '">' + esc(r.nextLabel) + '</button>' +
+          '<button ' + h(r.retake) + ' class="hv-outline" style="border:1.5px solid #EFE6EA;border-radius:11px;background:#FFF;color:#4E2140;font-size:13.5px;font-weight:600;padding:12px 22px;transition:all .15s;opacity:' + (r.allTagged ? 1 : 0.45) + '">Retake this round</button>' +
           '<button ' + h(r.back) + ' class="hv-link" style="border:0;background:none;color:#7D6774;font-size:13.5px;font-weight:500;padding:12px 4px;transition:color .15s">Back to subject</button>' +
+          (r.tagNote ? '<span style="font-size:12.5px;font-weight:600;color:#C33F68">' + esc(r.tagNote) + '</span>' : '') +
         '</div>' +
       '</div>' +
     '</div>' +
@@ -2084,6 +2194,13 @@ function viewReport(V) {
             '<div style="font-size:13px;color:#6E5266;margin-top:10px;line-height:1.6"><span style="color:#776A73">Correct: </span>' + esc(it.correct) + '</div>' +
             '<div style="font-size:13px;color:#7D6774;margin-top:4px;line-height:1.6">' + esc(it.yours) + '</div>' +
             '<div style="font-size:13.5px;color:#40293A;margin-top:12px;line-height:1.65;padding-top:12px;border-top:1px solid #F6F0F3">' + esc(it.why) + '</div>' +
+            (it.wrong ?
+              '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:12px">' +
+                '<span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#776A73;margin-right:4px">Why the miss?</span>' +
+                map(it.causes, function (cz) {
+                  return '<button ' + h(cz.pick) + ' style="border-radius:99px;font-size:11.5px;font-weight:600;padding:6px 11px;transition:all .13s;border:1.5px solid ' + cz.bd + ';background:' + cz.bg + ';color:' + cz.fg + '">' + esc(cz.label) + '</button>';
+                }) +
+              '</div>' : '') +
           '</div>' +
         '</div>';
       }) +
@@ -2349,15 +2466,17 @@ function viewStats(V) {
     '</div>' +
     (st.hasMisses ?
       '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:6px 26px">' +
+        (st.causeSummary ? '<div style="font-size:12px;color:#776A73;padding:12px 0;border-bottom:1px solid #F8F3F5">Why they were missed: <span style="color:#40293A;font-weight:600">' + esc(st.causeSummary) + '</span></div>' : '') +
         map(st.missList, function (m) {
-          return '<div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #F8F3F5">' +
+          return '<div class="mwrap" style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #F8F3F5">' +
             '<span style="font-size:10px;font-weight:700;padding:4px 8px;border-radius:6px;white-space:nowrap;color:' + m.acc + ';background:' + m.soft + '">' + esc(m.topic) + '</span>' +
             '<div style="flex:1;min-width:0;font-size:13px;color:#40293A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(m.stem) + '</div>' +
+            (m.cause ? '<span style="font-size:10.5px;font-weight:600;color:#776A73;background:#F6F2F4;padding:3px 8px;border-radius:6px;white-space:nowrap">' + esc(m.cause) + '</span>' : '') +
             '<span style="font-size:11.5px;font-weight:600;color:#C33F68;white-space:nowrap">' + esc(m.meta) + '</span>' +
           '</div>';
         }) +
       '</div>' : '') +
-    (st.noMisses ? '<div style="border:1px dashed #E4DBE0;border-radius:16px;padding:18px 22px;font-size:13px;color:#7D6774;background:#FBF8F9">Missed questions land here, then resurface in the review queue at 1, 3, 7, 14 and 28-day intervals until she answers them right twice.</div>' : '') +
+    (st.noMisses ? '<div style="border:1px dashed #E4DBE0;border-radius:16px;padding:18px 22px;font-size:13px;color:#7D6774;background:#FBF8F9">Missed questions land here, then their concepts resurface in the review queue at 1, 3, 7, 14 and 28-day intervals — a different question on the same topic when the bank has one — until cleared three times on separate days.</div>' : '') +
 
     '<h2 style="font-family:\'Bricolage Grotesque\',serif;font-size:20px;font-weight:600;letter-spacing:-0.03em;margin:44px 0 18px">Study history</h2>' +
     '<div style="border:1px solid #EFE6EA;border-radius:20px;background:#FFFFFF;padding:28px 30px">' +
