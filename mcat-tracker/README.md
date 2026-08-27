@@ -19,9 +19,11 @@ python3 -m http.server 8000   # then open http://localhost:8000/mcat-tracker/
 Progress lives in `localStorage` under the key `hnoo-mcat-v1`, so it is
 per-browser and per-device. **Back it up:** Progress → *Your data* →
 **Download backup** writes a JSON file you can keep, and **Restore from file**
-loads it back (on any browser or device). Clearing site data, switching
-browsers or changing device wipes the tracker otherwise, so take a backup
-every few weeks.
+loads it back on any browser or device. Where a host blocks page-initiated
+downloads — a sandboxed viewer, some in-app browsers — **Backup as text**
+shows the same JSON in a box to copy anywhere, and pasting it back restores
+it. Clearing site data, switching browsers or changing device wipes the
+tracker otherwise, so take a backup every few weeks.
 
 ## Screens
 

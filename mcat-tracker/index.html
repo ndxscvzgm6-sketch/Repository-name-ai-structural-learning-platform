@@ -1719,19 +1719,97 @@ function deleteEvent() {
    ------------------------------------------------------------------ */
 
 var dataNote = '';
+var showBackupText = false;
+
+/* When this page runs inside the claude.ai artifact viewer it is sandboxed and
+   cannot start its own download; the host mediates saves instead. Resolve that
+   namespace if it exists — it arrives asynchronously and stays null everywhere
+   else (a local file, static hosting), where the plain anchor works fine. */
+var downloadsNS = null;
+try {
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('downloads').then(function (ns) { downloadsNS = ns || null; }, function () {});
+  }
+} catch (e) {}
 function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
 
+function backupPayload() {
+  return JSON.stringify({ app: 'mcat-tracker', version: 1, exportedAt: new Date().toISOString(), data: save() }, null, 2);
+}
+
+/* Applies a parsed backup over the current save, asking first. Shared by the
+   file and text restore paths. */
+function applyBackup(incoming, sourceLabel) {
+  var d = incoming && incoming.data ? incoming.data : incoming;
+  if (!d || typeof d !== 'object' || !d.rounds || !d.done) {
+    dataNote = 'That does not look like an MCAT Tracker backup.'; render(); return false;
+  }
+  var counts = plural(Object.keys(d.rounds).length, 'round', 'rounds') + ', ' +
+               plural(Object.keys(d.done).length, 'topic', 'topics') + ' marked ready';
+  if (!window.confirm('Replace all current progress with this backup (' + counts + ')?\n\nThis cannot be undone.')) {
+    dataNote = 'Restore cancelled \u2014 nothing changed.'; render(); return false;
+  }
+  var b = blank();
+  Object.keys(b).forEach(function (k) { if (d[k] === undefined) d[k] = b[k]; });
+  try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (err) {}
+  dataNote = 'Restored ' + counts + (sourceLabel ? ' from ' + sourceLabel : '') + '.';
+  setState({ save: d });
+  return true;
+}
+
+function toggleBackupText() { showBackupText = !showBackupText; dataNote = ''; render(); }
+
+function restoreFromText() {
+  var el = document.getElementById('dc-backup-text');
+  if (!el || !el.value.trim()) { dataNote = 'Paste a backup into the box first.'; render(); return; }
+  var incoming;
+  try { incoming = JSON.parse(el.value); }
+  catch (err) { dataNote = 'That text is not valid JSON.'; render(); return; }
+  applyBackup(incoming, 'pasted text');
+}
+
+/* Three routes out, in order of preference: the host's mediated save, a plain
+   anchor download, and failing both the text panel — so the save is always
+   recoverable somewhere. */
 function exportSave() {
-  var payload = { app: 'mcat-tracker', version: 1, exportedAt: new Date().toISOString(), data: save() };
-  var url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'mcat-tracker-' + dateKey(new Date()) + '.json';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-  dataNote = 'Backup downloaded as ' + a.download;
+  var name = 'mcat-tracker-' + dateKey(new Date()) + '.json';
+
+  if (downloadsNS) {
+    downloadsNS.save({ filename: name, data: backupPayload() }).then(function () {
+      dataNote = 'Backup saved as ' + name + '.';
+      render();
+    }, function (err) {
+      if (err && err.code === 'declined') {
+        dataNote = 'Save cancelled \u2014 nothing was written.';
+      } else {
+        showBackupText = true;
+        dataNote = 'A file could not be saved here \u2014 copy the text below instead.';
+      }
+      render();
+    });
+    dataNote = 'Confirm the save when your browser asks\u2026';
+    render();
+    return;
+  }
+
+  var ok = false;
+  try {
+    var url = URL.createObjectURL(new Blob([backupPayload()], { type: 'application/json' }));
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    ok = true;
+  } catch (e) {}
+  if (ok) {
+    dataNote = 'Backup downloaded as ' + name + '. If no file appeared, use Backup as text below.';
+  } else {
+    showBackupText = true;
+    dataNote = 'Downloads are blocked here \u2014 copy the text below instead.';
+  }
   render();
 }
 
@@ -1745,20 +1823,7 @@ function importSave(e) {
     var incoming;
     try { incoming = JSON.parse(reader.result); }
     catch (err) { dataNote = 'That file is not valid JSON.'; render(); return; }
-    var d = incoming && incoming.data ? incoming.data : incoming;
-    if (!d || typeof d !== 'object' || !d.rounds || !d.done) {
-      dataNote = 'That does not look like an MCAT Tracker backup.'; render(); return;
-    }
-    var counts = plural(Object.keys(d.rounds).length, 'round', 'rounds') + ', ' +
-                 plural(Object.keys(d.done).length, 'topic', 'topics') + ' marked ready';
-    if (!window.confirm('Replace all current progress with this backup (' + counts + ')?\n\nThis cannot be undone.')) {
-      dataNote = 'Restore cancelled \u2014 nothing changed.'; render(); return;
-    }
-    var b = blank();
-    Object.keys(b).forEach(function (k) { if (d[k] === undefined) d[k] = b[k]; });
-    try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (err) {}
-    dataNote = 'Restored ' + counts + ' from ' + file.name + '.';
-    setState({ save: d });
+    applyBackup(incoming, file.name);
   };
   reader.readAsText(file);
 }
@@ -2360,8 +2425,12 @@ function computeVals() {
              Object.keys(sv2.misses || {}).length + ' in the error log · ' +
              plural(Object.keys(sv2.events || {}).length, 'scheduled session', 'scheduled sessions'),
     note: dataNote,
+    showText: showBackupText,
+    payload: showBackupText ? backupPayload() : '',
     exportSave: exportSave,
-    importSave: importSave
+    importSave: importSave,
+    toggleText: toggleBackupText,
+    restoreText: restoreFromText
   };
 
   var finalSize = active.reduce(function (a, su) { return a + Math.min(4, bankOf(su.id).length); }, 0);
@@ -3086,8 +3155,15 @@ function viewStats(V) {
         '<label class="hv-outline" style="display:inline-flex;align-items:center;border:1.5px solid #EFE6EA;border-radius:11px;background:#FFF;color:#4E2140;font-size:13.5px;font-weight:600;padding:12px 22px;cursor:pointer;transition:all .15s">Restore from file' +
           '<input type="file" accept="application/json,.json" ' + onChange(V.data.importSave) + ' style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" />' +
         '</label>' +
+        '<button ' + h(V.data.toggleText) + ' class="hv-outline" style="border:1.5px solid #EFE6EA;border-radius:11px;background:#FFF;color:#4E2140;font-size:13.5px;font-weight:600;padding:12px 22px;transition:all .15s">' + (V.data.showText ? 'Hide backup text' : 'Backup as text') + '</button>' +
         (V.data.note ? '<span style="font-size:12.5px;color:#3F7F63">' + esc(V.data.note) + '</span>' : '') +
       '</div>' +
+      (V.data.showText ?
+        '<div style="margin-top:18px;border-top:1px solid #F6F0F3;padding-top:18px">' +
+          '<div style="font-size:12.5px;color:#6E5266;line-height:1.6;max-width:62ch">Select all and copy this to save it anywhere \u2014 a note, an email to yourself. Pasting a backup in here and pressing Restore brings it back, on any device.</div>' +
+          '<textarea id="dc-backup-text" spellcheck="false" style="width:100%;height:150px;margin-top:12px;border:1.5px solid #E9DFE4;border-radius:10px;padding:11px 13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:1.5;color:#40293A;background:#FCFAF9;resize:vertical">' + esc(V.data.payload) + '</textarea>' +
+          '<button ' + h(V.data.restoreText) + ' class="hv-b93" style="margin-top:12px;border:0;border-radius:11px;background:linear-gradient(135deg,#D4436B,#A83057);color:#FFF;font-size:13.5px;font-weight:600;padding:11px 20px;transition:filter .15s">Restore from this text</button>' +
+        '</div>' : '') +
     '</div>' +
   '</section>';
 }
